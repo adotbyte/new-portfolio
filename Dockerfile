@@ -8,11 +8,6 @@ ENV HOME=/home/app
 ENV APP_HOME=/home/app/web
 ENV DEBIAN_FRONTEND=noninteractive
 
-ENV GEMINI_API_KEY=placeholder
-ENV ALLOWED_HOSTS=127.0.0.1,localhost
-ENV SECRET_KEY=zfXko35q2TkTP1
-ENV DEBUG=False
-
 # 2. Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev \
@@ -35,15 +30,24 @@ RUN pip install --upgrade pip && \
 # 6. Copy project files
 COPY . $APP_HOME
 
-# 7. DEBUG & FIX (Modified this section)
-# We use 'ls' to print the folder content to the logs. 
-# If entrypoint.sh isn't in the list, we'll see it in the GitHub Action log.
-RUN ls -la /home/app/web/ && \
-    dos2unix /home/app/web/entrypoint.sh && \
-    chmod +x /home/app/web/entrypoint.sh
+# 7. Fix line endings and permissions for entrypoint
+RUN dos2unix $APP_HOME/entrypoint.sh && \
+    chmod +x $APP_HOME/entrypoint.sh
 
 # 8. Collect static files
-RUN python manage.py collectstatic --noinput
+# We provide EVERY variable your settings.py expects as an environment variable
+# This bypasses the need for a .env file during the build process.
+RUN SECRET_KEY=build-placeholder \
+    GEMINI_API_KEY=build-placeholder \
+    ALLOWED_HOSTS=localhost,127.0.0.1 \
+    DEBUG=False \
+    EMAIL_HOST=localhost \
+    EMAIL_PORT=587 \
+    EMAIL_USE_TLS=True \
+    EMAIL_HOST_USER=none \
+    EMAIL_HOST_PASSWORD=none \
+    NOTIFY_EMAIL=none \
+    python manage.py collectstatic --noinput
 
 # 9. Final Permissions
 RUN chown -R app:app /home/app/ && \

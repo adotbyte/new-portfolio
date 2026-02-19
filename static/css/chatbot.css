@@ -1,0 +1,153 @@
+/* ==========================================================================
+   2. AI CHATBOT SYSTEM
+   ========================================================================== */
+
+/* Variable Definitions */
+:root {
+    --bubble-bg: #ffffff;
+    --bubble-body: #f4f7f6;
+    --bubble-text: #333333;
+    --bubble-ai-msg: #ffffff;
+    --bubble-border: #eeeeee;
+}
+
+[data-bs-theme="dark"] {
+    --bubble-bg: #212529;
+    --bubble-body: #1a1d20;
+    --bubble-text: #f8f9fa;
+    --bubble-ai-msg: #2c3034;
+    --bubble-border: #373b3e;
+}
+
+/* 1. Main Container Logic (Fixes the "Invisible Wall") */
+.ai-chat-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100px;  /* Small footprint so it doesn't block the footer */
+    height: 100px;
+    pointer-events: none !important; /* Clicks pass through the empty space */
+    z-index: 1000;
+}
+
+/* 2. The Chat Bubble (Centered & Responsive) */
+#chatBubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #8e94f2, #b892ff);
+    border-radius: 50%;
+    
+    /* Perfect Centering */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    padding: 0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 1001;
+    pointer-events: auto !important; /* Re-enable clicks for the bubble */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 3. The SVG Icon (Fixes the "Squashed" look) */
+#chatBubble svg {
+    width: 30px !important;  
+    height: 30px !important;
+    flex-shrink: 0 !important; /* Prevents squashing on mobile */
+    margin: 0 !important;
+    display: block !important;
+    fill: white !important; /* Ensure the old icon is visible */
+}
+
+/* 4. The Chat Window */
+.chat-window {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    max-width: 90vw; /* Responsive width for small phones */
+    height: 450px;
+    background: var(--bubble-bg) !important;
+    border: 1px solid var(--bubble-border) !important;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    z-index: 9999;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: auto; /* Ensure window stays interactive */
+}
+
+/* Header & Body Polish */
+.chat-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white !important;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: var(--bubble-body) !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Rest of your message styling... */
+.msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; }
+.user-msg { align-self: flex-end; background: #007bff !important; color: white !important; }
+.ai-msg { align-self: flex-start; background: var(--bubble-ai-msg) !important; color: var(--bubble-text) !important; border: 1px solid var(--bubble-border); }
+
+/* --- Light Mode (Default) --- */
+.chat-footer {
+    padding: 10px;
+    background: #ffffff !important; /* White background for footer */
+    border-top: 1px solid var(--bubble-border);
+    display: flex;
+    gap: 5px;
+}
+
+.chat-footer input {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 8px 15px;
+    background: #ffffff !important; 
+    color: #000000 !important; /* Black text for visibility */
+}
+
+/* Force placeholder color for Light Mode */
+.chat-footer input::placeholder {
+    color: #666666 !important; 
+    opacity: 1;
+}
+
+/* --- Dark Mode Override --- */
+[data-bs-theme="dark"] .chat-footer {
+    background: #212529 !important; /* Dark footer background */
+}
+
+[data-bs-theme="dark"] .chat-footer input {
+    background: #1a1d20 !important; /* Black/Dark input background */
+    color: #ffffff !important;      /* Pure white letters */
+    border: 1px solid #373b3e;
+}
+
+/* Force placeholder color for Dark Mode */
+[data-bs-theme="dark"] .chat-footer input::placeholder {
+    color: #bbbbbb !important; /* Light gray placeholder for dark background */
+    opacity: 1;
+}
+
+.chat-window {
+    display: none;
+}

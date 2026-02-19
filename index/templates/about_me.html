@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Me{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+
+<main class="markdown-container achievement-item">
+     {{ about_content|safe }}
+</main>
+
+<div class="container mt-4"> 
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8 markdown-body">
+            {{ markdown_data|safe }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

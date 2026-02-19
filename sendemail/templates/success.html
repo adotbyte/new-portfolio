@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+<head>
+ <title>{% block title %}Success{% endblock %}</title>
+</head>
+{% block content %}
+{% load crispy_forms_tags %}
+{{ form|crispy }}
+{% csrf_token %}
+<div class="container mt-5 text-center">
+  <div class="card shadow-lg p-4">
+    <h3 class="card-title mb-3">Thank You!</h3>
+    <p>Your message has been sent successfully.</p>
+    <a href="{% url 'contact' %}" class="btn btn-success mt-3">Send Another Message</a>
+  </div>
+</div>
+{% endblock %}

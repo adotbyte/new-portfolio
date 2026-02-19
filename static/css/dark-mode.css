@@ -1,0 +1,40 @@
+/* ==========================================================================
+   1. GLOBAL THEME & DARK MODE
+   ========================================================================== */
+
+/* Base Dark Mode Reset */
+[data-bs-theme="dark"],
+[data-bs-theme="dark"] body, 
+[data-bs-theme="dark"] section, 
+[data-bs-theme="dark"] .container, 
+[data-bs-theme="dark"] main, 
+[data-bs-theme="dark"] article {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+}
+
+/* Typography Visibility */
+[data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3, 
+[data-bs-theme="dark"] h4, [data-bs-theme="dark"] p, [data-bs-theme="dark"] strong {
+    color: #f8f9fa !important;
+}
+
+/* Link Logic */
+[data-bs-theme="dark"] a:not(.btn) {
+    color: #8ab4f8; /* Default links are blue */
+}
+
+[data-bs-theme="dark"] a.text-body {
+    color: inherit !important; /* text-body links stay white/gray */
+}
+
+[data-bs-theme="dark"] a.text-body:hover {
+    text-decoration: underline !important;
+    opacity: 0.8;
+}
+
+/* Component Colors */
+[data-bs-theme="dark"] .card {
+    background-color: #2c3034 !important;
+    border-color: #373b3e !important;
+}

@@ -1,0 +1,46 @@
+/* --- Markdown --- */
+/* This forces all list items (even nested ones) to use solid black bullets */
+    .markdown-container ul li {
+        list-style-type: disc !important;
+    }
+    
+    /* Optional: adds a bit of spacing to make it look like your image */
+    .markdown-container ul {
+        margin-bottom: 1rem;
+    }
+    .markdown-container li {
+        margin-bottom: 0.5rem;
+    }
+
+/* We use 'html body' to make this rule more powerful than any other CSS file */
+/*html body main.content-container {
+    display: block !important;
+    
+    /* This is the most important part: force it to be smaller 
+    width: 90vw !important; 
+    max-width: 800px !important; 
+    
+    /* Force the margins to exist 
+    margin-left: auto !important;
+    margin-right: auto !important;
+    
+    /* Ensure no other layout mode is interfering 
+    float: none !important;
+    position: relative !important;
+}*/
+
+/* This centers the "box" that holds the markdown */
+.markdown-container {
+    max-width: 1000px;  /* Or whatever width you like for desktop */
+    margin-left: auto;  /* Magic trick for centering */
+    margin-right: auto; /* Magic trick for centering */
+    padding: 0 20px;    /* Adds a little "breathable" space on the sides */
+}
+
+/* This ensures the text inside looks professional */
+.markdown-container p, 
+.markdown-container h1, 
+.markdown-container h2,
+.markdown-container li {
+    text-align: left;   /* Keep the text left-aligned inside the centered box */
+}

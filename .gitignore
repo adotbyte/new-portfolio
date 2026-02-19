@@ -1,0 +1,30 @@
+# --- Security ---
+.env
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+ENV/
+
+# --- Django ---
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# --- AI & RAG (Large Files) ---
+# This stops that 52MB warning you saw
+index_storage/
+*.index
+*.npy
+*.pkl
+
+# --- System & IDE ---
+.vscode/
+.DS_Store
+*.log

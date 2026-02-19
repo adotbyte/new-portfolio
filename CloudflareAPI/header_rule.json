@@ -1,0 +1,11 @@
+{
+  "description": "Add custom hidden server header",
+  "enabled": true,
+  "action": {
+    "set_response_header": {
+      "header": "X-Server-Details",
+      "value": "my-secret-server-info"
+    }
+  },
+  "expression": "true"
+}

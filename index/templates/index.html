@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}About Me{% endblock %}
+{% csrf_token %}
+{% load static %}
+  <main class="content-container achievement-item">
+        {% block content %}{{ about_content|safe }}
+  </main>
+  {% for chat in history %}
+{% endfor %}
+{% endblock %}

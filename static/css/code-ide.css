@@ -1,0 +1,59 @@
+/* --- IDE WINDOW STYLING --- */
+pre[class*="language-"] {
+    background: #ffffff !important; /* Pure white for bright mode */
+    border: 1px solid #d1d5db;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem 1.5rem 1.5rem !important; /* Top padding for the "buttons" */
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+}
+
+/* IDE Window Buttons (Red, Yellow, Green) */
+pre[class*="language-"]::before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 12px;
+    height: 12px;
+    background: #ff5f56;
+    border-radius: 50%;
+    box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+    z-index: 2;
+}
+
+/* 1. LIGHT MODE VISIBILITY */
+body:not(.dark-mode) pre[class*="language-"] .token {
+    color: #24292e !important; /* GitHub-style high contrast black */
+    font-weight: 500;
+}
+
+/* 2. DARK MODE IDE (VS Code Theme) */
+.dark-mode pre[class*="language-"] {
+    background: #0d1117 !important; /* Deeper black for higher contrast */
+    border: 1px solid #30363d;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode pre[class*="language-"] code {
+    color: #e6edf3 !important;
+}
+
+/* Syntax Highlighting - Vibrant for Visibility */
+.dark-mode .token.keyword  { color: #ff7b72 !important; }   /* Soft Red/Pink */
+.dark-mode .token.string   { color: #a5d6ff !important; }   /* Bright Blue */
+.dark-mode .token.function { color: #d2a8ff !important; }   /* Purple */
+.dark-mode .token.comment  { color: #8b949e !important; font-style: italic; } 
+.dark-mode .token.operator { color: #79c0ff !important; }   /* Cyan */
+.dark-mode .token.number   { color: #f2cc60 !important; }   /* Gold */
+.dark-mode .token.boolean  { color: #ffab70 !important; }   /* Orange */
+
+/* Scrollbar Styling */
+pre::-webkit-scrollbar { height: 8px; width: 8px; }
+pre::-webkit-scrollbar-track { background: transparent; }
+pre::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+.dark-mode pre::-webkit-scrollbar-thumb { background: #30363d; }

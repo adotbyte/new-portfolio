@@ -1,0 +1,16 @@
+services:
+  web:
+    image: ghcr.io/adotbyte/resume_website:latest
+    container_name: resume_website
+    restart: unless-stopped
+    # We use the full path so OMV can't miss it
+    env_file:
+    - /home/audrius/actions-runner/_work/resume_website/resume_website/CV/CV/.env
+    ports:
+      - "8080:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

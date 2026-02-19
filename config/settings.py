@@ -54,6 +54,8 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 GEMINI_API_KEY = env('GEMINI_API_KEY')
+
+GITHUB_WEBHOOK_SECRET = env('GITHUB_WEBHOOK_SECRET', default='change_me_in_production')
 #GOOGLE_CLOUD_PROJECT = env('GOOGLE_CLOUD_PROJECT')
 
 # Sesion

@@ -1,0 +1,23 @@
+# Local Python Virtual Environments (The "Heavy" folders)
+.venv/
+venv/
+env/
+bin/
+lib/
+include/
+
+# Database (Never push your local DB to GitHub)
+*.sqlite3
+
+# Environment Secrets (Don't leak your Gemini Key!)
+.env
+
+# Cache and OS junk
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Django Static/Media (These are generated during build)
+staticfiles/
+media/

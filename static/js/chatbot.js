@@ -1,165 +1,85 @@
 /* static/js/chatbot.js */
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Chat System: Initializing...");
-    
-    // --- 1. ELEMENT SELECTION ---
-    const chatWin = document.getElementById('chatWindow');
     const chatBody = document.getElementById('chatBody');
     const userInput = document.getElementById('userInput');
-    
-    const chatBubble = document.getElementById('chatBubble'); 
-    const closeBtn = document.getElementById('closeChatBtn');
-    const minimizeBtn = document.getElementById('minimizeChatBtn');
-    const clearBtn = document.getElementById('clearChatBtn');
-    const sendBtn = document.getElementById('sendMsgBtn');
 
-    // --- A. CROSS-TAB SYNCHRONIZATION (Chat Only) ---
-    window.addEventListener('storage', (event) => {
-        if (!chatWin) return;
-        if (event.key === 'chat_status') {
-            chatWin.style.display = event.newValue === 'open' ? 'flex' : 'none';
+    // --- 1. THE RECOVERY LOGIC ---
+    const loadHistory = () => {
+        const saved = localStorage.getItem('adotbyte_history');
+        if (saved && chatBody) {
+            chatBody.innerHTML = saved;
+            // Timeout ensures we scroll after the browser finishes rendering the HTML
+            setTimeout(() => { chatBody.scrollTop = chatBody.scrollHeight; }, 100);
         }
-        if (event.key === 'chat_cleared' && chatBody) {
-            chatBody.innerHTML = '<div class="msg ai-msg">History cleared!</div>';
-        }
-    });
+    };
 
-    // --- B. INITIAL STATE RECOVERY ---
-    if (chatWin) {
-        const currentStatus = localStorage.getItem('chat_status');
-        chatWin.style.display = (currentStatus === 'open') ? 'flex' : 'none';
-
-        if (localStorage.getItem('chat_minimized') === 'true') {
-            chatWin.classList.add('minimized');
-        }
-    }
-
-    const scrollToBottom = () => { 
+    const saveHistory = () => {
         if (chatBody) {
-            chatBody.scrollTop = chatBody.scrollHeight;
+            localStorage.setItem('adotbyte_history', chatBody.innerHTML);
         }
     };
+
+    loadHistory();
+
+    // --- 2. THE SEND LOGIC (Updated for Streaming) ---
     
-    scrollToBottom();
-
-    // --- C. CORE ACTIONS ---
-    const toggleChat = () => {
-        if (!chatWin) return;
-        const isHidden = window.getComputedStyle(chatWin).display === 'none';
-        const newState = isHidden ? 'flex' : 'none';
-        
-        chatWin.style.display = newState;
-        localStorage.setItem('chat_status', isHidden ? 'open' : 'closed');
-        
-        if (isHidden && userInput) {
-            userInput.focus();
-            scrollToBottom();
-        }
-    };
-
-    const minimizeChat = () => {
-        if (chatWin) {
-            chatWin.classList.toggle('minimized');
-            localStorage.setItem('chat_minimized', chatWin.classList.contains('minimized'));
-        }
-    };
-
-    const clearChat = async () => {
-        if (!confirm("Clear your conversation history?")) return;
-        try {
-            const response = await fetch('/chat/clear/', {
-                method: 'POST',
-                headers: { 
-                    "X-CSRFToken": getCookie('csrftoken'),
-                    "Content-Type": "application/json"
-                },
-                credentials: 'same-origin',
-            });
-            if (response.ok && chatBody) {
-                chatBody.innerHTML = '<div class="msg ai-msg">History cleared!</div>';
-                localStorage.setItem('chat_cleared', Date.now());
-            }
-        } catch (err) {
-            console.error("Clear chat failed:", err);
-        }
-    };
-
     const sendMessage = async () => {
-        if (!userInput) return;
         const text = userInput.value.trim();
         if (!text) return;
 
         appendMsg(text, 'user-msg', null, "You:");
         userInput.value = '';
-        const tempId = "typing-" + Date.now();
-        appendMsg("...", 'ai-msg', tempId, "AdotByte:");
+        saveHistory(); 
 
-        try {                
+        const tempId = "typing-" + Date.now();
+        const aiBubble = appendMsg("...", 'ai-msg', tempId, "AdotByte:");
+        const contentSpan = aiBubble.querySelector('.msg-content');
+
+        try {
             const response = await fetch('/chat_with_gemini/api/', {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json", 
                     "X-CSRFToken": getCookie('csrftoken') 
                 },
-                credentials: 'same-origin',
                 body: JSON.stringify({ message: text })
             });
 
             const data = await response.json();
-            const bubbleDiv = document.getElementById(tempId);
-            if (!bubbleDiv) return;
-            
-            const contentSpan = bubbleDiv.querySelector('.msg-content');
-            
+
             if (data.text) {
-                if (typeof marked !== 'undefined') {
-                    contentSpan.innerHTML = marked.parse(data.text);
-                } else {
-                    contentSpan.innerText = data.text;
-                }
+                // The text is already formatted as HTML from the backend
+                contentSpan.innerHTML = data.text;
+                aiBubble.removeAttribute('id');
+                saveHistory();
             } else {
-                contentSpan.innerText = data.error || "AdotByte is unavailable.";
+                throw new Error(data.error || "Unknown error");
             }
-            scrollToBottom();
-        } catch (error) {
-            const bubbleDiv = document.getElementById(tempId);
-            if(bubbleDiv) {
-                const span = bubbleDiv.querySelector('.msg-content');
-                if (span) span.innerText = "AI Connection Error.";
-            }
+
+        } catch (e) {
+            console.error("AI Error:", e);
+            contentSpan.innerText = "AI Connection Error. Please try again.";
         }
     };
 
-    // --- D. ATTACH LISTENERS ---
-    if (chatBubble) chatBubble.addEventListener('click', toggleChat);
-    if (closeBtn) closeBtn.addEventListener('click', toggleChat);
-    if (minimizeBtn) minimizeBtn.addEventListener('click', minimizeChat);
-    if (clearBtn) clearBtn.addEventListener('click', clearChat);
-    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
-    
-    if (userInput) {
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    }
-
-    // --- E. HELPERS ---
+    // --- 3. THE HELPER ---
     function appendMsg(content, className, id = null, label = "") {
-        if (!chatBody) return;
+        if (!chatBody) return null;
         const msgDiv = document.createElement('div');
         msgDiv.className = `msg ${className}`;
         if (id) msgDiv.id = id;
+        
         msgDiv.innerHTML = `<b>${label}</b> <span class="msg-content"></span>`;
+        // Use innerText for content initially for safety
         msgDiv.querySelector('.msg-content').innerText = content;
+        
         chatBody.appendChild(msgDiv);
-        scrollToBottom();
+        chatBody.scrollTop = chatBody.scrollHeight;
         return msgDiv;
     }
 
+    // CSRF Helper for Django
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -174,54 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return cookieValue;
     }
+
+    // Event Listeners
+    document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
+    userInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent line breaks in single-line inputs
+            sendMessage();
+        }
+    });
 });
-
-
-//-- Gemini overload notice ---
-
-async function callGemini(userInput) {
-    try {
-        const response = await fetch('chat_with_gemini/api/', {
-            method: 'POST',
-            // ... headers and body ...
-        });
-
-        // 429 means "Rate Limit Exceeded", 503 means "Overloaded"
-        if (response.status === 429 || response.status === 503) {
-            throw new Error('Gemini_Overload');
-        }
-
-        const data = await response.json();
-        // ... display response ...
-
-    } catch (error) {
-        let errorMessage;
-        
-        if (error.message === 'Gemini_Overload') {
-            // Pick a random Gemini joke
-            errorMessage = geminiOverloadJokes[Math.floor(Math.random() * geminiOverloadJokes.length)];
-        } else {
-            errorMessage = "The server is taking a nap. Apparently, '24/7' was just a suggestion.";
-        }
-
-        displayBotMessage(errorMessage);
-    }
-}
-
-// Inside your chatbot.js function that handles messages
-function displayMessage(role, message) {
-    const chatBody = document.getElementById('chatBody');
-    
-    // 1. Convert Markdown to HTML
-    const rawHtml = marked.parse(message);
-    
-    // 2. Sanitize the HTML to remove <script>, <onerror>, etc.
-    const cleanHtml = DOMPurify.sanitize(rawHtml);
-    
-    // 3. Inject into the DOM safely
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `msg ${role}-msg`;
-    messageDiv.innerHTML = `<b>${role === 'user' ? 'You' : 'AdotByte'}:</b> <span class="msg-content">${cleanHtml}</span>`;
-    
-    chatBody.appendChild(messageDiv);
-}

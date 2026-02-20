@@ -5,12 +5,12 @@ from google import genai
 from google.genai import types
 from django.conf import settings
 
-class AlexAIService:
+class AudriusAIService:
     def __init__(self):
         # Securely get API key from Django settings or Environment
         self.api_key = getattr(settings, "GEMINI_API_KEY", os.getenv("GEMINI_API_KEY"))
         self.client = genai.Client(api_key=self.api_key)
-        self.model_id = "gemini-2.5-flash-lite"
+        self.model_id = "gemini-2.0-flash"
         self.cache_min_tokens = 4096
 
     def get_context(self):
@@ -34,14 +34,14 @@ class AlexAIService:
     def ask(self, question):
         context_text = self.get_context()
         token_count = self.client.models.count_tokens(model=self.model_id, contents=context_text).total_tokens
-        sys_inst = "You are an AI for Alex's website. Answer based on context only."
+        sys_inst = "You are an AI for Audrius's website. Answer based on context only."
 
         if token_count >= self.cache_min_tokens:
             # CACHE LOGIC
             temp_cache = self.client.caches.create(
                 model=self.model_id,
                 config=types.CreateCachedContentConfig(
-                    display_name="alex_cache",
+                    display_name="audrius_cache",
                     system_instruction=sys_inst,
                     contents=[context_text],
                     ttl="600s", # 10 mins

@@ -69,12 +69,12 @@
             </div>
             <div class="chat-body" id="chatBody">
                 {% if not history %}
-                    <div class="msg ai-msg">Ask me anything about my projects!</div>
+                        <div class="msg ai-msg">Ask me anything about my projects!</div>
                 {% else %}
                     {% for chat in history %}
                         <div class="msg {% if chat.role == 'user' %}user-msg{% else %}ai-msg{% endif %}">
                             <b>{% if chat.role == 'user' %}You:{% else %}AdotByte:{% endif %}</b> 
-                            <span class="msg-content">{{ chat.message }}</span>
+                            <span class="msg-content">{{ chat.message|safe }}</span>
                         </div>
                     {% endfor %}
                 {% endif %}

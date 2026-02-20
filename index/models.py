@@ -33,7 +33,7 @@ from pgvector.django import VectorField
 class ResumePoint(models.Model):
     text = models.TextField()
     # 768 dimensions is standard for Gemini text-embedding-004
-    embedding = VectorField(dimensions=768) 
+    embedding = VectorField(dimensions=3072) 
 
     def __str__(self):
         return self.text[:50]

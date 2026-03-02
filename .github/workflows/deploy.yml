@@ -63,6 +63,11 @@ jobs:
           # 1. Navigate to the folder where your docker-compose.yml lives
           cd $GITHUB_WORKSPACE
 
+          Force write the Gemini Key
+          # If the secret is empty, this will write "GEMINI_API_KEY=MISSING_FROM_GITHUB"
+          echo "GEMINI_API_KEY=${RS_GEMINI_KEY:-MISSING_FROM_GITHUB}" > .env
+          echo "SECRET_KEY=${RS_SECRET_KEY:-MISSING_FROM_GITHUB}" >> .env
+
           # 2. Write EVERY variable to the .env file
           echo "SECRET_KEY=$RS_SECRET_KEY" > .env
           echo "EMAIL_HOST_USER=$RS_EMAIL_USER" >> .env

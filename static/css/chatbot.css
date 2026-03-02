@@ -48,7 +48,7 @@
     padding: 0 !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    z-index: 1001;
+    z-index: 9999;
     pointer-events: auto !important; /* Re-enable clicks for the bubble */
     -webkit-tap-highlight-color: transparent;
 }
@@ -61,6 +61,7 @@
     margin: 0 !important;
     display: block !important;
     fill: white !important; /* Ensure the old icon is visible */
+    pointer-events: none; /* The SVG won't block the click anymore */
 }
 
 /* 4. The Chat Window */
@@ -150,4 +151,30 @@
 
 .chat-window {
     display: none;
+}
+
+.chat-icon {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    display: inline-block;
+}
+
+#clearChatBtn:hover {
+    color: #ff4d4d; /* Danger red */
+    transform: scale(1.2) rotate(-10deg);
+}
+
+#minimizeChatBtn:hover, #closeChatBtn:hover {
+    color: #00d4ff; /* Brand Electric Blue */
+}
+
+#clearChatBtn {
+    display: inline-block;
+    cursor: pointer !important;
+    padding: 5px; /* Makes the "hit area" bigger and easier to click */
+}
+
+/* This tells the browser: "ignore the text/emoji, click the span instead" */
+#clearChatBtn * {
+    pointer-events: none;
 }

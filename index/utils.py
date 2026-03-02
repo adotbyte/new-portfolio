@@ -1,37 +1,55 @@
-import json
+# index/utils.py
 import os
-from bs4 import BeautifulSoup
+from django.conf import settings
+from google import genai
+from google.genai import types
+import chromadb
+from chromadb import EmbeddingFunction, Documents, Embeddings
 
-def update_json_from_html():
-    html_path = 'templates/my_knowledge.html'
-    json_path = 'static/resume_data.json'
-    
-    if not os.path.exists(html_path):
-        print("HTML file not found!")
-        return
+# 1. Initialize the 2026 Client
+# Using the new genai.Client for Gemini 2.0/3.0
+client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-    with open(html_path, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f, 'html.parser')
+# 2. Define the Function Class for ChromaDB
+class GeminiEmbeddingFunction(EmbeddingFunction):
+    def __init__(self, gemini_client):
+        self.client = gemini_client
+        self.__name__ = "GeminiEmbeddingFunction"
 
-    # Example: Finding all <div> elements with class 'achievement'
-    # You will need to change 'div' and 'achievement' to match your HTML tags!
-    achievements_list = []
-    
-    # Let's assume your HTML has <div class="item"><h4>Category</h4><p>Details</p></div>
-    items = soup.find_all('div', class_='achievements-item') 
-    
-    for item in items:
-        category = item.find('h4').get_text(strip=True)
-        details = item.find('p').get_text(strip=True)
-        
-        achievements_list.append({
-            "category": category,
-            "details": details
-        })
+    def __call__(self, input: Documents) -> Embeddings:
+        # Convert text chunks into 3072-dimensional vectors
+        response = self.client.models.embed_content(
+            model="models/gemini-embedding-001",
+            contents=input,
+            config=types.EmbedContentConfig(
+                task_type="RETRIEVAL_DOCUMENT",
+                output_dimensionality=3072
+            )
+        )
+        return [e.values for e in response.embeddings]
 
-    # OVERWRITE the JSON file
-    data = {"achievements-item": achievements_list}
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+# 3. Create the global instance
+gemini_ef = GeminiEmbeddingFunction(client)
+
+# 4. Helper to get the collection consistently
+# This ensures both views.py and sync_brain.py use the same database logic
+def get_portfolio_collection():
+    chroma_path = os.path.join(settings.BASE_DIR, "chroma_db")
     
-    print("JSON has been overwritten with new HTML content.")
+    # PersistentClient keeps the data saved even if the server restarts
+    chroma_client = chromadb.PersistentClient(path=chroma_path)
+    
+    return chroma_client.get_or_create_collection(
+        name="portfolio_data", 
+        embedding_function=gemini_ef
+    )
+
+# index/utils.py
+
+def ensure_session(request):
+    """Ensures the user has a session and returns the session_key."""
+    if not request.session.session_key:
+        request.session.create()
+    request.session['active'] = True
+    request.session.save()
+    return request.session.session_key

@@ -14,3 +14,16 @@ def chat_history_processor(request):
     return {
         'history': history 
     }
+
+### Brain sync
+
+import os
+from django.conf import settings
+
+def sync_info(request):
+    sync_file = os.path.join(settings.BASE_DIR, "brain_sync.txt")
+    last_sync = "Never"
+    if os.path.exists(sync_file):
+        with open(sync_file, "r") as f:
+            last_sync = f.read().strip()
+    return {'last_sync': last_sync}

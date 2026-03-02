@@ -11,10 +11,12 @@ bcrypt==5.0.0
 beautifulsoup4==4.14.3
 build==1.4.0
 certifi==2026.1.4
+cffi==2.0.0
 charset-normalizer==3.4.4
 chromadb==1.5.0
 click==8.3.1
 crispy-bootstrap5==2025.6
+cryptography==46.0.5
 distro==1.9.0
 dj-database-url==3.1.1
 Django==6.0.1
@@ -36,7 +38,6 @@ google-api-python-client==2.188.0
 google-auth==2.47.0
 google-auth-httplib2==0.3.0
 google-genai==1.64.0
-google-generativeai==0.8.6
 googleapis-common-protos==1.72.0
 grpcio==1.76.0
 grpcio-status==1.71.2
@@ -58,6 +59,7 @@ jsonschema-specifications==2025.9.1
 kubernetes==35.0.0
 langchain-core==1.2.13
 langchain-google-genai==4.2.0
+langchain-text-splitters==1.1.1
 langsmith==0.7.4
 Markdown==3.10.2
 markdown-it-py==4.0.0
@@ -79,7 +81,6 @@ orjson==3.11.7
 overrides==7.7.0
 packaging==26.0
 pgvector==0.4.2
-posthog==5.4.0
 propcache==0.4.1
 proto-plus==1.27.0
 protobuf==5.29.5
@@ -88,6 +89,7 @@ psycopg2-binary==2.9.11
 pyasn1==0.6.2
 pyasn1_modules==0.4.2
 pybase64==1.4.3
+pycparser==3.0
 pydantic==2.12.5
 pydantic_core==2.41.5
 Pygments==2.19.2

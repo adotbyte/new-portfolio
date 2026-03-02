@@ -2,77 +2,54 @@ import json
 import os
 import subprocess
 import markdown2
-import hmac
-import hashlib
+import re
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse, Http404, HttpResponseForbidden, StreamingHttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django import db # Added to handle connection closing
 
-# AI & RAG Imports
-from google import genai
-from google.genai import types
-import chromadb
-from chromadb import Documents, EmbeddingFunction, Embeddings
-
-# IMPORT YOUR MODELS
+# AI & RAG Imports from your new utils
+from .utils import get_portfolio_collection, client as ai_client, genai, types
 from .models import ChatHistory 
+from .utils import get_portfolio_collection, client as ai_client, genai, types, ensure_session
 
 # --- 1. INITIALIZATION ---
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-
-class GeminiEmbeddingFunction(EmbeddingFunction):
-    def __init__(self, gemini_client):
-        self.client = gemini_client
-        self.__name__ = "GeminiEmbeddingFunction"
-
-    def __call__(self, input: Documents) -> Embeddings:
-        response = self.client.models.embed_content(
-            model="models/gemini-embedding-001",
-            contents=input,
-            config=types.EmbedContentConfig(
-                task_type="RETRIEVAL_DOCUMENT",
-                output_dimensionality=3072
-            )
-        )
-        return [e.values for e in response.embeddings]
-
-gemini_ef = GeminiEmbeddingFunction(client)
-chroma_path = os.path.join(settings.BASE_DIR, "chroma_db")
-chroma_client = chromadb.PersistentClient(path=chroma_path)
-
-# Prevent SQLite Locks
-try:
-    import sqlite3
-    db_file = os.path.join(chroma_path, "chroma.sqlite3")
-    if os.path.exists(db_file):
-        conn = sqlite3.connect(db_file)
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.close()
-except Exception as e:
-    print(f"WAL Mode failed: {e}")
-
-collection = chroma_client.get_or_create_collection(
-    name="portfolio_data", 
-    embedding_function=gemini_ef
-)
+# Get the collection using the shared logic in utils.py
+collection = get_portfolio_collection()
 
 # --- 2. HELPERS ---
 def ensure_session(request):
     if not request.session.session_key:
         request.session.create()
     request.session['active'] = True
-    request.session.save() # Crucial: Write to DB immediately
+    request.session.save()
     return request.session.session_key
+
+def clean_django_tags(text):
+    """Removes {% ... %} and {{ ... }} tags from the text."""
+    text = re.sub(r'\{%.*?%\}', '', text)
+    text = re.sub(r'\{\{.*?\}\}', '', text)
+    return re.sub(r'\s+', ' ', text).strip()
 
 # --- 3. VIEWS ---
 
 def index(request):
-    session_id = ensure_session(request)
+    # This now calls the function from utils.py
+    session_id = ensure_session(request) 
     history = ChatHistory.objects.filter(session_id=session_id).order_by('timestamp')
-    return render(request, 'index.html', {'history': history})
+    
+    sync_file = os.path.join(settings.BASE_DIR, "brain_sync.txt")
+    last_sync = "Never"
+    
+    if os.path.exists(sync_file):
+        with open(sync_file, "r") as f:
+            last_sync = f.read().strip()
+            
+    return render(request, 'index.html', {
+        'history': history,
+        'last_sync': last_sync
+    })
 
 @csrf_exempt
 @require_POST
@@ -85,49 +62,84 @@ def chat_with_gemini(request):
         # 1. Save User Message
         ChatHistory.objects.create(session_id=session_id, role='user', message=user_query)
 
-        # 2. RAG Retrieval - INCREASED SENSITIVITY
-        # We grab 15 results to make sure we don't miss the 'Projects' section
-        results = collection.query(query_texts=[user_query], n_results=15)
+        # 2. RAG Retrieval
+        results = collection.query(query_texts=[user_query], n_results=10)
         
-        # Join documents with more space to keep sections distinct
-        context_text = "\n\n---\n\n".join(results['documents'][0]) if results['documents'] else ""
+        # 3. Clean Context for the AI
+        cleaned_docs = [clean_django_tags(doc) for doc in results['documents'][0]] if results['documents'] else []
+        context_text = "\n\n---\n\n".join(cleaned_docs) if cleaned_docs else "No specific project notes found."
 
-        # 3. AI Generation
-        sys_instr = (
-            "You are AdotByte, the official professional AI assistant for Audrius's portfolio. "
-            "Your task is to provide detailed information about Audrius's projects, experience, and skills. "
-            "Use the context below. If you see a section about 'Projects', list them clearly.\n\n"
-            f"CONTEXT FROM DATA:\n{context_text}"
-        )
+        # 4. System Instruction
+        sys_instr = f"""
+        ## ROLE
+        You are AdotByte, the digital assistant for Audrius.
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
+        ## DATA FROM AUDRIUS'S FILES:
+        {context_text}
+
+        ## STRICT RULES:
+        1. ONLY use the information provided in the "DATA FROM AUDRIUS'S FILES" section above.
+        2. If the data is empty or does not mention "Commander Nova" (which it shouldn't!), DO NOT make up stories about space missions.
+        3. If you don't find the Raspberry Pi info, say: "I can see your files, but I don't see the Raspberry Pi details. Let's check the ingestion."
+        """
+
+        # 5. Generate AI Response
+        response = ai_client.models.generate_content(
+            model="gemini-2.0-flash", 
             contents=user_query,
-            config=types.GenerateContentConfig(system_instruction=sys_instr)
+            config=types.GenerateContentConfig(system_instruction=sys_instr),
         )
-        
         ai_text = response.text
 
-        # 4. Save and Return
+        # 6. Save and Return
         formatted_ai_text = markdown2.markdown(ai_text, extras=['fenced-code-blocks', 'tables'])
         ChatHistory.objects.create(session_id=session_id, role='assistant', message=formatted_ai_text)
 
         return JsonResponse({'text': formatted_ai_text})
 
     except Exception as e:
+        import traceback
+        print(traceback.format_exc())
         return JsonResponse({'error': str(e)}, status=500)
 
-# (Remaining views like about_me_view, blog_index, etc., stay exactly as they were)
+# --- 4. OTHER VIEWS ---
+
+# --- HELPERS ---
+def get_last_sync():
+    """A helper function so we don't repeat code in every view."""
+    sync_file = os.path.join(settings.BASE_DIR, "brain_sync.txt")
+    if os.path.exists(sync_file):
+        with open(sync_file, "r") as f:
+            return f.read().strip()
+    return "Never"
+
+# --- VIEWS ---
+
+def index(request):
+    """The Home/Chat Page"""
+    session_id = ensure_session(request)
+    history = ChatHistory.objects.filter(session_id=session_id).order_by('timestamp')
+    
+    return render(request, 'index.html', {
+        'history': history,
+    })
+
 def about_me_view(request):
+    """The Specialized About Me Page"""
     file_path = os.path.join(settings.BASE_DIR, 'about_me.md')
     html_content = "<p>Content coming soon!</p>"
     if os.path.exists(file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             html_content = markdown2.markdown(f.read(), extras=['fenced-code-blocks', 'tables'])
-    return render(request, 'about_me.html', {'about_content': html_content})
+            
+    return render(request, 'about_me.html', {
+        'about_content': html_content,
+    })
 
 def my_knowledge(request):
-    return render(request, 'my_knowledge.html')
+    """The Technical Knowledge Page"""
+    return render(request, 'my_knowledge.html', {
+    })
 
 @csrf_exempt
 def delete_chat_history(request):

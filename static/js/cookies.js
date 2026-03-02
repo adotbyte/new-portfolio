@@ -1,61 +1,7 @@
-/* --- SECURE DATA MANAGEMENT (CSP COMPLIANT) --- */
+/* static/js/cookies.js */
 
-// Handle the success alert separately
-if (sessionStorage.getItem('wipeSuccessFlag') === 'true') {
-    window.addEventListener('load', () => {
-        const alertBox = document.getElementById('wipeSuccessAlert');
-        if (alertBox) {
-            alertBox.classList.remove('d-none');
-            setTimeout(() => {
-                alertBox.classList.add('d-none');
-                sessionStorage.removeItem('wipeSuccessFlag');
-            }, 4000);
-        }
-    });
-}
-
-// Global Listener - Securely catches clicks without inline HTML code
-window.addEventListener('click', function(event) {
-    const btn = event.target.closest('#fullWipeBtn');
-    if (!btn) return;
-
-    event.preventDefault();
-
-    if (confirm("Permanently delete chat history and reset theme?")) {
-        // UI Feedback
-        const spinner = document.getElementById('wipeSpinner');
-        const text = document.getElementById('wipeText');
-        btn.disabled = true;
-        if (spinner) spinner.classList.remove('d-none');
-        if (text) text.innerText = " Clearing...";
-
-        // Execute logic
-        performSecureWipe();
-    }
-});
-
-async function performSecureWipe() {
-    try {
-        await fetch('/chat/clear/', {
-            method: 'POST',
-            headers: { 
-                "X-CSRFToken": getInternalCookie('csrftoken'),
-                "Content-Type": "application/json"
-            }
-        });
-
-        localStorage.clear();
-        sessionStorage.setItem('wipeSuccessFlag', 'true');
-        window.location.reload();
-
-    } catch (error) {
-        console.error("Wipe failed:", error);
-        localStorage.clear();
-        window.location.reload();
-    }
-}
-
-function getInternalCookie(name) {
+// 1. Define getCookie globally so all scripts can see it
+window.getCookie = function(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -68,24 +14,74 @@ function getInternalCookie(name) {
         }
     }
     return cookieValue;
-}
+};
 
-// A safer way to ensure the page doesn't freeze after closing the modal
-const myModalEl = document.getElementById('privacyModal');
-if (myModalEl) {
-    myModalEl.addEventListener('hidden.bs.modal', function () {
-        // This runs AFTER the modal is completely gone
-        // It ensures focus returns to the body safely
-        document.body.focus();
+document.addEventListener("DOMContentLoaded", () => {
+    const fullWipeBtn = document.getElementById('fullWipeBtn');
+    const executeFinalWipe = document.getElementById('executeFinalWipe');
+    const wipeSuccessAlert = document.getElementById('wipeSuccessAlert');
+    
+    // Check if Bootstrap is loaded before initializing
+    if (typeof bootstrap !== 'undefined') {
+        const privEl = document.getElementById('privacyModal');
+        const confEl = document.getElementById('confirmFullWipeModal');
         
-        // Remove the backdrop manually just in case a "ghost" one stays
-        const backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.remove();
+        const privacyModal = privEl ? new bootstrap.Modal(privEl) : null;
+        const confirmModal = confEl ? new bootstrap.Modal(confEl) : null;
+
+        fullWipeBtn?.addEventListener('click', () => {
+            privacyModal?.hide(); 
+            confirmModal?.show(); 
+        });
+
+        executeFinalWipe?.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/chat/clear/', { 
+                    method: "POST",
+                    headers: { 
+                        "X-CSRFToken": window.getCookie('csrftoken'), 
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === "success") {
+                    localStorage.clear();
+                    
+                    // Clear all cookies
+                    document.cookie.split(";").forEach((c) => {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+
+                    confirmModal?.hide();
+
+                    if (wipeSuccessAlert) {
+                        wipeSuccessAlert.classList.remove('d-none');
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error("Wipe failed:", err);
+            }
+        });
+    } else {
+        console.error("Bootstrap is not loaded! Check your base.html script order.");
+    }
+});
+
+
+// Service Worker ghost deleting
+
+// Add this to your cookies.js to stop the background requests
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            registration.unregister();
+            console.log("Old Service Worker cleared.");
         }
-        
-        // Allow scrolling again (Bootstrap sometimes forgets this on freeze)
-        document.body.style.overflow = 'auto';
-        document.body.classList.remove('modal-open');
     });
 }

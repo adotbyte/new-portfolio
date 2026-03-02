@@ -54,8 +54,8 @@ jobs:
           cd $GITHUB_WORKSPACE
           
           # 2. Go into your subfolder (where your manage.py/app.py is)
-          cd portfolio/
-                    
+          cd /home/audrius/actions-runner/_work/resume_website/resume_website/
+
           # 2. Write secrets to the .env file
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
             echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env

@@ -39,25 +39,27 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
     
-  deploy:
-        needs: build  # Only run if the build finishes successfully
-        runs-on: self-hosted  # Use your Audrius server runner
-        steps:
-          - name: Create .env file
-            run: |
-              # Go to your project folder
-              cd /home/audrius/actions-runner/_work/resume_website/resume_website/CV/CV/
-              
-              # Create the fresh .env from GitHub Secrets
-              echo "SECRET_KEY=${{ secrets.MY_SECRET_KEY }}" > .env
-              # Add other keys here if you have them
-              
-          - name: Pull and Restart Docker
-            run: |
-              cd /home/audrius/actions-runner/_work/resume_website/resume_website/CV/CV/
-              
-              # 1. Pull the fresh image you just built
-              docker compose pull
-              
-              # 2. Restart the container with the new image and the new .env
-              docker compose up -d --force-recreate
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master # Or use your self-hosted runner directly
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: audrius
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/audrius/actions-runner/_work/resume_website/resume_website/CV/CV/
+            
+            # This is the MAGIC part: Create the .env file using GitHub Secrets
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
+            echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
+            echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
+            echo "NOTIFY_EMAIL=${{ secrets.NOTIFY_EMAIL }}" >> .env
+            echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
+            echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
+            echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
+            echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+            echo "DEBUG=${{ secrets.DEBUG }}" >> .env
+            echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
+            
+            # Pull the new image and restart
+            docker compose pull
+            docker compose up -d --force-recreate

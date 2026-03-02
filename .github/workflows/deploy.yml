@@ -58,6 +58,7 @@ jobs:
           RS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
           RS_DEBUG: ${{ secrets.DEBUG }}
           RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
+
         run: |
           # 1. Navigate to the folder where your docker-compose.yml lives
           cd $GITHUB_WORKSPACE

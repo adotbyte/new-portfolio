@@ -71,3 +71,5 @@ jobs:
           # 3. Refresh Docker
           docker compose pull
           docker compose up -d --force-recreate
+
+          # Manual trigger to fix EMAIL_PORT - 2026-03-02

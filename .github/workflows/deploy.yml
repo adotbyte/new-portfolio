@@ -10,7 +10,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,43 +32,51 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/arm64  # This ensures it works on Raspberry Pi 5
+          platforms: linux/arm64
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-    
-          # ... after your 'build' job ...
 
   deploy:
     needs: build
     runs-on: self-hosted
-    steps:  # <--- Only ONE 'steps' keyword here
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Create .env and Restart
+        # We define the env vars directly in the step for maximum reliability
+        env:
+          RS_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          RS_EMAIL_USER: ${{ secrets.EMAIL_HOST_USER }}
+          RS_EMAIL_PASS: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          RS_NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          RS_EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          RS_EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          RS_EMAIL_TLS: ${{ secrets.EMAIL_USE_TLS }}
+          RS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
+          RS_DEBUG: ${{ secrets.DEBUG }}
+          RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
         run: |
-          # 1. Move to the root of your checked-out code
-          cd $GITHUB_WORKSPACE
-          
-          # 2. Go into your subfolder (where your manage.py/app.py is)
-          cd /home/audrius/actions-runner/_work/resume_website/resume_website/
+          # 1. Navigate to the folder where your docker-compose.yml lives
+          cd $GITHUB_WORKSPACE/CV/CV/
 
-          # 2. Write secrets to the .env file
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
-            echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
-            echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
-            echo "NOTIFY_EMAIL=${{ secrets.NOTIFY_EMAIL }}" >> .env
-            echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
-            echo "EMAIL_PORT='${{ secrets.EMAIL_PORT }}'" >> .env
-            echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
-            echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
-            echo "DEBUG=${{ secrets.DEBUG }}" >> .env
-            echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
-          
-          # 3. Refresh Docker
+          # 2. Write EVERY variable to the .env file
+          echo "SECRET_KEY=$RS_SECRET_KEY" > .env
+          echo "EMAIL_HOST_USER=$RS_EMAIL_USER" >> .env
+          echo "EMAIL_HOST_PASSWORD=$RS_EMAIL_PASS" >> .env
+          echo "NOTIFY_EMAIL=$RS_NOTIFY_EMAIL" >> .env
+          echo "EMAIL_HOST=$RS_EMAIL_HOST" >> .env
+          echo "EMAIL_PORT=${RS_EMAIL_PORT:-587}" >> .env
+          echo "EMAIL_USE_TLS=$RS_EMAIL_TLS" >> .env
+          echo "GEMINI_API_KEY=$RS_GEMINI_KEY" >> .env
+          echo "DEBUG=$RS_DEBUG" >> .env
+          echo "ALLOWED_HOSTS=$RS_ALLOWED" >> .env
+
+          # 3. Deploy
           docker compose pull
           docker compose up -d --force-recreate
-
-          # Manual trigger to fix EMAIL_PORT - 2026-03-02
+          
+          # 4. Cleanup (Lazy way to keep your Raspberry Pi clean)
+          docker image prune -f

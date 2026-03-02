@@ -60,7 +60,7 @@ jobs:
           RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
         run: |
           # 1. Navigate to the folder where your docker-compose.yml lives
-          cd $GITHUB_WORKSPACE/CV/CV/
+          cd $GITHUB_WORKSPACE
 
           # 2. Write EVERY variable to the .env file
           echo "SECRET_KEY=$RS_SECRET_KEY" > .env

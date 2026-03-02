@@ -50,9 +50,12 @@ jobs:
 
       - name: Create .env and Restart
         run: |
-          # 1. Move to your project folder
-          cd /home/audrius/actions-runner/_work/resume_website/resume_website/CV/CV/
+          # 1. Move to the root of your checked-out code
+          cd $GITHUB_WORKSPACE
           
+          # 2. Go into your subfolder (where your manage.py/app.py is)
+          cd portfolio/
+                    
           # 2. Write secrets to the .env file
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
             echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env

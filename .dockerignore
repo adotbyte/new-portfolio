@@ -21,3 +21,6 @@ Thumbs.db
 # Django Static/Media (These are generated during build)
 staticfiles/
 media/
+
+# Github
+.git/

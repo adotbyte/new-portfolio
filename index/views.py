@@ -141,6 +141,11 @@ def my_knowledge(request):
     return render(request, 'my_knowledge.html', {
     })
 
+from django.shortcuts import render
+
+def privacy(request):
+    return render(request, 'privacy.html')
+
 @csrf_exempt
 def delete_chat_history(request):
     if request.method == "POST":

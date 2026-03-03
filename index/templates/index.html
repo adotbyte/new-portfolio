@@ -1,10 +1,30 @@
 {% extends "base.html" %}
-{% block title %}About Me{% endblock %}
-{% csrf_token %}
 {% load static %}
-  <main class="content-container achievement-item">
-        {% block content %}{{ about_content|safe }}
-  </main>
-  {% for chat in history %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<main class="content-container achievement-item">
+    {{ about_content|safe }}
+</main>
+
+{# This loop is currently empty—if you aren't using it yet, it's fine to leave it or remove it #}
+{% for chat in history %}
+    {# chat content here #}
 {% endfor %}
+{% endblock %}
+
+{% block schema %}
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Audrius Morkūnas",
+  "url": "http://morkunas.info",
+  "jobTitle": "Technology enthusiast with extensive experience!",
+  "sameAs": [
+    "https://github.com/adotbyte",
+    "https://www.linkedin.com/in/audrius-morkunas-939a2581/"
+  ],
+  "knowsAbout": ["Python", "Django", "Git", "AI Integration", "Web Development", "Linux", "Docker", "Cloudflare Zero Trust"]
+}
 {% endblock %}

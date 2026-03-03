@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}About Me | Audrius{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
 {% csrf_token %}
@@ -18,4 +18,25 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block schema %}
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Audrius Morkūnas",
+  "url": "http://morkunas.info",
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://morkunas.info{% static 'images/logo.png' %}",
+    "width": "600",
+    "height": "600"
+  },
+  "jobTitle": "Technology enthusiast with extensive experience!",
+  "sameAs": [
+    "https://github.com/adotbyte",
+    "https://www.linkedin.com/in/audrius-morkunas-939a2581/"
+  ],
+  "knowsAbout": ["Python", "Django", "Git", "AI Integration", "Web Development", "Linux", "Docker", "Cloudflare Zero Trust"]
+}
 {% endblock %}

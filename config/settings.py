@@ -14,8 +14,6 @@ from pathlib import Path
 import os
 import environ
 
-os.environ['POSTHOG_DISABLED'] = '1'
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,6 +52,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 GEMINI_API_KEY = env('GEMINI_API_KEY')
 
+FB_APP_ID = os.getenv('FB_APP_ID')
+
 #GOOGLE_CLOUD_PROJECT = env('GOOGLE_CLOUD_PROJECT')
 
 # Sesion
@@ -69,6 +69,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
+    'django.contrib.sites',
     'index',
     'sendemail',
     'honeypot',
@@ -90,6 +92,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+### sitemap.xml
+SITE_ID = 1
+
+# posthog telemetry disable
+os.environ['ANONYMIZED_TELEMETRY'] = 'False'
 
 # Since you're behind Cloudflare
 SECURE_PROXY_SSL_HEADER = ('HTTP_CF_VISITOR', '{"scheme":"https"}')
@@ -188,6 +196,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'index.context_processors.chat_history_processor',
                 'index.context_processors.sync_info',
+                'index.context_processors.fb_settings',
             ],
         },
     },

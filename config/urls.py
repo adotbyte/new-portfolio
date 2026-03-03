@@ -24,5 +24,4 @@ urlpatterns = [
     #path('admin/', admin.site.urls),
     path('', include('index.urls')), 
     path("", include("sendemail.urls")), # Add this line to include sendemail app URLs
-    path('get_ai_context/', include("index.urls")), # AI chat
 ]

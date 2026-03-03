@@ -37,3 +37,20 @@ class ResumePoint(models.Model):
 
     def __str__(self):
         return self.text[:50]
+
+
+from django.db import models
+from django.urls import reverse # You MUST import reverse at the top
+
+class Project(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True) # Usually projects use a slug (e.g., 'my-ai-app')
+    # ... your other fields ...
+
+    def __str__(self):
+        return self.title
+
+    # --- ADD THIS CODE BELOW ---
+    def get_absolute_url(self):
+        # 'project_detail' must match the 'name' you gave the path in urls.py
+        return reverse('project_detail', args=[self.slug])

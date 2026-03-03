@@ -27,3 +27,12 @@ def sync_info(request):
         with open(sync_file, "r") as f:
             last_sync = f.read().strip()
     return {'last_sync': last_sync}
+
+### FB ID
+
+from django.conf import settings
+
+def fb_settings(request):
+    return {
+        'FB_APP_ID': settings.FB_APP_ID,
+    }

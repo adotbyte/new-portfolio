@@ -28,3 +28,6 @@ index_storage/
 .vscode/
 .DS_Store
 *.log
+
+# --- VScode ---
+.vscode/

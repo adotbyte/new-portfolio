@@ -72,16 +72,3 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Bootstrap is not loaded! Check your base.html script order.");
     }
 });
-
-
-// Service Worker ghost deleting
-
-// Add this to your cookies.js to stop the background requests
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-            registration.unregister();
-            console.log("Old Service Worker cleared.");
-        }
-    });
-}

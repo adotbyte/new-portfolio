@@ -5,10 +5,10 @@
 
 {% block content %}
 <div class="container mb-5 mt-4">
-    <h3 class="mb-5 mt-4 text-center text-secondary border-bottom pb-3">Technical Expertise</h3>
+    <h3 class="mb-5 mt-4 text-center text-body border-bottom pb-3">Technical Expertise</h3>
 
     <div class="mb-5 shadow-sm p-4 rounded bg-body-tertiary">
-        <h4 class="mb-3 text-secondary achievement-item d-flex align-items-center">
+        <h4 class="mb-3 text-body achievement-item d-flex align-items-center">
             <i class="bi bi-cpu me-2"></i> Software & OS
         </h4>
         <p class="lead-sm text-body-secondary">
@@ -17,7 +17,7 @@
     </div>
 
     <div class="mb-5 shadow-sm p-4 rounded bg-body-tertiary border-start border-info border-4">
-        <h4 class="mb-3 text-secondary achievement-item d-flex align-items-center">
+        <h4 class="mb-3 text-body achievement-item d-flex align-items-center">
             <i class="bi bi-tools me-2"></i> Hardware Engineering
         </h4>
         <p class="text-body-secondary">
@@ -26,7 +26,7 @@
     </div>
 
     <div class="mb-5 shadow-sm p-4 rounded bg-body-tertiary">
-        <h4 class="mb-3 text-secondary achievement-item d-flex align-items-center">
+        <h4 class="mb-3 text-body achievement-item d-flex align-items-center">
             <i class="bi bi-router me-2"></i> Networking & Infrastructure
         </h4>
         <p class="text-body-secondary">
@@ -34,7 +34,7 @@
         </p>
     </div>
 
-    <h3 class="mb-4 mt-5 text-center text-secondary">Cloud & DevOps</h3>
+    <h3 class="mb-4 mt-5 text-center text-body">Cloud & DevOps</h3>
 
     <div class="row g-4">
         <div class="col-md-6">
@@ -71,7 +71,7 @@
                     "I prioritize Zero Trust architectures; utilizing Cloudflare reverse proxies to eliminate external port forwarding. My deployments include isolated networks—bridging Tailscale with Plex for secure, private access with strict dual-antivirus scanning for all images."
                 </p>
                 <div class="mt-5 p-2 bg-success-subtle rounded border border-success-subtle">
-                    <div class="small text-success fw-bold text-center">
+                    <div class="small text-body fw-bold text-center">
                         <i class="bi bi-check-all"></i> Vulnerability Scanning Enabled
                     </div>
                 </div>
@@ -80,22 +80,22 @@
     </div>
 </div>
 
-<div class="mt-4 shadow-sm position-relative">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-dark text-white p-2 p-md-3 rounded-top border-bottom border-secondary gap-2">
+<div class="mt-4 shadow-sm position-relative border rounded">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-dark text-white p-2 p-md-3 rounded-top border-bottom gap-2">
         
         <div class="d-flex align-items-center gap-2">
-            <small class="fw-bold text-nowrap"><i class="bi bi-file-earmark-code me-1"></i> docker-compose.yml</small>
-            <div class="d-flex align-items-center bg-black px-2 py-1 rounded-pill border border-secondary shadow-sm" style="height: 22px;">
+            <small class="fw-bold text-white-nowrap"><i class="bi bi-file-earmark-code me-1"></i> docker-compose.yml</small>
+            <div class="d-flex align-items-center bg-black px-2 py-1 rounded-pill border shadow-sm" style="height: 22px;">
                 <span class="status-pulse me-2"></span>
-                <small class="text-success fw-bold" style="font-size: 0.65rem; white-space: nowrap;">LIVE</small>
+                <small class="text-white fw-bold" style="font-size: 0.65rem; white-space: nowrap;">LIVE</small>
             </div>
         </div>
 
         <div class="d-flex flex-wrap gap-1">
-            <span class="badge bg-dark border border-secondary text-secondary" style="font-family: monospace; font-size: 0.7rem;">
+            <span class="badge bg-dark border border-secondary text-white" style="font-family: monospace; font-size: 0.7rem;">
                 <i class="bi bi-git me-1"></i> {% now "Y.m.d" %}
             </span>
-            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.7rem;">
+            <span class="badge bg-success-subtle text-body border border-success-subtle" style="font-size: 0.7rem;">
                 v2.4.1
             </span>
             <span class="badge bg-secondary d-none d-sm-inline-block" style="font-size: 0.7rem;">Production</span>
@@ -111,7 +111,7 @@
         </div>
     </div>
     <div class="code-container">
-    <pre class="m-0" style="border-radius: 0 0 8px 8px;"><code id="dockerCode" class="language-yaml">
+    <pre class="m-0"><code id="dockerCode" class="language-yaml">
 
 services:
   # The Django App (AdotByte Portfolio)
@@ -186,33 +186,33 @@ volumes:
             <div class="arch-node p-2 rounded">
                 <i class="bi bi-github fs-2"></i>
                 <div class="fw-bold small">GitHub Repo</div>
-                <div class="text-secondary" style="font-size: 0.6rem;">Source Code</div>
+                <div style="font-size: 0.6rem;">Source Code</div>
             </div>
 
-            <i class="bi bi-chevron-double-right fs-4 text-secondary d-none d-lg-block opacity-50"></i>
+            <i class="bi bi-chevron-double-right fs-4 text-body d-none d-lg-block opacity-50"></i>
 
             <div class="arch-node border px-4 py-3 rounded border-info">
                 <i class="bi bi-box-seam-fill fs-3 bi-box-seam-fill"></i>
                 <div class="fw-bold small small mt-1">
                     <span class="status-dot"></span>Docker Engine</div>
-                <div class="text-secondary" style="font-size: 0.6rem;">Django Container</div>
+                <div style="font-size: 0.6rem;">Django Container</div>
             </div>
 
-            <i class="bi bi-arrow-left-right fs-4 text-success d-none d-lg-block opacity-50"></i>
+            <i class="bi bi-arrow-left-right fs-4 d-none d-lg-block opacity-50"></i>
 
             <div class="arch-node border rounded border-warning d-flex flex-column align-items-center justify-content-center p-2">
                 <i class="bi bi-cloud-check fs-3 pulse-tunnel text-warning"></i>
                 <div class="fw-bold mt-1" style="font-size: 0.65rem; line-height: 1;">CF Tunnel</div>
-                <div class="text-secondary mt-1" style="font-size: 0.55rem; line-height: 1;">Zero Trust Bridge</div>
+                <div class="mt-1" style="font-size: 0.55rem; line-height: 1;">Zero Trust Bridge</div>
             </div>
 
-            <i class="bi bi-chevron-double-right fs-4 text-secondary d-none d-lg-block opacity-50"></i>
+            <i class="bi bi-chevron-double-right fs-4 d-none d-lg-block opacity-50"></i>
 
             <div class="arch-node border px-4 py-3 rounded border-success position-relative">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success border border-dark" style="font-size: 0.6rem;">A+ SECURITY</span>
                 <i class="bi bi-cloud-fill fs-3 bi-cloud-fill"></i>
                 <div class="fw-bold small">Cloudflare Edge</div>
-                <div class="text-secondary" style="font-size: 0.6rem;">HSTS • morkunas.info</div>
+                <div style="font-size: 0.6rem;">HSTS • morkunas.info</div>
             </div>
         </div>
 

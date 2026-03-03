@@ -26,3 +26,19 @@ footer a {
 .v-align-baseline {
     vertical-align: baseline !important;
 }
+
+/* The "Growing" Line (Animated) */
+.header-line {
+    width: 0; /* Starts at zero */
+    height: 3px;
+    background-color: #198754 !important;
+    margin: 8px auto 0;
+    border-radius: 10px;
+    /* This makes it grow smoothly */
+    animation: growLine 1.5s ease-out forwards;
+}
+
+@keyframes growLine {
+    from { width: 0; }
+    to { width: 80px; } /* Final size */
+}

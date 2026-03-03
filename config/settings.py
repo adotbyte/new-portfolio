@@ -85,6 +85,9 @@ MIDDLEWARE = [
     'csp.middleware.CSPMiddleware',
     'config.middleware.SecurityHeadersMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -150,6 +153,7 @@ CSP_SCRIPT_SRC = (
 
 # 3. Styles: Bootstrap and Google Fonts
 CSP_STYLE_SRC = (
+    "'nonce",
     "'self'", 
     "https://cdn.jsdelivr.net", 
     "https://fonts.googleapis.com",
@@ -310,7 +314,7 @@ SILENCED_SYSTEM_CHECKS = ["security.W004"]
 
 # Bot working system on HTML page
 
-CSP_STYLE_SRC = ("'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'")
+CSP_STYLE_SRC = ("'self'", "'nonce'", "https://cdn.jsdelivr.net", "'unsafe-inline'")
 CSP_SCRIPT_SRC = (
     "'self'", 
     "https://cdn.jsdelivr.net", 

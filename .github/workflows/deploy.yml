@@ -42,42 +42,29 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      # No need to "checkout" if you have the files manually on the server, 
+      # BUT if you want it automated, do this:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Create .env and Restart
-        # We define the env vars directly in the step for maximum reliability
-        env:
-          RS_SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          RS_EMAIL_USER: ${{ secrets.EMAIL_HOST_USER }}
-          RS_EMAIL_PASS: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          RS_NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
-          RS_EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          RS_EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          RS_EMAIL_TLS: ${{ secrets.EMAIL_USE_TLS }}
-          RS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
-          RS_DEBUG: ${{ secrets.DEBUG }}
-          RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
-
+        working-directory: ${{ github.workspace }} # Ensures we are in the right folder
         run: |
-          # 1. Navigate to the folder where your docker-compose.yml lives
-          cd $GITHUB_WORKSPACE
+          # Create the .env file
+          cat <<EOF > .env
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+          NOTIFY_EMAIL=${{ secrets.NOTIFY_EMAIL }}
+          EMAIL_HOST=${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT=${{ secrets.EMAIL_PORT }}
+          EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          DEBUG=${{ secrets.DEBUG }}
+          ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
+          FB_APP_ID=${{ secrets.FB_APP_ID }}
+          EOF
 
-          # 2. Write EVERY variable to the .env file
-          echo "SECRET_KEY=$RS_SECRET_KEY" > .env
-          echo "EMAIL_HOST_USER=$RS_EMAIL_USER" >> .env
-          echo "EMAIL_HOST_PASSWORD=$RS_EMAIL_PASS" >> .env
-          echo "NOTIFY_EMAIL=$RS_NOTIFY_EMAIL" >> .env
-          echo "EMAIL_HOST=$RS_EMAIL_HOST" >> .env
-          echo "EMAIL_PORT=${RS_EMAIL_PORT:-587}" >> .env
-          echo "EMAIL_USE_TLS=$RS_EMAIL_TLS" >> .env
-          echo "GEMINI_API_KEY=$RS_GEMINI_KEY" >> .env
-          echo "DEBUG=$RS_DEBUG" >> .env
-          echo "ALLOWED_HOSTS=$RS_ALLOWED" >> .env
-
-          # 3. Deploy
+          # Pull and Up using the local .env we just created
           docker compose pull
           docker compose up -d --force-recreate
-          
-          # 4. Cleanup (Lazy way to keep your Raspberry Pi clean)
-          docker image prune -f

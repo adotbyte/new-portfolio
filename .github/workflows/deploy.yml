@@ -27,6 +27,9 @@ jobs:
           RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
         run: |
+          # Go to your specific server folder
+          cd /home/audrius/actions-runner/_work/resume_website/resume_website
+          
           cat <<EOF > .env
           SECRET_KEY="$RS_SECRET_KEY"
           EMAIL_HOST_USER="$RS_EMAIL_USER"

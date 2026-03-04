@@ -6,6 +6,8 @@ services:
     # We use the full path so OMV can't miss it
     env_file:
     - .env
+    volumes:
+      - /home/audrius/actions-runner/_work/resume_website/resume_website/.env:/home/app/web/.env
     ports:
       - "8080:8000"
     healthcheck:

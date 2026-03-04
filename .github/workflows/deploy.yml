@@ -14,8 +14,6 @@ jobs:
 
       - name: Create .env
         env:
-          MY_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # Mapping Repository Secrets to Shell Variables
           RS_SECRET_KEY: ${{ secrets.SECRET_KEY }}
           RS_EMAIL_USER: ${{ secrets.EMAIL_HOST_USER }}
           RS_EMAIL_PASS: ${{ secrets.EMAIL_HOST_PASSWORD }}
@@ -28,27 +26,25 @@ jobs:
           RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
         run: |
-          # Go to your specific server folder
           cd /home/audrius/actions-runner/_work/resume_website/resume_website
           
-          # 2. Use the mapped variable (MY_GEMINI_KEY) to write the file
-          # Use double quotes to handle any special characters in the key
-          echo "GEMINI_API_KEY=\"$MY_GEMINI_KEY\"" > .env
-
+          # We use "quotes" around variables inside the EOF to protect the data
           cat <<EOF > .env
           SECRET_KEY="$RS_SECRET_KEY"
           EMAIL_HOST_USER="$RS_EMAIL_USER"
           EMAIL_HOST_PASSWORD="$RS_EMAIL_PASS"
           NOTIFY_EMAIL="$RS_NOTIFY_EMAIL"
           EMAIL_HOST="$RS_EMAIL_HOST"
-          EMAIL_PORT=${RS_EMAIL_PORT:-587}
-          EMAIL_USE_TLS=${RS_EMAIL_TLS:-True}
+          EMAIL_PORT="${RS_EMAIL_PORT:-587}"
+          EMAIL_USE_TLS="${RS_EMAIL_TLS:-True}"
           GEMINI_API_KEY="$RS_GEMINI_KEY"
-          DEBUG=${RS_DEBUG:-False}
+          DEBUG="${RS_DEBUG:-False}"
           ALLOWED_HOSTS="$RS_ALLOWED"
           FB_APP_ID="$RS_FB_APP_ID"
           EOF
-          echo "Success: .env file created with variables."
+          
+          echo "Success: .env file created. Checking line count:"
+          wc -l .env
 
       - name: Build and Restart
         run: |

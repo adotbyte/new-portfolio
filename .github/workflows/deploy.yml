@@ -26,7 +26,7 @@ jobs:
           RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
         run: |
-          cd /home/audrius/actions-runner/_work/resume_website/resume_website
+          cd ${{ github.workspace }}
           
           # We use "quotes" around variables inside the EOF to protect the data
           cat <<EOF > .env
@@ -43,8 +43,8 @@ jobs:
           FB_APP_ID="$RS_FB_APP_ID"
           EOF
           
-          echo "Success: .env file created. Checking line count:"
-          wc -l .env
+          echo "File created at: $(pwd)/.env"
+          ls -la .env
 
       - name: Build and Restart
         run: |

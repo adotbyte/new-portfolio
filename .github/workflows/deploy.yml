@@ -14,6 +14,7 @@ jobs:
 
       - name: Create .env
         env:
+          MY_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
           # Mapping Repository Secrets to Shell Variables
           RS_SECRET_KEY: ${{ secrets.SECRET_KEY }}
           RS_EMAIL_USER: ${{ secrets.EMAIL_HOST_USER }}
@@ -30,6 +31,10 @@ jobs:
           # Go to your specific server folder
           cd /home/audrius/actions-runner/_work/resume_website/resume_website
           
+          # 2. Use the mapped variable (MY_GEMINI_KEY) to write the file
+          # Use double quotes to handle any special characters in the key
+          echo "GEMINI_API_KEY=\"$MY_GEMINI_KEY\"" > .env
+
           cat <<EOF > .env
           SECRET_KEY="$RS_SECRET_KEY"
           EMAIL_HOST_USER="$RS_EMAIL_USER"

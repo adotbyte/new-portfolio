@@ -1,0 +1,248 @@
+/* ==========================================================================
+   2. ACCESSIBILITY & THEME FIXES (The "100 Score" Mission)
+   ========================================================================== */
+
+/* --- GLOBAL THEME AWARE ELEMENTS --- */
+
+/* Light Mode Header (Default) */
+header.bg-secondary {
+    color: #212529 !important;
+}
+
+/* Dark Mode Header */
+[data-bs-theme="dark"] header.bg-secondary {
+    background-color: #343a40 !important;
+    color: #ffffff !important;
+}
+
+/* Pipeline Nodes - Light Mode */
+.arch-node {
+    background-color: #f8f9fa !important;
+    color: #212529 !important; 
+    border: 1px solid #dee2e6 !important;
+}
+
+/* Pipeline Nodes - Dark Mode */
+[data-bs-theme="dark"] .arch-node {
+    background-color: #2c3034 !important;
+    color: #f8f9fa !important;
+    border-color: #495057 !important;
+}
+
+/* --- DOCKER FRAME & CODE BLOCK --- */
+
+/* The Header Frame (Always Dark) */
+.bg-dark.text-white.p-2.p-md-3.rounded-top {
+    border: 1px solid #495057 !important;
+    background-color: #1a1d20 !important;
+}
+
+/* The Code Area - Light Mode */
+code#dockerCode {
+    background-color: #f1f1f1 !important;
+    color: #24292e !important;
+    border: 1px solid #373b3e !important;
+    border-top: none !important;
+}
+
+/* The Code Area - Dark Mode Override */
+[data-bs-theme="dark"] code#dockerCode,
+[data-bs-theme="dark"] code[class*="language-"] {
+    background-color: #161b22 !important;
+    color: #e6edf3 !important;
+    text-shadow: none !important;
+}
+
+/* Syntax Highlighting (Dark Mode Only) */
+[data-bs-theme="dark"] .token.atrule,
+[data-bs-theme="dark"] .token.keyword { color: #79c0ff !important; }
+[data-bs-theme="dark"] .token.property { color: #7ee787 !important; }
+
+/* --- SPECIFIC ACCESSIBILITY TWEAKS --- */
+
+[data-bs-theme="dark"] .bg-success-subtle {
+    background-color: #051b11 !important;
+    color: #a3cfbb !important;
+    border-color: #0f5132 !important;
+}
+
+[data-bs-theme="dark"] .text-danger {
+    color: #ff8787 !important;
+    font-weight: 600 !important;
+}
+
+[data-bs-theme="dark"] .text-secondary {
+    color: #adb5bd !important;
+}
+
+/* LIVE Status Fix */
+.status-pulse + small.text-white {
+    color: #ffffff !important;
+}
+
+/* Fix for the Docker Frame visibility */
+.custom-docker-border {
+    border-color: #495057 !important; /* A lighter gray that is visible on black */
+}
+
+/* Ensure the entire outer container has a frame in Dark Mode */
+[data-bs-theme="dark"] .code-container {
+    border: 1px solid #495057 !important;
+    border-top: none; /* Let the header handle the top border */
+    border-radius: 0 0 8px 8px;
+}
+
+/* Ensure the top header has a full frame too */
+[data-bs-theme="dark"] .rounded-top.bg-dark {
+    border: 1px solid #495057 !important;
+}
+
+/* --- THE DOCKER FRAME "MASTER FIX" --- */
+
+/* 1. Force the Header Border */
+.mt-4.shadow-sm.position-relative .bg-dark {
+    border: 1px solid #444ce7 !important; /* Brighter gray/blue so you can SEE it */
+    border-bottom: none !important; /* Don't double up on the middle line */
+}
+
+/* 2. Force the Code Container Border */
+.code-container {
+    border: 1px solid #444ce7 !important;
+    border-top: 1px solid #444ce7 !important; /* This creates the line between header and code */
+    border-radius: 0 0 8px 8px;
+    overflow: hidden; /* Keeps the code from leaking over the border */
+}
+
+/* 3. Match the Code Block background */
+#dockerCode {
+    background-color: #161b22 !important;
+    display: block;
+    padding: 1rem;
+}
+
+/* DARK MODE SPECIFIC: Make the border a bit softer but still visible */
+[data-bs-theme="dark"] .mt-4.shadow-sm.position-relative .bg-dark,
+[data-bs-theme="dark"] .code-container {
+    border-color: #495057 !important; 
+}
+
+/* --- PIPELINE ARROW FIX --- */
+
+/* Light Mode: Solid Dark Green */
+.arch-arrow {
+    color: #0f5132 !important; /* Dark Green */
+    opacity: 0.8 !important;   /* Boost opacity so it's not invisible */
+}
+
+/* Dark Mode: Brighter Green for Contrast */
+[data-bs-theme="dark"] .arch-arrow {
+    color: #7ee787 !important; /* Brighter Green/Mint */
+    opacity: 1 !important;
+}
+
+/* --- CODE EDITOR STYLING --- */
+
+/* The Background: Dark for both modes to protect your eyes */
+.code-container, #dockerCode {
+    background-color: #1e1e1e !important; /* VS Code Dark */
+    color: #d4d4d4 !important; /* Base text color */
+    border-radius: 0 0 8px 8px !important;
+    padding: 20px !important;
+}
+
+/* SYNTAX COLORS (The "Real YML" Look) */
+
+/* 1. Keys/Properties (services, web, build) -> Blue */
+#dockerCode .token.atrule, 
+#dockerCode .token.keyword,
+#dockerCode .token.key {
+    color: #569cd6 !important; 
+}
+
+/* 2. Values (postgres:15-alpine) -> Orange/Salmon */
+#dockerCode .token.string,
+#dockerCode .token.attr-value {
+    color: #ce9178 !important;
+}
+
+/* 3. Comments (# This is a comment) -> Green */
+#dockerCode .token.comment {
+    color: #6a9955 !important;
+    font-style: italic;
+}
+
+/* 4. Numbers and Booleans (always, true, 8000) -> Lime Green */
+#dockerCode .token.boolean,
+#dockerCode .token.number {
+    color: #b5cea8 !important;
+}
+
+/* DARK MODE OVERRIDE: Slightly darker for deep night viewing */
+[data-bs-theme="dark"] .code-container {
+    background-color: #0d1117 !important; /* GitHub Dark */
+    border: 1px solid #30363d !important;
+}
+
+/* Make arrows bold green and visible */
+.bi-chevron-double-right, .bi-arrow-left-right {
+    color: #198754 !important; /* Success Green */
+    opacity: 1 !important;
+    filter: drop-shadow(0px 0px 1px rgba(0,0,0,0.5));
+}
+
+/* Header Background Logic */
+header {
+    background-color: #f8f9fa !important; /* Clean white/light gray for Light Mode */
+}
+
+[data-bs-theme="dark"] header {
+    background-color: #212529 !important; /* Deep dark for Dark Mode */
+}
+
+/* LIGHT MODE: Force the text to be dark/sharp against the gray */
+.custom-header h1 {
+    color: #212529 !important; /* Dark charcoal for clarity */
+    text-shadow: 0 1px 1px rgba(255,255,255,0.5); /* Subtle lift */
+}
+
+/* DARK MODE: Flip to white text and a deeper gray */
+[data-bs-theme="dark"] .custom-header {
+    background-color: #343a40 !important; /* Deeper gray */
+}
+
+[data-bs-theme="dark"] .custom-header h1 {
+    color: #ffffff !important;
+    text-shadow: none;
+}
+
+/* --- REFINED PRETTY HEADER --- */
+
+.custom-pretty-header {
+    /* Soft gradient for a premium look */
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%) !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+.header-text {
+    color: #212529 !important;
+    font-size: 1.25rem !important; /* Smaller, cleaner size */
+    line-height: 1.4;
+}
+
+.header-line {
+    width: 40px; /* Shorter line for smaller text */
+    height: 3px;
+    background-color: #198754 !important; /* Matches your green arrows */
+    border-radius: 10px;
+}
+
+/* Dark Mode Adaptation */
+[data-bs-theme="dark"] .custom-pretty-header {
+    background: linear-gradient(180deg, #212529 0%, #1a1d20 100%) !important;
+    border-bottom: 1px solid #30363d !important;
+}
+
+[data-bs-theme="dark"] .header-text {
+    color: #f8f9fa !important;
+}

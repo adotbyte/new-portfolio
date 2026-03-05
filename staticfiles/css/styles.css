@@ -1,0 +1,44 @@
+/* This targets links ONLY inside your 'My Knowledge' section */
+#my_knowledge a {
+    color: var(--bs-primary); /* Uses your Bootstrap primary color */
+    text-decoration: none;    /* Removes the underline */
+    transition: 0.3s;         /* Makes it feel smooth */
+}
+
+#my_knowledge a:hover {
+    color: #ff4757;           /* Changes color when you hover over it */
+    text-underline-offset: 4px;
+    text-decoration: underline;
+}
+
+#my_knowledge a, 
+footer a {
+    transition: color 0.3s ease-in-out;
+}
+
+/* CSP */
+/* In styles.css */
+.footer-privacy-btn {
+    vertical-align: baseline;
+}
+
+/* static/css/styles.css */
+.v-align-baseline {
+    vertical-align: baseline !important;
+}
+
+/* The "Growing" Line (Animated) */
+.header-line {
+    width: 0; /* Starts at zero */
+    height: 3px;
+    background-color: #198754 !important;
+    margin: 8px auto 0;
+    border-radius: 10px;
+    /* This makes it grow smoothly */
+    animation: growLine 1.5s ease-out forwards;
+}
+
+@keyframes growLine {
+    from { width: 0; }
+    to { width: 80px; } /* Final size */
+}

@@ -1,0 +1,156 @@
+/* --- BASE ARCH-NODE (Light Mode Default) --- */
+.arch-node {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #212529;
+    transition: all 0.3s ease-in-out;
+    
+    /* FIX: Shrink the box to content */
+    display: inline-block; 
+    width: auto;
+    min-width: 120px; /* Gives a consistent minimum size so very short labels don't look tiny */
+    padding: 0.75rem 1rem !important; /* Tightens the box size */
+}
+
+/* Base colors for icons (Works in both modes) */
+.arch-node .bi-box-seam-fill { color: #0dcaf0 !important; }
+.arch-node .bi-tunnel { color: #ffc107 !important; }
+.arch-node .bi-cloud-fill { color: #198754 !important; }
+
+/* --- DARK MODE REFINEMENT --- */
+body.dark-mode .card {
+    background-color: #0a0a0a !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .arch-node {
+    background-color: #000000 !important;
+    color: #f8f9fa;
+}
+
+/* Neon Glows for Dark Mode Only */
+body.dark-mode .border-info {
+    border-color: #0dcaf0 !important;
+    box-shadow: 0 0 15px rgba(13, 202, 240, 0.4);
+}
+body.dark-mode .border-warning {
+    border-color: #ffc107 !important;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+}
+body.dark-mode .border-success {
+    border-color: #198754 !important;
+    box-shadow: 0 0 15px rgba(25, 135, 84, 0.4);
+}
+
+/* Hover effect */
+.arch-node:hover {
+    transform: translateY(-5px);
+}
+
+/* Pulse for the Tunnel */
+@keyframes tunnel-glow {
+    0% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.6; transform: scale(1); }
+}
+.pulse-tunnel {
+    display: inline-block;
+    animation: tunnel-glow 3s infinite ease-in-out;
+}
+
+/* Status Dot Animation */
+@keyframes status-blink {
+    0% { opacity: 1; box-shadow: 0 0 2px #198754; }
+    50% { opacity: 0.4; box-shadow: 0 0 8px #198754; }
+    100% { opacity: 1; box-shadow: 0 0 2px #198754; }
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #198754; 
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+    animation: status-blink 2s infinite ease-in-out;
+}
+
+body.dark-mode .status-dot {
+    background-color: #20c997;
+    box-shadow: 0 0 10px rgba(32, 201, 151, 0.5);
+}
+
+/* Center the arrows vertically with the nodes */
+.bi-chevron-double-right, 
+.bi-arrow-left-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Matches the node container height */
+    margin: 0 5px; /* Brings arrows closer to the nodes */
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+/* Make arrows look better in Dark Mode */
+body.dark-mode .bi-chevron-double-right, 
+body.dark-mode .bi-arrow-left-right {
+    color: #6c757d; /* Muted grey */
+    opacity: 0.8;
+}
+
+.arch-node {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #212529;
+    transition: all 0.3s ease-in-out;
+    
+    /* FIX: Perfect Centering */
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    /* Shrink the box tightly */
+    min-width: 90px;  /* Reduced width */
+    min-height: 85px; /* Fixed height makes all boxes look uniform */
+    padding: 8px !important;
+}
+
+/* Fix for icons to prevent them from pushing the top boundary */
+.arch-node i {
+    line-height: 1;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.dark-mode .arch-node {
+    background-color: #000000 !important;
+}
+
+/* --- ULTIMATE ARROW VISIBILITY FIX --- */
+
+/* This targets the arrows specifically when the body has your .dark-mode class */
+body.dark-mode .bi-chevron-double-right, 
+body.dark-mode .bi-arrow-left-right,
+body.dark-mode .bi-chevron-right,
+body.dark-mode .bi-chevron-down {
+    /* Use !important to override Bootstrap's .text-secondary or .opacity-50 */
+    color: #ffffff !important; 
+    opacity: 1 !important;
+    
+    /* Add a clean white glow so they truly stand out on a black background */
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6)) !important;
+    
+    /* Ensure they are fully solid */
+    -webkit-text-stroke: 0.5px #ffffff; 
+}
+
+/* If you want the success arrow to stay green but be bright */
+body.dark-mode .text-success.bi-arrow-left-right {
+    color: #00ff88 !important; /* Bright neon green */
+    filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.5)) !important;
+}

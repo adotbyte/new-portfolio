@@ -2,7 +2,6 @@
    2. AI CHATBOT SYSTEM
    ========================================================================== */
 
-/* Variable Definitions */
 :root {
     --bubble-bg: #ffffff;
     --bubble-body: #f4f7f6;
@@ -19,18 +18,20 @@
     --bubble-border: #373b3e;
 }
 
-/* 1. Main Container Logic (Fixes the "Invisible Wall") */
+/* 1. Main Container Logic */
 .ai-chat-container {
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 100px;  /* Small footprint so it doesn't block the footer */
+    width: 100px;
     height: 100px;
-    pointer-events: none !important; /* Clicks pass through the empty space */
+    pointer-events: none !important;
     z-index: 1000;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-/* 2. The Chat Bubble (Centered & Responsive) */
+/* 2. The Chat Bubble */
 #chatBubble {
     position: fixed;
     bottom: 20px;
@@ -39,29 +40,56 @@
     height: 60px;
     background: linear-gradient(135deg, #8e94f2, #b892ff);
     border-radius: 50%;
-    
-    /* Perfect Centering */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    
-    padding: 0 !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     z-index: 9999;
-    pointer-events: auto !important; /* Re-enable clicks for the bubble */
+    pointer-events: auto !important;
     -webkit-tap-highlight-color: transparent;
+
+    /* Rendering Fixes */
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    
+    /* Remove any potential text-based spacing */
+    line-height: 0;
+    font-size: 0;
 }
 
-/* 3. The SVG Icon (Fixes the "Squashed" look) */
+/* 3. The SVG Icon - Absolute Centered to ignore sibling divs */
 #chatBubble svg {
-    width: 30px !important;  
-    height: 30px !important;
-    flex-shrink: 0 !important; /* Prevents squashing on mobile */
-    margin: 0 !important;
-    display: block !important;
-    fill: white !important; /* Ensure the old icon is visible */
-    pointer-events: none; /* The SVG won't block the click anymore */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: 28px !important;
+    height: 28px !important;
+    fill: none; /* Matches your HTML stroke-only style */
+    stroke: #ffffff !important;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    
+    /* Pixel-Perfect rendering */
+    shape-rendering: geometricPrecision;
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
+}
+
+/* Notification Dot - Absolute so it doesn't bump the SVG */
+#chatNotification:not(:empty) {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: #ff4d4d;
+    border: 2px solid white;
+    border-radius: 50%;
+    z-index: 10000;
 }
 
 /* 4. The Chat Window */
@@ -71,7 +99,7 @@
     bottom: 90px;
     right: 20px;
     width: 350px;
-    max-width: 90vw; /* Responsive width for small phones */
+    max-width: 90vw;
     height: 450px;
     background: var(--bubble-bg) !important;
     border: 1px solid var(--bubble-border) !important;
@@ -80,10 +108,10 @@
     z-index: 9999;
     flex-direction: column;
     overflow: hidden;
-    pointer-events: auto; /* Ensure window stays interactive */
+    pointer-events: auto;
 }
 
-/* Header & Body Polish */
+/* Header & Body */
 .chat-header {
     background: linear-gradient(135deg, #007bff, #0056b3);
     color: white !important;
@@ -103,15 +131,15 @@
     gap: 10px;
 }
 
-/* Rest of your message styling... */
+/* Message Bubbles */
 .msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; }
 .user-msg { align-self: flex-end; background: #007bff !important; color: white !important; }
 .ai-msg { align-self: flex-start; background: var(--bubble-ai-msg) !important; color: var(--bubble-text) !important; border: 1px solid var(--bubble-border); }
 
-/* --- Light Mode (Default) --- */
+/* Footer & Input */
 .chat-footer {
     padding: 10px;
-    background: #ffffff !important; /* White background for footer */
+    background: #ffffff !important;
     border-top: 1px solid var(--bubble-border);
     display: flex;
     gap: 5px;
@@ -122,59 +150,76 @@
     border: 1px solid #ccc;
     border-radius: 20px;
     padding: 8px 15px;
-    background: #ffffff !important; 
-    color: #000000 !important; /* Black text for visibility */
+    background: #ffffff !important;
+    color: #000000 !important;
 }
 
-/* Force placeholder color for Light Mode */
-.chat-footer input::placeholder {
-    color: #666666 !important; 
-    opacity: 1;
-}
+.chat-footer input::placeholder { color: #666666 !important; opacity: 1; }
 
-/* --- Dark Mode Override --- */
-[data-bs-theme="dark"] .chat-footer {
-    background: #212529 !important; /* Dark footer background */
-}
-
+/* Dark Mode Footer */
+[data-bs-theme="dark"] .chat-footer { background: #212529 !important; }
 [data-bs-theme="dark"] .chat-footer input {
-    background: #1a1d20 !important; /* Black/Dark input background */
-    color: #ffffff !important;      /* Pure white letters */
+    background: #1a1d20 !important;
+    color: #ffffff !important;
     border: 1px solid #373b3e;
 }
+[data-bs-theme="dark"] .chat-footer input::placeholder { color: #bbbbbb !important; }
 
-/* Force placeholder color for Dark Mode */
-[data-bs-theme="dark"] .chat-footer input::placeholder {
-    color: #bbbbbb !important; /* Light gray placeholder for dark background */
-    opacity: 1;
+/* Icons & Buttons */
+.chat-icon { transition: all 0.2s ease-in-out; cursor: pointer; }
+#clearChatBtn:hover { color: #ff4d4d; transform: scale(1.2) rotate(-10deg); }
+#minimizeChatBtn:hover, #closeChatBtn:hover { color: #00d4ff; }
+#clearChatBtn { display: inline-block; cursor: pointer !important; padding: 5px; }
+#clearChatBtn * { pointer-events: none; }
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    #chatBubble {
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        bottom: 15px; /* Tighter to corner for mobile */
+        right: 15px;
+    }
 }
 
-.chat-window {
-    display: none;
+/* Enhanced Notification Dot */
+#chatNotification:not(:empty) {
+    position: absolute;
+    top: 8px; /* Adjusted for better visual balance */
+    right: 8px;
+    width: 14px; /* Slightly larger to be more "clickable" */
+    height: 14px;
+    background-color: #ff4d4d;
+    border: 2px solid white;
+    border-radius: 50%;
+    z-index: 10000;
+    
+    /* Animation: Pop in first, then start the pulse */
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.chat-icon {
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    display: inline-block;
+/* Keyframes for the initial appearance */
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-#clearChatBtn:hover {
-    color: #ff4d4d; /* Danger red */
-    transform: scale(1.2) rotate(-10deg);
+/* The Pulse Ring (stays the same as before) */
+#chatNotification:not(:empty)::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #ff4d4d;
+    z-index: -1;
+    animation: notificationPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    animation-composition: replace;
+    will-change: transform, opacity; /* Optimizes the GPU path */
 }
 
-#minimizeChatBtn:hover, #closeChatBtn:hover {
-    color: #00d4ff; /* Brand Electric Blue */
-}
-
-#clearChatBtn {
-    display: inline-block;
-    cursor: pointer !important;
-    padding: 5px; /* Makes the "hit area" bigger and easier to click */
-}
-
-/* This tells the browser: "ignore the text/emoji, click the span instead" */
-#clearChatBtn * {
-    pointer-events: none;
+@keyframes notificationPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2.8); opacity: 0; }
 }

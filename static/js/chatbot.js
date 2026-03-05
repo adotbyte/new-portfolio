@@ -183,3 +183,37 @@
         });
     });
 })();
+
+// --- Notification dot ---
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Wait 3 seconds after the page loads
+    setTimeout(() => {
+        const chatWindow = document.querySelector('.chat-window');
+        const notification = document.getElementById('chatNotification');
+
+        // 2. Only show notification if the chat isn't already open
+        if (chatWindow.style.display !== 'flex') {
+            notification.innerHTML = "1"; // Putting text inside triggers :not(:empty)
+            
+            // Optional: Log a greeting to the console or prep the first AI message
+            console.log("Chatbot: 'Hey! Need some help? I'm right here.'");
+        }
+    }, 3000); 
+
+    // 3. Clear the notification when the bubble is clicked
+    document.getElementById('chatBubble').addEventListener('click', () => {
+        const notification = document.getElementById('chatNotification');
+        notification.innerHTML = ""; // Hides it
+    });
+});
+
+// Simple battery saver: Pause animations when tab is hidden
+document.addEventListener("visibilitychange", () => {
+    const dot = document.getElementById('chatNotification');
+    if (document.hidden) {
+        dot.style.animationPlayState = 'paused';
+    } else {
+        dot.style.animationPlayState = 'running';
+    }
+});

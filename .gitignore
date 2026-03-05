@@ -15,6 +15,7 @@ ENV/
 db.sqlite3
 db.sqlite3-journal
 media/
+staticfiles/
 
 # --- AI & RAG (Large Files) ---
 # This stops that 52MB warning you saw

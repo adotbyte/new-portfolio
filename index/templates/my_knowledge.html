@@ -112,13 +112,10 @@
     </div>
     <div class="code-container">
     <pre class="m-0"><code id="dockerCode" class="language-yaml">
-
 services:
   # The Django App with AI Chatbot (using ChromaDB)
   web:
-    build: 
-      context: https://github.com/adotbyte/resume_website.git#main
-      dockerfile: Dockerfile
+    build: .
     command: gunicorn my_portfolio.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/app/static
@@ -137,7 +134,7 @@ services:
     image: cloudflare/cloudflared:latest
     restart: always
     environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-your-demo-token-here}
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-evaluation-mode-no-token}
     command: tunnel --no-autoupdate run
     networks:
       - private_network

@@ -58,7 +58,7 @@ jobs:
       - name: Verify Deployment
         run: |
           echo "Waiting for container to stabilize..."
-          sleep 10
+          sleep 30
           
           # Check the Docker health status
           STATUS=$(docker inspect --format='{{json .State.Health.Status}}' resume_website)

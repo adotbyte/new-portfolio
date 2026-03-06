@@ -63,10 +63,14 @@ jobs:
           # Clean up old unused images to save SD card space
           docker image prune -f
 
-      - name: Trigger AI Sync
+      - name: Trigger AI Ingestion and Sync
         run: |
-          # Use the container name from your docker-compose.yml
-          # Assuming your service is named 'resume_website'
+          echo "📥 Ingesting real data into AI..."
+          # First, run the script that processes your data
+          docker exec resume_website python ingest_data.py
+          
+          echo "🔄 Running Sync..."
+          # Then, run the sync command
           docker exec resume_website python manage.py sync_brain
 
       - name: Verify Deployment

@@ -1,227 +1,346 @@
 /* ==========================================================================
-   2. AI CHATBOT SYSTEM
+   1. VARIABLES & THEMES
    ========================================================================== */
-
 :root {
-    --bubble-bg: #ffffff;
-    --bubble-body: #f4f7f6;
-    --bubble-text: #333333;
-    --bubble-ai-msg: #ffffff;
-    --bubble-border: #eeeeee;
+    --ai-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+    --bg-light: #f4f7f6;
+    --window-bg: #ffffff;
+    --text-main: #2f3542;
+    --user-color: #5352ed;
+    --ai-bubble-bg: #ffffff;
+    --footer-bg: #ffffff;
+    --border-color: #eeeeee;
+    --error-bg: #fff4f4;
+    --error-border: #f5c6cb;
+    --error-text: #721c24;
 }
 
-[data-bs-theme="dark"] {
-    --bubble-bg: #212529;
-    --bubble-body: #1a1d20;
-    --bubble-text: #f8f9fa;
-    --bubble-ai-msg: #2c3034;
-    --bubble-border: #373b3e;
-}
-
-/* 1. Main Container Logic */
-.ai-chat-container {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    pointer-events: none !important;
-    z-index: 1000;
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-/* 2. The Chat Bubble */
-#chatBubble {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #8e94f2, #b892ff);
-    border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    z-index: 9999;
-    pointer-events: auto !important;
-    -webkit-tap-highlight-color: transparent;
-
-    /* Rendering Fixes */
-    will-change: transform;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    
-    /* Remove any potential text-based spacing */
-    line-height: 0;
-    font-size: 0;
-}
-
-/* 3. The SVG Icon - Absolute Centered to ignore sibling divs */
-#chatBubble svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    width: 28px !important;
-    height: 28px !important;
-    fill: none; /* Matches your HTML stroke-only style */
-    stroke: #ffffff !important;
-    stroke-width: 2px;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    
-    /* Pixel-Perfect rendering */
-    shape-rendering: geometricPrecision;
-    vector-effect: non-scaling-stroke;
-    pointer-events: none;
-}
-
-/* Notification Dot - Absolute so it doesn't bump the SVG */
-#chatNotification:not(:empty) {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 12px;
-    height: 12px;
-    background-color: #ff4d4d;
-    border: 2px solid white;
-    border-radius: 50%;
-    z-index: 10000;
-}
-
-/* 4. The Chat Window */
+/* Dark Mode Overrides */
+/* LIGHT MODE (Default - applies to the window) */
 .chat-window {
-    display: none;
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    width: 350px;
-    max-width: 90vw;
-    height: 450px;
-    background: var(--bubble-bg) !important;
-    border: 1px solid var(--bubble-border) !important;
-    border-radius: 12px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-    z-index: 9999;
-    flex-direction: column;
-    overflow: hidden;
-    pointer-events: auto;
+    --bg-light: #f4f7f6;
+    --window-bg: #ffffff;
+    --text-main: #2f3542;
+    --ai-bubble-bg: #ffffff;
+    --footer-bg: #ffffff;
+    --border-color: #eeeeee;
+    background: var(--window-bg); /* Use the variable! */
+    color: var(--text-main);
 }
 
-/* Header & Body */
-.chat-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white !important;
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* DARK MODE (Triggered when the website is dark) */
+[data-bs-theme="dark"] .chat-window {
+    --bg-light: #1e1e2e;
+    --window-bg: #181825;
+    --text-main: #cdd6f4;
+    --ai-bubble-bg: #313244;
+    --footer-bg: #181825;
+    --border-color: #45475a;
 }
 
-.chat-body {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background: var(--bubble-body) !important;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* Ensure bubbles use these variables */
+.ai-msg { 
+    background: var(--ai-bubble-bg); 
+    color: var(--text-main); 
 }
 
-/* Message Bubbles */
-.msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; }
-.user-msg { align-self: flex-end; background: #007bff !important; color: white !important; }
-.ai-msg { align-self: flex-start; background: var(--bubble-ai-msg) !important; color: var(--bubble-text) !important; border: 1px solid var(--bubble-border); }
-
-/* Footer & Input */
-.chat-footer {
-    padding: 10px;
-    background: #ffffff !important;
-    border-top: 1px solid var(--bubble-border);
-    display: flex;
-    gap: 5px;
+.chat-footer { 
+    background: var(--footer-bg); 
+    border-top: 1px solid var(--border-color); 
 }
 
 .chat-footer input {
-    flex: 1;
-    border: 1px solid #ccc;
+    background: var(--bg-light);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   2. CUSTOM SCROLLBAR
+   ========================================================================== */
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+    background: var(--bg-light);
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+    background: #a777e3;
+    border-radius: 10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: #6e8efb;
+}
+
+/* ==========================================================================
+   3. CHAT WINDOW & HEADER
+   ========================================================================== */
+.ai-chat-container { 
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px; 
+    z-index: 1000; 
+}
+
+.chat-window {
+    width: 380px; 
+    height: 550px; 
+    background: var(--window-bg); 
     border-radius: 20px;
-    padding: 8px 15px;
-    background: #ffffff !important;
-    color: #000000 !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+    display: none; 
+    flex-direction: column; 
+    overflow: hidden; 
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-.chat-footer input::placeholder { color: #666666 !important; opacity: 1; }
-
-/* Dark Mode Footer */
-[data-bs-theme="dark"] .chat-footer { background: #212529 !important; }
-[data-bs-theme="dark"] .chat-footer input {
-    background: #1a1d20 !important;
-    color: #ffffff !important;
-    border: 1px solid #373b3e;
-}
-[data-bs-theme="dark"] .chat-footer input::placeholder { color: #bbbbbb !important; }
-
-/* Icons & Buttons */
-.chat-icon { transition: all 0.2s ease-in-out; cursor: pointer; }
-#clearChatBtn:hover { color: #ff4d4d; transform: scale(1.2) rotate(-10deg); }
-#minimizeChatBtn:hover, #closeChatBtn:hover { color: #00d4ff; }
-#clearChatBtn { display: inline-block; cursor: pointer !important; padding: 5px; }
-#clearChatBtn * { pointer-events: none; }
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-    #chatBubble {
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        bottom: 15px; /* Tighter to corner for mobile */
-        right: 15px;
-    }
+.chat-header {
+    background: var(--ai-gradient); 
+    color: white; 
+    padding: 20px;
+    font-weight: bold; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    cursor: default;
 }
 
-/* Enhanced Notification Dot */
-#chatNotification:not(:empty) {
+.chat-header span, .chat-header i, .chat-header button {
+    cursor: pointer !important;
+    user-select: none;
+}
+
+/* ==========================================================================
+   4. MESSAGES AREA & BUBBLES
+   ========================================================================== */
+.chat-body {
+    flex: 1; 
+    padding: 15px; 
+    background: var(--bg-light);
+    overflow-y: auto; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px;
+    scroll-behavior: smooth;
+}
+
+/* Ghost bubble prevention */
+.msg:empty, .msg-content:empty { display: none !important; }
+
+.msg { 
+    max-width: 85%; 
+    padding: 12px 16px; 
+    border-radius: 18px; 
+    font-size: 14px; 
+    line-height: 1.5; 
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.msg b {
+    display: block;
+    font-size: 11px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.ai-msg { 
+    background: var(--ai-bubble-bg); 
+    color: var(--text-main);
+    align-self: flex-start; 
+    border-bottom-left-radius: 2px; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+
+.user-msg { 
+    background: var(--user-color); 
+    color: white; 
+    align-self: flex-end; 
+    border-bottom-right-radius: 2px; 
+    margin-left: auto;
+}
+
+/* ==========================================================================
+   5. MARKDOWN & CONTENT STYLING
+   ========================================================================== */
+.msg-content { word-wrap: break-word; line-height: 1.4; }
+.msg-content p { margin: 5px 0; }
+
+.msg-content code { 
+    background: rgba(110, 142, 251, 0.2); 
+    color: var(--text-main);
+    padding: 2px 4px; 
+    border-radius: 4px; 
+    font-family: monospace; 
+}
+
+.msg-content pre { 
+    background: #2d2d2d; 
+    color: #f8f8f2; 
+    padding: 10px; 
+    border-radius: 8px; 
+    overflow-x: auto; 
+    margin: 10px 0; 
+}
+
+.msg-content a { color: #00a8ff; text-decoration: underline; }
+
+.chat-error-bubble {
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   6. FOOTER & INPUT
+   ========================================================================== */
+.chat-footer { 
+    padding: 15px; 
+    background: var(--footer-bg); 
+    border-top: 1px solid var(--border-color); 
+    display: flex; 
+    gap: 10px; 
+}
+
+.chat-footer input { 
+    flex: 1; 
+    background: var(--bg-light); 
+    color: var(--text-main);
+    border: 1px solid var(--border-color); 
+    padding: 10px 15px; 
+    border-radius: 25px; 
+    outline: none; 
+}
+
+.chat-footer button { 
+    background: var(--ai-gradient); 
+    color: white; 
+    width: 40px; height: 40px; 
+    border: none; border-radius: 50%; 
+    cursor: pointer; 
+}
+
+/* ==========================================================================
+   7. BUTTONS, NOTIFICATIONS & ANIMATIONS
+   ========================================================================== */
+.chat-bubble {
+    width: 65px; height: 65px; background: var(--ai-gradient);
+    border-radius: 50%; float: right; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 5px 20px rgba(110, 142, 251, 0.4); 
+    transition: transform 0.3s;
+}
+.chat-bubble:hover { transform: scale(1.1) rotate(5deg); }
+.chat-bubble svg { width: 30px; fill: white; }
+
+#chatNotification {
     position: absolute;
-    top: 8px; /* Adjusted for better visual balance */
-    right: 8px;
-    width: 14px; /* Slightly larger to be more "clickable" */
-    height: 14px;
-    background-color: #ff4d4d;
-    border: 2px solid white;
+    top: -5px; right: -5px;
+    background-color: #ff4757;
+    color: white;
+    font-size: 10px;
+    width: 18px; height: 18px;
     border-radius: 50%;
-    z-index: 10000;
-    
-    /* Animation: Pop in first, then start the pulse */
-    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    animation: pulse-dot 2s infinite, bounce 0.5s infinite alternate;
 }
 
-/* Keyframes for the initial appearance */
-@keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+@keyframes pulse-dot {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
 }
 
-/* The Pulse Ring (stays the same as before) */
-#chatNotification:not(:empty)::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 14px;
-    height: 14px;
+.typing-dots span {
+    width: 6px; height: 6px; background: #888; border-radius: 50%;
+    display: inline-block;
+    animation: typing-bounce 1.4s infinite ease-in-out both;
+}
+
+/* ==========================================================================
+   8. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 480px) {
+    .ai-chat-container { bottom: 15px; right: 15px; left: 15px; }
+    .chat-window { width: calc(100% - 30px); height: 70vh; bottom: 80px; position: fixed; right: 15px; }
+    .msg { font-size: 16px; }
+}
+
+/* ==========================================================================
+   DYNAMIC BUBBLE CONTRAST
+   ========================================================================== */
+:root {
+    /* High contrast purple for light mode */
+    --bubble-outline: #5352ed; 
+}
+
+[data-bs-theme="dark"] {
+    /* Brighter purple for dark mode */
+    --bubble-outline: #a777e3; 
+}
+
+.chat-bubble {
+    width: 60px;
+    height: 60px;
+    background: transparent;
+    /* Uses the dynamic variable for the frame */
+    border: 2px solid var(--bubble-outline); 
     border-radius: 50%;
-    background-color: #ff4d4d;
-    z-index: -1;
-    animation: notificationPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-    animation-composition: replace;
-    will-change: transform, opacity; /* Optimizes the GPU path */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    /* Added a subtle glow for better visibility on white backgrounds */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-@keyframes notificationPulse {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(2.8); opacity: 0; }
+.chat-bubble svg {
+    width: 28px;
+    height: 28px;
+    /* Uses the dynamic variable for the icon lines */
+    stroke: var(--bubble-outline); 
+    fill: none;
+    stroke-width: 2;
 }
 
+/* Hover effect remains consistent */
+.chat-bubble:hover {
+    transform: scale(1.1);
+    background: rgba(83, 82, 237, 0.05);
+}
 
+/* Styling for system notifications inside the chat */
+.ai-msg b:contains('System:') {
+    color: #ff4757; /* Red to indicate a system action */
+}
+
+/* Optional: Italicize the deletion confirmation */
+.msg-content:contains('successfully deleted') {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Styling for the temporary system confirmation */
+.ai-msg b {
+    /* If the label is System, make it red to grab attention */
+    color: #ff4757; 
+}
+
+.ai-msg .msg-content {
+    /* Make the text slightly italic for the system message */
+    font-style: italic;
+}

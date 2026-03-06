@@ -122,7 +122,7 @@ services:
     command: gunicorn my_portfolio.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/app/static
-      - chroma_db_data:/app/chroma_db # Persistent storage for your AI vectors
+      - chroma_db_data:/app/chroma_db
     environment:
       - DJANGO_SETTINGS_MODULE=my_portfolio.settings.production
       - CSP_REPORT_ONLY=False
@@ -137,21 +137,18 @@ services:
     image: cloudflare/cloudflared:latest
     restart: always
     environment:
-      # If you aren't using an .env file, you can paste the token here 
-      # or keep it as a variable for the user to provide.
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-your-demo-token-here}
     command: tunnel --no-autoupdate run
     networks:
       - private_network
 
 networks:
-  # Unified network for the tunnel to communicate with the Django app
   private_network:
     driver: bridge
 
 volumes:
   static_volume:
-  chroma_db_data: # Vital for keeping your AI's learned data</code></pre>
+  chroma_db_data:</code></pre>
 </div>
 </div>
 

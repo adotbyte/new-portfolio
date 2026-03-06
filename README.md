@@ -1,62 +1,29 @@
-🚀 Django Resume Website & Home Lab Infrastructure
-This is more than just a CV website—it is a fully functional, secure, and containerized infrastructure running on my personal home server. This project was built to demonstrate my expertise in Full-stack development, DevOps principles, and Cybersecurity.
+![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Django](https://img.shields.io/badge/django-%23092e20.svg?style=for-the-badge&logo=django&logoColor=white)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-white?style=for-the-badge&logo=chroma&logoColor=31c4f3)
 
-🛠 Technology Stack
-Framework: Django (Python)
+## 🚀 Full-Stack Portfolio: AI-Powered Django Deployment
+A professional-grade portfolio featuring an **AI Chatbot** integrated with a **Vector Database**, containerized with **Docker**, and secured via **Cloudflare Zero Trust**.
 
-Frontend: JavaScript (ES6+), Bootstrap 5, HTML5/CSS3
+## 🛡️ Infrastructure & Security
+This project demonstrates modern **DevSecOps** and **AI Infrastructure**:
 
-Database: SQLite (Initial phase) / PostgreSQL (via Docker container)
+* **Cloudflare Tunnel:** The application is hosted behind a secure tunnel (`cloudflared`), keeping the server invisible to the public internet with **zero open inbound ports**.
+* **Zero Trust Perimeter:** Outbound-only connectivity ensures high security for the AI application and its data.
+* **WAF & DDoS Protection:** Leverages Cloudflare’s global network to mitigate common web attacks.
 
-Hardware: Raspberry Pi 5 (16GB RAM)
+## 🏗️ Technical Stack
+* **Backend:** Django 6.x / Python
+* **AI Engine:** Integrated Chatbot with RAG (Retrieval-Augmented Generation)
+* **Vector Database:** **ChromaDB** (for high-performance semantic search and document retrieval)
+* **DevOps:** Docker, Docker Compose
+* **Network:** Cloudflare Zero Trust, Tunneling
 
-OS/Management: OpenMediaVault (OMV)
+## ⚙️ Quick Start for Evaluators
+To run this project locally, you only need Docker installed.
 
-Virtualization: Docker & Docker Compose
-
-Networking: Cloudflare (DNS, WAF, Proxy)
-
-🔒 Security & Infrastructure (Security First)
-A transparent and honest approach to security is my priority. I have achieved an A+ Rating on SecurityHeaders.com through rigorous configuration.
-
-Content Security Policy (CSP): Implemented via custom Django Middleware to mitigate XSS (Cross-Site Scripting) risks.
-
-Cloudflare Proxy & Tunneling: My home IP address is masked behind Cloudflare’s global network, utilizing WAF rules for added protection.
-
-Docker Isolation: Each service (Web, DB, Nginx) runs in an isolated container environment.
-
-SSL/TLS: Automated certificate management ensures end-to-end encrypted HTTPS traffic.
-
-📂 Project Structure
-Plaintext
-├── core/                  # Django settings and security configuration
-├── apps/                  # Modular applications (Resume, Projects, Blog)
-├── static/                # CSS, JS, and assets
-├── templates/             # Django HTML templates
-├── docker-compose.yml     # Infrastructure-as-Code (IaC) definition
-└── Dockerfile             # Instructions for the web application container
-🧪 QA & Testing Methodology
-As an aspiring Junior QA, I use this project as my primary testing ground:
-
-Manual Testing: Extensive cross-browser testing (Chrome, Firefox, Safari) and mobile responsiveness checks.
-
-Boundary Value Analysis: Input validation is enforced at both the Frontend (JS) and Backend (Django models/forms) levels.
-
-Security Audits: Regular vulnerability scans based on OWASP principles to prevent SQLi and XSS.
-
-Uptime Monitoring: Leveraging OMV and Docker logs to ensure 24/7 service availability.
-
-🚀 Local Development Setup
-Clone the repository:
-
-Bash
-git clone https://github.com/your-username/resume-project.git
-Run with Docker Compose:
-
-Bash
-docker-compose up --build
-Access the site:
-The application will be available at http://localhost:8000
-
-💡 Contact Me
-I am a curious, communicative, and highly motivated individual looking for new challenges in the IT sector. If you value quality, transparency, and technical integrity, let’s connect!
+### 1. Clone the repository
+```bash
+git clone [https://github.com/adotbyte/resume_website.git](https://github.com/adotbyte/resume_website.git)
+cd resume_website

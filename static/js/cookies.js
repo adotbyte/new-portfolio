@@ -72,3 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Bootstrap is not loaded! Check your base.html script order.");
     }
 });
+
+
+
+
+
+
+

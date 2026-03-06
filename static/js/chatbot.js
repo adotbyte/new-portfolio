@@ -217,20 +217,3 @@ document.addEventListener("visibilitychange", () => {
         dot.style.animationPlayState = 'running';
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

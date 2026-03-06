@@ -20,3 +20,16 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+### brain_sync.txt and chroma_db problem solved
+def ensure_files_exist():
+    # Create the text file if it's missing
+    if not os.path.exists('brain_sync.txt'):
+        with open('brain_sync.txt', 'w') as f:
+            f.write("Initial sync data\n")
+        print("✅ Created missing brain_sync.txt")
+
+    # Create the database folder if it's missing
+    if not os.path.exists('chroma_db'):
+        os.makedirs('chroma_db')
+        print("✅ Created missing chroma_db directory")

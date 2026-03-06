@@ -4,18 +4,22 @@ import os
 import sys
 
 def ensure_files_exist():
-    """Check for missing files/folders before Django starts."""
+    # This finds the exact folder your manage.py is in
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    txt_path = os.path.join(BASE_DIR, 'brain_sync.txt')
+    db_path = os.path.join(BASE_DIR, 'chroma_db')
+
     # Create the text file if it's missing
-    if not os.path.exists('brain_sync.txt'):
-        with open('brain_sync.txt', 'w') as f:
+    if not os.path.exists(txt_path):
+        with open(txt_path, 'w') as f:
             f.write("Initial sync data\n")
-        print("✅ Created missing brain_sync.txt")
+        print(f"✅ Created missing file at: {txt_path}")
 
     # Create the database folder if it's missing
-    if not os.path.exists('chroma_db'):
-        # exist_ok=True prevents an error if the folder was created 1 second ago
-        os.makedirs('chroma_db', exist_ok=True) 
-        print("✅ Created missing chroma_db directory")
+    if not os.path.exists(db_path):
+        os.makedirs(db_path, exist_ok=True)
+        print(f"✅ Created missing folder at: {db_path}")
 
 def main():
     """Run administrative tasks."""

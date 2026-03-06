@@ -24,13 +24,13 @@ This project demonstrates modern **DevSecOps** and **AI Infrastructure**:
 To run this project locally, you only need Docker installed.
 
 ### 1. Clone the repository
-(`` ```bash ``)
+(```bash)
 git clone https://github.com/adotbyte/resume_website.git
-cd resume_website(`` ``` ``) 
+cd resume_website(```)
 
 ### 2. Run with Docker Compose
-(`` ```bash ``)
-docker-compose up --build(`` ``` ``)
+(```bash)
+docker-compose up --build(```)
 
 ### 3. Access the Application
 The application will be available locally at: `http://localhost:8000`

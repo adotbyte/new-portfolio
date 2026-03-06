@@ -1,6 +1,7 @@
 services:
   web:
-    image: ghcr.io/adotbyte/resume_website:latest
+    #image: ghcr.io/adotbyte/resume_website:latest
+    build: .
     container_name: resume_website
     restart: unless-stopped
     # We use the full path so OMV can't miss it
@@ -15,4 +16,4 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 30s

@@ -49,7 +49,7 @@ jobs:
       - name: Build and Restart
         run: |
           # This builds the image NATIVELY on your Raspberry Pi
-          docker compose build --pull
+          docker compose build --no-cache
           docker compose up -d --force-recreate
           
           # Clean up old unused images to save SD card space

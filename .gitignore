@@ -25,9 +25,16 @@ index_storage/
 *.pkl
 
 # --- System & IDE ---
-.vscode/
 .DS_Store
 *.log
 
 # --- VScode ---
 .vscode/
+
+# --- Database ---
+chroma_db/
+brain_sync.txt
+
+# --- Cloudflare ---
+CloudflareAPI/
+

@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 
-ALLOWED_DOMAINS = ['gmail.com', 'yahoo.com', 'yourdomain.com', '.lt', '.com', '.net', '.org', '.edu', '.gov', '.info', '.eu']
-ALLOWED_SUFFIXES = ['.lt', '.com', '.net', '.org', '.edu', '.gov', '.info', '.eu']
+ALLOWED_DOMAINS = ['gmail.com', 'yahoo.com', 'yourdomain.com', '.lt', '.com', '.net', '.org', '.edu', '.gov', '.info', '.eu', '.dev']
+ALLOWED_SUFFIXES = ['.lt', '.com', '.net', '.org', '.edu', '.gov', '.info', '.eu', '.dev']
 
 def validate_email_domain(value):
     email = value.lower()

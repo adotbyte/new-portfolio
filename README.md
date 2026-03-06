@@ -27,3 +27,9 @@ To run this project locally, you only need Docker installed.
 ```bash
 git clone [https://github.com/adotbyte/resume_website.git](https://github.com/adotbyte/resume_website.git)
 cd resume_website
+
+### 2. Run with Docker Compose
+```docker-compose up --build
+
+### 3. Access the Application
+The application will be available locally at: ```http://localhost:8000

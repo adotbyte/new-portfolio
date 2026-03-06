@@ -116,12 +116,14 @@ services:
   # The Django App with AI Chatbot (using ChromaDB)
   web:
     build: .
-    command: gunicorn my_portfolio.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
     volumes:
       - static_volume:/app/static
       - chroma_db_data:/app/chroma_db
     environment:
-      - DJANGO_SETTINGS_MODULE=my_portfolio.settings.production
+      - DJANGO_SETTINGS_MODULE=config.settings.production
       - CSP_REPORT_ONLY=False
       - DEBUG=False
       - SECRET_KEY=hr-evaluation-secret-key-123

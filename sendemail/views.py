@@ -45,3 +45,19 @@ def contact_view(request):
         # process form
         pass
     return render(request, 'contact.html')
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # SUCCESS: The bot failed to get here!
+            # Send your email here
+            return render(request, 'success.html')
+        else:
+            # FAILURE: If the bot didn't solve the captcha, 
+            # form.is_valid() will be False and no email will be sent.
+            print(form.errors) 
+    else:
+        form = ContactForm()
+    
+    return render(request, 'contact.html', {'form': form})

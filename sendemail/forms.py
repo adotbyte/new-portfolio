@@ -1,5 +1,6 @@
 from django import forms
 from .validators import validate_email_domain
+from turnstile.fields import TurnstileField
 
 
 class ContactForm(forms.Form):
@@ -23,13 +24,10 @@ class ContactForm(forms.Form):
 #email checked validate email address
     email = forms.EmailField(validators=[validate_email_domain])
     message = forms.CharField(widget=forms.Textarea)
-    
-    # Honeypot field (hidden from humans)
-    honeypot = forms.CharField(required=False, widget=forms.HiddenInput)
-    
-    # Validate the honeypot
-    def clean_honeypot(self):
-        data = self.cleaned_data['honeypot']
-        if data:
-            raise forms.ValidationError("Spam detected.")
-        return data
+    captcha = TurnstileField(
+        theme='auto', 
+        size='compact',
+        error_messages={
+            'invalid': 'Verification failed. Please try the captcha again to prove you are human!'
+        }
+    )

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-<head>
- <title>{% block title %}Contact Me{% endblock %}</title>
-</head>
-{% block content %}
 {% load crispy_forms_tags %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
@@ -12,11 +12,17 @@
         <h3 class="card-title text-center mb-4">Contact Me</h3>
         <form method="post">
           {% csrf_token %}
-          {{ form|crispy }}
-          <!-- Honeypot field hidden using Bootstrap -->
-          <div class="d-none">
-            {{ form.honeypot }}
+          
+          <div class="turnstile-centered">
+            {{ form|crispy }}
+            
+            {% if form.captcha.errors %}
+          <div class="alert alert-danger text-center p-2 small">
+            {{ form.captcha.errors.0 }}
           </div>
+            {% endif %}
+          </div>
+          
           <button type="submit" class="btn btn-success w-100">Send</button>
         </form>
       </div>

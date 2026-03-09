@@ -73,7 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'index',
     'sendemail',
-    'honeypot',
+    'turnstile',
     'crispy_forms',
     'crispy_bootstrap5',
     'config',  
@@ -95,6 +95,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+### turnstile
+TURNSTILE_SITEKEY = '0x4AAAAAACoVoqlqnS49N-f9'
+TURNSTILE_SECRET = '0x4AAAAAACoVovHidv67NZhGS3ouEPT4Hgs'
+
+TURNSTILE_DEFAULT_CONFIG = {
+    'theme': 'auto',    # Options: 'light', 'dark', or 'auto'
+    'size': 'compact',   # Options: 'normal', 'flexible', or 'compact'
+}
 
 ### sitemap.xml
 SITE_ID = 1

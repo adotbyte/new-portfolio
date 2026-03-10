@@ -97,8 +97,8 @@ MIDDLEWARE = [
 ]
 
 ### turnstile
-TURNSTILE_SITEKEY = '0x4AAAAAACoVoqlqnS49N-f9'
-TURNSTILE_SECRET = '0x4AAAAAACoVovHidv67NZhGS3ouEPT4Hgs'
+TURNSTILE_SITEKEY = os.getenv('TURNSTILE_SITEKEY')
+TURNSTILE_SECRET = os.getenv('TURNSTILE_SECRET')
 
 TURNSTILE_DEFAULT_CONFIG = {
     'theme': 'auto',    # Options: 'light', 'dark', or 'auto'

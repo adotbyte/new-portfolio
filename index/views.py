@@ -58,7 +58,7 @@ client = genai.Client(api_key=GEMINI_KEY)
 # Uses the path consistent with your old ingestion scripts
 db_path = os.path.join(settings.BASE_DIR, "chroma_db")
 db = chromadb.PersistentClient(path=db_path)
-collection = db.get_or_create_collection("portfolio_data")
+collection = db.get_or_create_collection(name="portfolio_data")
 
 # --- 2. HELPERS & TOOLS ---
 

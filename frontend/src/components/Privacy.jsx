@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Privacy = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = "Privacy Policy | Audrius Morkūnas";
     window.scrollTo(0, 0); // Ensure page starts at the top
   }, []);
-
   return (
     <section className="min-h-screen bg-white w-full flex flex-col justify-center py-20">
       <div className="w-full max-w-4xl mx-auto px-8">
@@ -60,9 +61,12 @@ const Privacy = () => {
 
         {/* Back Button */}
         <div className="mt-12 pt-8 border-t border-gray-100">
-            <a href="/" className="text-blue-600 font-bold text-sm hover:underline">
+            <button 
+              onClick={() => navigate(-1)} 
+              className="text-blue-600 font-bold text-sm hover:underline cursor-pointer flex items-center"
+            >
               ← Back to Portfolio
-            </a>
+            </button>
         </div>
       </div>
     </section>

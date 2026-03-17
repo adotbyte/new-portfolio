@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Turnstile } from '@marsidev/react-turnstile';
+import SEO from './SEO';
 
 function getCookie(name) {
   let cookieValue = null;
@@ -20,12 +21,6 @@ const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [turnstileToken, setTurnstileToken] = useState(null);
   const [status, setStatus] = useState(null); 
-
-  <SEO 
-      title="Contact" 
-      description="Get in touch with Audrius Morkūnas for project inquiries or AI collaboration." 
-      path="/Contact" 
-    />
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -67,6 +62,13 @@ const handleSubmit = async (e) => {
   // REMOVED: The "if (status === 'success') return ..." block that was causing the jump.
 
   return (
+    <>
+      <SEO 
+      title="Contact" 
+      description="Get in touch with Audrius Morkūnas for project inquiries or AI collaboration." 
+      path="Contact" 
+    />
+
     <section className="min-h-[80vh] flex items-center justify-center px-6">
       <form onSubmit={handleSubmit} className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl border border-gray-100 space-y-6">
         <div className="text-center mb-4">
@@ -146,6 +148,7 @@ const handleSubmit = async (e) => {
         )}
       </form>
     </section>
+    </>
   );
 };
 

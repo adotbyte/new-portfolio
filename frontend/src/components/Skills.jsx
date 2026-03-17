@@ -1,4 +1,5 @@
 import React from 'react';
+import SEO from './SEO';
 
 const Skills = () => {
   const skillCategories = [

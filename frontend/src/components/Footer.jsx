@@ -121,7 +121,7 @@ const handleFinalWipe = async () => {
                     <span>
                       <strong>Read:</strong>
                       <Link 
-                        to="Privacy" 
+                        to="/Privacy" 
                         className="font-bold hover:underline ml-1"
                         onClick={() => setShowPrivacy(false)} 
                       >

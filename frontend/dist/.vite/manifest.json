@@ -34,7 +34,8 @@
     "src": "src/components/Contact.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_vendor.js"
+      "_vendor.js",
+      "index.html"
     ]
   },
   "src/components/Footer.jsx": {
@@ -61,7 +62,8 @@
     "src": "src/components/Skills.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "_vendor.js"
+      "_vendor.js",
+      "index.html"
     ]
   },
   "style.css": {

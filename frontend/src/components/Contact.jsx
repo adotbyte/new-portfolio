@@ -21,26 +21,27 @@ const Contact = () => {
   const [turnstileToken, setTurnstileToken] = useState(null);
   const [status, setStatus] = useState(null); 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus('loading');
-    
-    const csrftoken = getCookie('csrftoken');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setStatus('loading');
+  
+  // CHANGE THIS: Don't use getCookie, grab it from the DOM instead
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    const payload = {
-      ...formData,
-      'cf-turnstile-response': turnstileToken,
-    };
-    
-    const response = await fetch('/api/email/contact/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrftoken, 
-      },
-      body: JSON.stringify(payload),
-    });
+  const payload = {
+    ...formData,
+    'cf-turnstile-response': turnstileToken,
+  };
+  
+  const response = await fetch('/api/email/contact/', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken, // Now this will have the actual token value
+    },
+    body: JSON.stringify(payload),
+  });
 
     if (response.ok) {
       setStatus('success'); 

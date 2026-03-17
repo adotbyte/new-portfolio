@@ -171,12 +171,8 @@ def chat_api(request):
 from django.middleware.csrf import get_token
 
 def index(request):
-    # The debug print and Turnstile context are gone
-    response = render(request, 'index.html')
-    
-    # Keep your CSRF cookie logic
-    response.set_cookie('csrftoken', get_token(request), httponly=False, samesite='Lax')
-    return response
+    # Let Django's middleware handle the CSRF cookie automatically
+    return render(request, 'index.html')
 
 def about_me_view(request):
     """Specialized About Me Page using local markdown file."""

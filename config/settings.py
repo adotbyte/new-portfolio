@@ -117,7 +117,6 @@ SITE_ID = 1
 os.environ['ANONYMIZED_TELEMETRY'] = 'False'
 
 # Since you're behind Cloudflare
-SECURE_PROXY_SSL_HEADER = ('HTTP_CF_VISITOR', '{"scheme":"https"}')
 # --- Find your SECURE_PROXY settings and use this single block ---
 # Cloudflare uses 'HTTP_CF_VISITOR' or 'HTTP_X_FORWARDED_PROTO'
 # For HTTPS sites ensure cookies are only sent over HTTPS
@@ -128,7 +127,7 @@ USE_X_FORWARDED_PORT = True
 
 if not DEBUG:
     # 1 year in seconds (31,536,000)
-    SECURE_HSTS_SECONDS = 31536000 
+    SECURE_HSTS_SECONDS = 15552000 
     
     # Apply HSTS to all subdomains (e.g., www.morkunas.info)
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True

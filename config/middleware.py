@@ -24,6 +24,10 @@ class SecurityHeadersMiddleware:
         )
         
         response["Content-Security-Policy"] = csp_policy
-        response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response["Permissions-Policy"] = (
+            "camera=(), microphone=(), geolocation=(), "
+            "browsing-topics=(), join-ad-interest-group=(), "
+            "run-ad-auction=(), shared-storage=()"
+        )
         
         return response

@@ -149,11 +149,10 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.morkunas.info',
 ]
 CSRF_USE_SESSIONS = True
-CSRF_COOKIE_NAME = 'csrftoken'
 
 # Add the prefixes to satisfy the "No Cookie Prefix" warning
-SESSION_COOKIE_NAME = 'sessionid'
-CSRF_COOKIE_NAME = '__Host-csrftoken'
+CSRF_COOKIE_NAME = "__Secure-csrftoken"
+SESSION_COOKIE_NAME = "__Secure-sessionid"
 
 # LAX
 SESSION_COOKIE_SAMESITE = 'Lax'

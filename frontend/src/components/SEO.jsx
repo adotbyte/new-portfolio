@@ -31,7 +31,7 @@ const SEO = ({ title, description, path }) => {
       
       {/* Open Graph Tags */}
       <meta property="og:url" content={fullUrl} />
-      <meta property="og:image" content={`${baseUrl}/static/images/logo.png`} />
+      <meta property="og:image" content={`${baseUrl}/frontend/images/logo.png`} />
 
       {/* 2. Inject JSON-LD Schema */}
       <script type="application/ld+json">

@@ -170,6 +170,7 @@ def chat_api(request):
 
 from django.middleware.csrf import get_token
 
+
 def index(request):
     # Let Django's middleware handle the CSRF cookie automatically
     return render(request, 'index.html')
@@ -274,4 +275,3 @@ def project_list_api(request):
             "link": p.link,
         })
     return JsonResponse(data, safe=False)
-

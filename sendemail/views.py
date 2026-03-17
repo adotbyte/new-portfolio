@@ -1,63 +1,59 @@
-from django.conf import settings
+import json
+import requests
+import logging
+from django.http import JsonResponse
 from django.core.mail import send_mail
-from django.shortcuts import reverse
-from django.views.generic import TemplateView, FormView
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
+from django.conf import settings
 
-from .forms import ContactForm
+logger = logging.getLogger(__name__)
 
-
-class SuccessView(TemplateView):
-    template_name = "success.html"
-
-
-class ContactView(FormView):
-    form_class = ContactForm
-    template_name = "contact.html"
-
-    def get_success_url(self):
-        return reverse("success")
-
-    def form_valid(self, form):
-        name = form.cleaned_data.get("name")
-        email = form.cleaned_data.get("email")
-        message = form.cleaned_data.get("message")
-
-        full_message = f"""
-            Received message below from {name}, {email}
-            ________________________
-
-
-            {message}
-            """
-        send_mail(
-            subject="Received contact form submission",
-            message=full_message,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[settings.NOTIFY_EMAIL],
-        )
-        return super(ContactView, self).form_valid(form)
-
-@csrf_protect  # This is actually the default behavior
-def contact_view(request):
+# REMOVED @csrf_exempt - your React app now sends the CSRF token properly!
+def contact_api(request):
     if request.method == 'POST':
-        # process form
-        pass
-    return render(request, 'contact.html')
+        try:
+            data = json.loads(request.body)
+            
+            # 1. Get Form Data
+            name = data.get('name', 'No Name')
+            email = data.get('email', 'No Email')
+            message_content = data.get('message', 'No Message')
+            turnstile_token = data.get('cf-turnstile-response')
 
-def contact_view(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            # SUCCESS: The bot failed to get here!
-            # Send your email here
-            return render(request, 'success.html')
-        else:
-            # FAILURE: If the bot didn't solve the captcha, 
-            # form.is_valid() will be False and no email will be sent.
-            print(form.errors) 
-    else:
-        form = ContactForm()
-    
-    return render(request, 'contact.html', {'form': form})
+            # 2. Verify Turnstile Token
+            if not turnstile_token:
+                return JsonResponse({"status": "error", "message": "Captcha missing"}, status=400)
+
+            verify_response = requests.post(
+                "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                data={
+                    'secret': settings.TURNSTILE_SECRET_KEY,
+                    'response': turnstile_token,
+                },
+                timeout=5
+            )
+            
+            outcome = verify_response.json()
+
+            if not outcome.get('success'):
+                logger.warning(f"Failed Turnstile attempt from {email}. Errors: {outcome.get('error-codes')}")
+                return JsonResponse({"status": "error", "message": "Invalid Captcha"}, status=400)
+
+            # 3. Send the email
+            subject = f"New Portfolio Message from {name}"
+            full_message = f"From: {name} <{email}>\n\n{message_content}"
+            
+            send_mail(
+                subject,
+                full_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.NOTIFY_EMAIL], # Ensure this is defined in settings.py!
+                fail_silently=False,
+            )
+
+            return JsonResponse({"status": "success"})
+
+        except Exception as e:
+            logger.error(f"Contact API Error: {str(e)}")
+            return JsonResponse({"status": "error", "message": "An internal error occurred."}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)

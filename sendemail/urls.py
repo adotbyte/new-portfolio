@@ -1,8 +1,7 @@
 from django.urls import path
-from .views import SuccessView, ContactView
+from . import views
 
 urlpatterns = [
-    path("contact/", ContactView.as_view(), name="contact"),
-    path("success/", SuccessView.as_view(), name="success"),
-    #path("success/", lambda request: HttpResponse("Message sent successfully!"), name="success"),
+    # This results in: /api/email/contact/
+    path('contact/', views.contact_api, name='contact_api'),
 ]

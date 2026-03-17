@@ -1,30 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{% endblock %}
+{% block title %}Audrius Morkūnas | Portfolio{% endblock %}
 
 {% block content %}
-<main class="content-container achievement-item">
-    {{ about_content|safe }}
-</main>
+  {% endblock %}
 
-{# This loop is currently empty—if you aren't using it yet, it's fine to leave it or remove it #}
-{% for chat in history %}
-    {# chat content here #}
-{% endfor %}
-{% endblock %}
-
-{% block schema %}
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Audrius Morkūnas",
-  "url": "http://morkunas.info",
-  "jobTitle": "Technology enthusiast with extensive experience!",
-  "sameAs": [
-    "https://github.com/adotbyte",
-    "https://www.linkedin.com/in/audrius-morkunas-939a2581/"
-  ],
-  "knowsAbout": ["Python", "Django", "Git", "AI Integration", "Web Development", "Linux", "Docker", "Cloudflare Zero Trust"]
-}
+{% block extra_style %}
+  <link rel="stylesheet" href="/static/assets/index.css">
 {% endblock %}

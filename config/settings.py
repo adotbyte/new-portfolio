@@ -17,6 +17,8 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CHROMA_DB_PATH = os.path.join(BASE_DIR, "chroma_db")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -71,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
+    'corsheaders',
     'index',
     'sendemail',
     'turnstile',
@@ -81,24 +84,26 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Best place for static files
+    'django.contrib.sessions.middleware.SessionMiddleware', # Session MUST be before CSRF
+    'django.middleware.common.CommonMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware', # CSRF MUST be after Session
     'csp.middleware.CSPMiddleware',
     'config.middleware.SecurityHeadersMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# React
+CORS_ALLOW_ALL_ORIGINS = True
+
 ### turnstile
-TURNSTILE_SITEKEY = os.getenv('TURNSTILE_SITEKEY')
-TURNSTILE_SECRET = os.getenv('TURNSTILE_SECRET')
+TURNSTILE_SITE_KEY = env('VITE_TURNSTILE_SITE_KEY', default='')
+TURNSTILE_SECRET_KEY = env('TURNSTILE_SECRET_KEY', default='')
 
 TURNSTILE_DEFAULT_CONFIG = {
     'theme': 'auto',    # Options: 'light', 'dark', or 'auto'
@@ -134,60 +139,61 @@ if not DEBUG:
     # Redirect all HTTP traffic to HTTPS inside Django
     SECURE_SSL_REDIRECT = True
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True 
-SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False 
+SESSION_COOKIE_HTTPONLY = False
+CSRF_TRUSTED_ORIGINS = [
+    'localhost',
+    'http://127.0.0.1:8000',
+    'https://morkunas.info',
+    'https://www.morkunas.info',
+]
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_NAME = 'csrftoken'
 
 # Add the prefixes to satisfy the "No Cookie Prefix" warning
-SESSION_COOKIE_NAME = '__Host-sessionid'
+SESSION_COOKIE_NAME = 'sessionid'
 CSRF_COOKIE_NAME = '__Host-csrftoken'
 
+# LAX
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+# TEMPORARY: ONLY for local development to bypass the login block
+CSRF_AUTO_RELOAD_HEADERS = True
 
 ### settings.py - Production CSP Configuration
+### settings.py - Unified CSP Configuration
 
-# 1. Base Strategy: Allow your domains
+# settings.py
+
 CSP_DEFAULT_SRC = ("'self'", "https://morkunas.info", "https://www.morkunas.info")
 
-# 2. Scripts: Bootstrap, Cloudflare, and Marked.js
 CSP_SCRIPT_SRC = (
     "'self'", 
-    "https://cdn.jsdelivr.net",              # Bootstrap & Marked.js
-    "https://cdnjs.cloudflare.com",          # Cloudflare libraries
-    "https://ajax.cloudflare.com",           # Cloudflare
-    "https://static.cloudflareinsights.com", # Cloudflare Insights
-    "https://challenges.cloudflare.com", # Required for Turnstile/Bot Challenge
-    "https://static.cloudflareinsights.com",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.tailwindcss.com",          # Allow Tailwind CDN
+    "https://challenges.cloudflare.com",    # Allow Turnstile
+    "https://cdnjs.cloudflare.com", 
+    "'unsafe-inline'",                      # Needed for the window.KEY injection
+    "'unsafe-eval'",                        # Needed for React
 )
 
-# 3. Styles: Bootstrap and Google Fonts
 CSP_STYLE_SRC = (
-    "'nonce",
     "'self'", 
     "https://cdn.jsdelivr.net", 
     "https://fonts.googleapis.com",
-    "https://cdnjs.cloudflare.com",
+    "https://cdn.tailwindcss.com",          # Allow Tailwind Styles
+    "'unsafe-inline'",                      # CRITICAL: Tailwind needs this to inject CSS
 )
 
-# 4. Fonts: Required for Bootstrap Icons (delivered via jsdelivr)
-CSP_FONT_SRC = ("'self'", "https://cdn.jsdelivr.net")
-
-# 5. Images: Your favicon + allow images from any HTTPS source for Marked.js
+CSP_FRAME_SRC = ("'self'", "https://challenges.cloudflare.com")
+CSP_CONNECT_SRC = ("'self'", "https://challenges.cloudflare.com", "https://cloudflareinsights.com")
 CSP_IMG_SRC = ("'self'", "data:", "https:")
 
-# 6. Nonce Configuration: Required for your inline <script> tags
+# This ensures your <script nonce="..."> tags in base.html work
 CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src']
-
-CSP_FRAME_SRC = (
-    "'self'",
-    "https://challenges.cloudflare.com", # Required for the iframe-loader
-)
-
-CSP_CONNECT_SRC = (
-    "'self'",
-    "https://cloudflareinsights.com",
-    "https://challenges.cloudflare.com",
-)
 
 ### Other things
 
@@ -199,7 +205,10 @@ X_FRAME_OPTIONS = 'DENY'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'frontend', 'dist'), # React folder
+            BASE_DIR / "templates",                    # Old templates folder
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -264,10 +273,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = 'static'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    # Point to 'dist', NOT 'dist/assets'
+    # This allows Django to find '/assets/index.js' correctly
+    BASE_DIR / 'frontend' / 'dist',
 ]
 # Optional: compressed and cached files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -320,17 +331,6 @@ SECURE_SSL_REDIRECT = False # Change to True when deployment
 
 # Silence warning
 SILENCED_SYSTEM_CHECKS = ["security.W004"]
-
-# Bot working system on HTML page
-
-CSP_STYLE_SRC = ("'self'", "'nonce'", "https://cdn.jsdelivr.net", "'unsafe-inline'")
-CSP_SCRIPT_SRC = (
-    "'self'", 
-    "https://cdn.jsdelivr.net", 
-    "https://cdnjs.cloudflare.com", 
-    "'unsafe-inline'", 
-    "'unsafe-eval'"  # Added this for some JS libraries
-)
 
 # If using subdomains
 CSRF_TRUSTED_ORIGINS = [

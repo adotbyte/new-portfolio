@@ -2,7 +2,7 @@
 
 I am a technology enthusiast who loves this hobby. I am most interested in the world of the Internet in a broad sense. Learning something new every day is a pleasure for me.
 
-### 🏠 My Home Lab
+## 🏠 My Home Lab
 
 I currently manage a self-hosted environment powered by:
 
@@ -11,13 +11,13 @@ I currently manage a self-hosted environment powered by:
 - **Network:** Cloudflare Zero Trust Tunnels & Reverse Proxies
     - **Reverse Proxies:** Efficient traffic routing and SSL management for all hosted applications
 
-### 🛠️ Technical Skills
+## 🛠️ Technical Skills
 - **Infrastructure:** Docker, Linux (Debian/Ubuntu OS), Cloudflare Networking
 - **Cloud:** AWS ([AWS Cloud Quest: Cloud Practitioner - Training Badge 🟢](https://www.credly.com/badges/6a3d2231-79c9-485e-9442-981ac2b4049f/public_url))
 - **Backend:** Python, Django, Git
 - **Hardware:** Computer building and troubleshooting
 
-### 🚀 Featured Project
+## 🚀 Featured Project
 **[AI-Powered Interactive Resume](https://morkunas.info/)**
 *A Django application running in Docker on my Pi 5, exposed securely via Cloudflare Tunnels. It allows recruiters to query my experience using AI.*
 

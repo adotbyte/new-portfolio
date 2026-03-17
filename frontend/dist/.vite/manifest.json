@@ -1,0 +1,71 @@
+{
+  "_vendor.js": {
+    "file": "assets/vendor.js",
+    "name": "vendor"
+  },
+  "index.html": {
+    "file": "assets/index.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_vendor.js"
+    ],
+    "dynamicImports": [
+      "src/components/Skills.jsx",
+      "src/components/Contact.jsx",
+      "src/components/Footer.jsx",
+      "src/components/Privacy.jsx",
+      "src/components/Chatbot.jsx"
+    ]
+  },
+  "src/components/Chatbot.jsx": {
+    "file": "assets/Chatbot.js",
+    "name": "Chatbot",
+    "src": "src/components/Chatbot.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor.js"
+    ]
+  },
+  "src/components/Contact.jsx": {
+    "file": "assets/Contact.js",
+    "name": "Contact",
+    "src": "src/components/Contact.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor.js"
+    ]
+  },
+  "src/components/Footer.jsx": {
+    "file": "assets/Footer.js",
+    "name": "Footer",
+    "src": "src/components/Footer.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor.js"
+    ]
+  },
+  "src/components/Privacy.jsx": {
+    "file": "assets/Privacy.js",
+    "name": "Privacy",
+    "src": "src/components/Privacy.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor.js"
+    ]
+  },
+  "src/components/Skills.jsx": {
+    "file": "assets/Skills.js",
+    "name": "Skills",
+    "src": "src/components/Skills.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor.js"
+    ]
+  },
+  "style.css": {
+    "file": "assets/style.css",
+    "src": "style.css"
+  }
+}

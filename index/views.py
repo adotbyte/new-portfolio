@@ -171,13 +171,8 @@ def chat_api(request):
 from django.middleware.csrf import get_token
 
 def index(request):
-    # Debug: This will show up in your CMD/Terminal when you refresh the page
-    print(f"DEBUG: Turnstile Key is {settings.TURNSTILE_SITE_KEY}")
-    
-    context = {
-        'TURNSTILE_SITE_KEY': settings.TURNSTILE_SITE_KEY,
-    }
-    response = render(request, 'index.html', context)
+    # The debug print and Turnstile context are gone
+    response = render(request, 'index.html')
     
     # Keep your CSRF cookie logic
     response.set_cookie('csrftoken', get_token(request), httponly=False, samesite='Lax')

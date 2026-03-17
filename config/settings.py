@@ -139,17 +139,17 @@ if not DEBUG:
     # Redirect all HTTP traffic to HTTPS inside Django
     SECURE_SSL_REDIRECT = True
 
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False 
-SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True 
+SESSION_COOKIE_HTTPONLY = True
 CSRF_TRUSTED_ORIGINS = [
     'localhost',
     'http://127.0.0.1:8000',
     'https://morkunas.info',
     'https://www.morkunas.info',
 ]
-CSRF_USE_SESSIONS = False
+CSRF_USE_SESSIONS = True
 CSRF_COOKIE_NAME = 'csrftoken'
 
 # Add the prefixes to satisfy the "No Cookie Prefix" warning
@@ -339,21 +339,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # In settings.py (for debugging only)
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.security.csrf': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
 
 
 

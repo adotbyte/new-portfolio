@@ -40,7 +40,7 @@ db_path = os.path.join(settings.BASE_DIR, "chroma_db")
 db = chromadb.PersistentClient(path=db_path)
 
 # GET the existing collection
-collection = db.get_collection(
+collection = db.get_or_create_collection(
     name="portfolio_data", 
     embedding_function=gemini_ef
 )

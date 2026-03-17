@@ -26,8 +26,8 @@ jobs:
           RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
           RS_CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          RS_TURNSTILE_SITEKEY: ${{ secrets.TURNSTILE_SITEKEY }}
-          RS_TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
+          RS_VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+          RS_TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
         run: |
           cd ${{ github.workspace }}
           
@@ -45,8 +45,8 @@ jobs:
           ALLOWED_HOSTS="$RS_ALLOWED"
           FB_APP_ID="$RS_FB_APP_ID"
           CLOUDFLARE_TOKEN="$RS_CLOUDFLARE_TOKEN"
-          TURNSTILE_SITEKEY="$RS_TURNSTILE_SITEKEY"
-          TURNSTILE_SECRET="$RS_TURNSTILE_SECRET"
+          VITE_TURNSTILE_SITE_KEY="$RS_VITE_TURNSTILE_SITE_KEY"
+          TURNSTILE_SECRET_KEY="$RS_TURNSTILE_SECRET_KEY"
           EOF
           
           echo "File created at: $(pwd)/.env"

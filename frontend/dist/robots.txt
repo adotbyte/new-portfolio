@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Hide the "Kitchen" (Backend)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /chat/clear/
+
+# Link to your Sitemap
+Sitemap: https://morkunas.info/sitemap.xml

@@ -82,7 +82,7 @@ const handleFinalWipe = async () => {
       {/* 2. Main Footer - Centered and Tight */}
       <footer className="w-full py-8 border-t border-gray-100 bg-white mt-auto">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-gray-400 text-xs font-medium tracking-wide">
+          <p className="text-gray-600 text-xs font-medium tracking-wide">
             &copy; {currentYear} | 
             <button 
               type="button" 
@@ -102,7 +102,7 @@ const handleFinalWipe = async () => {
             <div className="p-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-black text-gray-900">Privacy & Cookies</h2>
-                <button onClick={() => setShowPrivacy(false)} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                <button onClick={() => setShowPrivacy(false)} aria-label="Close privacy modal" className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
               </div>
               
               <div className="space-y-4 text-sm text-gray-600 leading-relaxed text-left">

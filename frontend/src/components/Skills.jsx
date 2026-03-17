@@ -25,6 +25,12 @@ const Skills = () => {
   ];
 
 return (
+  <>
+    <SEO 
+        title="Technical Skills" 
+        description="Explore the technical expertise of Audrius Morkūnas: Systems Administration, Backend Development with Django, and Modern Web Tools." 
+        path="Portfolio" 
+    />
   <section className="min-h-[90vh] flex flex-col justify-center bg-white py-12">
     <div className="w-full max-w-7xl mx-auto px-6">
       
@@ -77,6 +83,7 @@ return (
       </div>
     </div>
   </section>
+  </>
 );
 };
 

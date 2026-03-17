@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import SEO from './SEO';
 
 const AboutMe = () => {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(true); // Added loading state
-
+  
   useEffect(() => {
     document.title = "Audrius Morkūnas | Portfolio";
     
@@ -35,6 +36,12 @@ const AboutMe = () => {
   ];
 
   return (
+    <>
+    <SEO 
+        title="About Me" 
+        description="Explore the portfolio of Audrius Morkūnas - Developer and Creator of AdotByte AI. Linux, Docker, Django, and React." 
+        path="/" 
+      />
     <section id="about" className="flex-grow flex flex-col justify-center bg-white w-full py-12">
       <div className="w-full max-w-7xl mx-auto px-8">
         
@@ -115,6 +122,7 @@ const AboutMe = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

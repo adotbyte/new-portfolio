@@ -21,6 +21,12 @@ const Contact = () => {
   const [turnstileToken, setTurnstileToken] = useState(null);
   const [status, setStatus] = useState(null); 
 
+  <SEO 
+      title="Contact" 
+      description="Get in touch with Audrius Morkūnas for project inquiries or AI collaboration." 
+      path="/Contact" 
+    />
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   setStatus('loading');

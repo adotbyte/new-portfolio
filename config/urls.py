@@ -9,7 +9,7 @@ BASE_DIR = settings.BASE_DIR
 
 urlpatterns = [
     # 1. Admin and API (Keep these at the top)
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     path('api/email/', include('sendemail.urls')), 
 
     # 2. THE ASSETS BRIDGE

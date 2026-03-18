@@ -44,6 +44,12 @@ RUN SECRET_KEY=build-placeholder \
     GEMINI_API_KEY=build-placeholder \
     ALLOWED_HOSTS=localhost,127.0.0.1 \
     DEBUG=False \
+    EMAIL_HOST=localhost \
+    EMAIL_PORT=587 \
+    EMAIL_USE_TLS=True \
+    EMAIL_HOST_USER=none \
+    EMAIL_HOST_PASSWORD=none \
+    NOTIFY_EMAIL=none \
     python manage.py collectstatic --noinput
 
 # 7. Final Permissions

@@ -36,7 +36,7 @@ return (
       <meta property="og:description" content={description || defaultDescription} />
       <meta property="og:site_name" content={siteName} />
       {/* Ensure this path is 100% correct and accessible publicly */}
-      <meta property="og:image" content={`${baseUrl}/images/logo.png`} />
+      <meta property="og:image" content={`${baseUrl}/logo.png`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
 
@@ -44,7 +44,7 @@ return (
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title || siteName} />
       <meta name="twitter:description" content={description || defaultDescription} />
-      <meta name="twitter:image" content={`${baseUrl}/images/logo.png`} />
+      <meta name="twitter:image" content={`${baseUrl}/logo.png`} />
 
       {/* Inject JSON-LD Schema */}
       <script type="application/ld+json">

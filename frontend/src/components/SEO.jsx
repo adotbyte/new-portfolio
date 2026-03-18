@@ -6,6 +6,7 @@ const SEO = ({ title, description, path }) => {
   const fullUrl = `${baseUrl}${path || ''}`;
   const defaultDescription = "Audrius Morkūnas Portfolio - Creator of AdotByte AI. Linux, Docker, Django, and React.";
   const siteName = "Audrius Morkūnas | Portfolio";
+  const authorName = "Audrius Morkūnas";
 
   // 1. Define the Schema Data
   const schemaMarkup = {
@@ -27,6 +28,9 @@ return (
       {/* Standard Metadata */}
       <title>{title ? `${title} | ${siteName}` : siteName}</title>
       <meta name="description" content={description || defaultDescription} />
+      
+      <meta name="author" content={authorName} />
+
       <link rel="canonical" href={fullUrl} />
       
       {/* Open Graph / Facebook (Explicitly provided) */}

@@ -161,16 +161,32 @@ X_FRAME_OPTIONS = 'DENY'
 # 9. CSP SETTINGS (Turnstile & Tailwind friendly)
 CSP_DEFAULT_SRC = ("'self'", "https://morkunas.info", "https://www.morkunas.info")
 CSP_SCRIPT_SRC = (
-    "'self'", "https://cdn.jsdelivr.net", "https://cdn.tailwindcss.com",
-    "https://challenges.cloudflare.com", "https://cdnjs.cloudflare.com", 
-    "'unsafe-inline'", "'unsafe-eval'"
+    "'self'",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.tailwindcss.com",
+    "https://challenges.cloudflare.com",
+    "https://cdnjs.cloudflare.com", 
+    "'unsafe-inline'",
+    "'unsafe-eval'"
 )
 CSP_STYLE_SRC = (
-    "'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com",
-    "https://cdn.tailwindcss.com", "'unsafe-inline'"
+    "'self'",
+    "https://cdn.jsdelivr.net",
+    "https://fonts.googleapis.com",
+    "https://cdn.tailwindcss.com",
+    "'unsafe-inline'"
 )
-CSP_FRAME_SRC = ("'self'", "https://challenges.cloudflare.com")
-CSP_CONNECT_SRC = ("'self'", "https://challenges.cloudflare.com", "https://cloudflareinsights.com")
+CSP_FRAME_SRC = (
+    "'self'",
+    "https://challenges.cloudflare.com"
+    )
+CSP_CONNECT_SRC = (
+    "'self'",
+    "https://challenges.cloudflare.com",
+    "https://cloudflareinsights.com",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    )
 CSP_IMG_SRC = ("'self'", "data:", "https:")
 CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src']
 

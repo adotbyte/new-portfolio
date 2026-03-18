@@ -35,7 +35,7 @@ const handleSubmit = async (e) => {
   
   // 2. RETRIEVE CSRF TOKEN: Uses your getCookie helper to find the 'csrftoken'
   // This fixes the "Cannot read properties of null (reading 'value')" error
-  const csrftoken = getCookie('csrftoken'); 
+  const csrftoken = getCookie('__Secure-csrftoken') || getCookie('csrftoken');
 
   const payload = {
     ...formData,

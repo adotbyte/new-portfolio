@@ -134,8 +134,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 if not DEBUG:
     # Production
-    CSRF_COOKIE_NAME = "csrftoken"
-    SESSION_COOKIE_NAME = "sessionid"
+    CSRF_COOKIE_NAME = "__Secure-csrftoken"
+    SESSION_COOKIE_NAME = "__Secure-sessionid"
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = False
@@ -157,6 +157,9 @@ CSRF_USE_SESSIONS = False
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 X_FRAME_OPTIONS = 'DENY'
+
+# Missing Security Headers (Nginx or Middleware)
+SECURE_REFERRER_POLICY = "same-origin"
 
 # 9. CSP SETTINGS (Turnstile & Tailwind friendly)
 CSP_DEFAULT_SRC = ("'self'", "https://morkunas.info", "https://www.morkunas.info")

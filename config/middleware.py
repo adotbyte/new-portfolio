@@ -17,7 +17,7 @@ class SecurityHeadersMiddleware:
             f"default-src 'self'; "
             f"script-src 'self' 'nonce-{nonce}' https://challenges.cloudflare.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
             f"style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
-            f"img-src 'self' data: https://cdnjs.cloudflare.com; "
+            f"img-src 'self' data: https://cdnjs.cloudflare.com https://challenges.cloudflare.com; "
             f"font-src 'self' https://cdn.jsdelivr.net; "
             f"connect-src 'self' https://cdn.jsdelivr.net https://cloudflareinsights.com https://challenges.cloudflare.com; "
             f"frame-src 'self' https://challenges.cloudflare.com;"
@@ -25,8 +25,9 @@ class SecurityHeadersMiddleware:
         
         response["Content-Security-Policy"] = csp_policy
         response["Permissions-Policy"] = (
-            "camera=(),microphone=(),geolocation=(),browsing-topics=(),"
-            "join-ad-interest-group=(),run-ad-auction=(),shared-storage=()"
+            "camera=(), microphone=(), geolocation=(), "
+            "browsing-topics=(self), join-ad-interest-group=(self), "
+            "run-ad-auction=(self), shared-storage=(self)"
         )
         
         return response

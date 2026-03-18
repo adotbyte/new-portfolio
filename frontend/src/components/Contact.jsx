@@ -24,40 +24,49 @@ const Contact = () => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  
+  // 1. Verify Cloudflare Turnstile completion
+  if (!turnstileToken) {
+    alert("Please complete the captcha verification.");
+    return;
+  }
+
   setStatus('loading');
   
-  // CHANGE THIS: Don't use getCookie, grab it from the DOM instead
-  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  // 2. RETRIEVE CSRF TOKEN: Uses your getCookie helper to find the 'csrftoken'
+  // This fixes the "Cannot read properties of null (reading 'value')" error
+  const csrftoken = getCookie('csrftoken'); 
 
   const payload = {
     ...formData,
     'cf-turnstile-response': turnstileToken,
   };
   
-  const response = await fetch('/api/email/contact/', {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrftoken, // Now this will have the actual token value
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch('/api/email/contact/', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'), // Required for Django security
+      },
+      credentials: 'include', // Ensures cookies like sessionid/csrftoken are sent
+      body: JSON.stringify(payload),
+    });
 
     if (response.ok) {
       setStatus('success'); 
-      
-      // Reset form fields immediately so user sees they are cleared
       setFormData({ name: '', email: '', message: '' });
-
-      // After 5 seconds, hide the success message
-      setTimeout(() => {
-          setStatus(null); 
-      }, 5000);
+      setTurnstileToken(null); 
+      setTimeout(() => setStatus(null), 5000);
     } else {
+      console.error("Server rejected request. Status:", response.status);
       setStatus('error');
     }
-  };
+  } catch (err) {
+    console.error("Network or script error:", err);
+    setStatus('error');
+  }
+};
 
   // REMOVED: The "if (status === 'success') return ..." block that was causing the jump.
 

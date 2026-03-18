@@ -1,12 +1,19 @@
 # --- STAGE 1: Build the React Frontend ---
 FROM node:20-slim AS frontend-builder
 WORKDIR /build
+
+# Define Build Arguments (These must match your GitHub Secrets names)
+ARG VITE_TURNSTILE_SITE_KEY
+
 # Copy only package files first to leverage Docker cache
 COPY frontend/package*.json ./
 RUN npm install
-# Copy the rest of the frontend and build
+
+# Copy the rest of the frontend
 COPY frontend/ ./
-RUN npm run build
+
+# CRITICAL: Vite needs the variable during the 'build' command
+RUN VITE_TURNSTILE_SITE_KEY=$VITE_TURNSTILE_SITE_KEY npm run build
 
 # --- STAGE 2: Build the Python/Django App ---
 FROM python:3.12-slim
@@ -32,31 +39,25 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 # 4. Copy project files
 COPY . $APP_HOME
 
-# --- CRITICAL STEP: Copy React Build from Stage 1 ---
-# This pulls the 'dist' folder into your Django project structure
+# 5. Copy React Build from Stage 1
 COPY --from=frontend-builder /build/dist $APP_HOME/frontend/dist
 
-# 5. Fix line endings and permissions
+# 6. Fix line endings and permissions
 RUN dos2unix $APP_HOME/entrypoint.sh && chmod +x $APP_HOME/entrypoint.sh
 
-# 6. Collect static files
+# 7. Collect static files
+# Note: Python build-placeholders are fine here as long as the 
+# frontend was already built with the real VITE_ key in Stage 1.
 RUN SECRET_KEY=build-placeholder \
-    GEMINI_API_KEY=build-placeholder \
-    VITE_TURNSTILE_SITE_KEY=build-placeholder \
     ALLOWED_HOSTS=localhost,127.0.0.1 \
     DEBUG=False \
-    EMAIL_HOST=localhost \
-    EMAIL_PORT=587 \
-    EMAIL_USE_TLS=True \
-    EMAIL_HOST_USER=none \
-    EMAIL_HOST_PASSWORD=none \
-    NOTIFY_EMAIL=none \
     python manage.py collectstatic --noinput
 
-# 7. Final Permissions
+# 8. Final Permissions
 RUN chown -R app:app /home/app/ && chmod -R 755 /home/app/web/
 
 USER app
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:8000/ || exit 1
 

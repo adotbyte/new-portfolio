@@ -46,11 +46,19 @@ COPY --from=frontend-builder /build/dist $APP_HOME/frontend/dist
 RUN dos2unix $APP_HOME/entrypoint.sh && chmod +x $APP_HOME/entrypoint.sh
 
 # 7. Collect static files
-# Note: Python build-placeholders are fine here as long as the 
-# frontend was already built with the real VITE_ key in Stage 1.
+# We provide placeholders for ALL required env vars so Django doesn't crash during build
 RUN SECRET_KEY=build-placeholder \
+    GEMINI_API_KEY=build-placeholder \
+    TURNSTILE_SECRET_KEY=build-placeholder \
+    VITE_TURNSTILE_SITE_KEY=build-placeholder \
     ALLOWED_HOSTS=localhost,127.0.0.1 \
     DEBUG=False \
+    EMAIL_HOST=localhost \
+    EMAIL_PORT=587 \
+    EMAIL_USE_TLS=True \
+    EMAIL_HOST_USER=none \
+    EMAIL_HOST_PASSWORD=none \
+    NOTIFY_EMAIL=none \
     python manage.py collectstatic --noinput
 
 # 8. Final Permissions

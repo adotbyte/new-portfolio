@@ -134,8 +134,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 if not DEBUG:
     # Production
-    CSRF_COOKIE_NAME = "__Secure-csrftoken"
-    SESSION_COOKIE_NAME = "__Secure-sessionid"
+    CSRF_COOKIE_NAME = "csrftoken"
+    SESSION_COOKIE_NAME = "sessionid"
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = False

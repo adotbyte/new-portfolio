@@ -23,12 +23,12 @@ COPY --from=frontend-builder /build/dist $APP_HOME/frontend/dist
 RUN dos2unix $APP_HOME/entrypoint.sh && chmod +x $APP_HOME/entrypoint.sh
 
 # 7. Collect static files
-# Placeholders for EVERY variable required by your settings.py to prevent build crashes
+# Placeholders for EVERY variable required by your settings.py
 RUN SECRET_KEY=build-placeholder \
     GEMINI_API_KEY=build-placeholder \
     TURNSTILE_SECRET_KEY=build-placeholder \
     VITE_TURNSTILE_SITE_KEY=build-placeholder \
-    ALLOWED_HOSTS=localhost,127.0.0.1 \
+    ALLOWED_HOSTS=morkunas.info,localhost,127.0.0.1 \
     DEBUG=False \
     EMAIL_HOST=localhost \
     EMAIL_PORT=587 \

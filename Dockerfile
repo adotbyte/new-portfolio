@@ -42,6 +42,7 @@ RUN dos2unix $APP_HOME/entrypoint.sh && chmod +x $APP_HOME/entrypoint.sh
 # 6. Collect static files
 RUN SECRET_KEY=build-placeholder \
     GEMINI_API_KEY=build-placeholder \
+    VITE_TURNSTILE_SITE_KEY=build-placeholder \
     ALLOWED_HOSTS=localhost,127.0.0.1 \
     DEBUG=False \
     EMAIL_HOST=localhost \

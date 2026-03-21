@@ -62,6 +62,15 @@ db_path = os.path.join(settings.BASE_DIR, "chroma_db")
 db = chromadb.PersistentClient(path=db_path)
 collection = db.get_or_create_collection(name="portfolio_data")
 
+def ingest_data(file_content):
+    # Use your existing helper to strip the Django junk BEFORE it enters the DB
+    clean_text = clean_django_tags(file_content)
+    
+    collection.add(
+        documents=[clean_text],
+        ids=["resume_content_v2"]
+    )
+
 # --- 2. HELPERS & TOOLS ---
 
 def clean_django_tags(text):
@@ -112,16 +121,11 @@ resume_tool = types.Tool(
 )
 
 @csrf_exempt
-@require_POST
 def chat_api(request):
-    if request.method == "GET":
-        return JsonResponse({"status": "CSRF Handshake successful"})
-    # ---------------------
+    # Just handle POST. No need for the GET handshake anymore!
+    if request.method != "POST":
+        return JsonResponse({'error': 'Only POST allowed'}, status=405)
 
-    if request.method == "POST":
-    # 1. INITIALIZE variables at the very top
-        raw_content = ""
-    
     try:
         body = json.loads(request.body)
         user_query = body.get('message', '').strip()
@@ -129,21 +133,29 @@ def chat_api(request):
         if not user_query:
             return JsonResponse({'error': 'Empty message'}, status=400)
 
-        # 2. START THE CHAT
-        # Note: I used 'gemini-2.0-flash' as 2.5-flash-lite might not be out yet!
+        # 1. START THE CHAT
         chat = client.chats.create(
             model="gemini-2.5-flash-lite", 
             config=types.GenerateContentConfig(
                 tools=[resume_tool],
-                system_instruction="You are AdotByte, Audrius's expert digital agent. Your goal is to provide specific, fact-based answers about Audrius's technical skills, Raspberry Pi 5 setup, and engineering projects. ALWAYS use the search_resume tool first before answering questions about his experience or skills. If the search returns results, summarize them professionally for a recruiter. If no results are found, politely explain you only have access to his technical portfolio."
+            system_instruction="""
+            You are AdotByte, the expert digital agent for Audrius. 
+            Your tone is professional, technical, and helpful. 
+            When providing project details:
+            1. Use bold headings for project titles.
+            2. Provide a brief 2-sentence summary.
+            3. List the tech stack used (Docker, Django, etc.).
+            4. If the user asks about the Raspberry Pi, highlight the hardware engineering aspect.
+            Always use the 'search_resume' tool to verify facts before speaking.
+            """
             )
         )
 
-        # 3. SEND INITIAL MESSAGE
+        # 2. SEND INITIAL MESSAGE
         response = chat.send_message(user_query)
+        raw_content = ""
 
-        # 4. HANDLE THE TOOL LOOP
-        # Check if Gemini wants to call the search function
+        # 3. HANDLE THE TOOL LOOP
         if response.candidates[0].content.parts and response.candidates[0].content.parts[0].function_call:
             call = response.candidates[0].content.parts[0].function_call
             
@@ -151,7 +163,8 @@ def chat_api(request):
             query_text = call.args.get("query", user_query)
             result_data = search_resume(query_text)
             
-            # Send result back to Gemini for the final summary
+            # THE FIX: Send the response back in the simplest possible format
+            # The SDK handles the mapping if you provide the dictionary correctly
             final_response = chat.send_message(
                 types.Part.from_function_response(
                     name=call.name,
@@ -159,13 +172,11 @@ def chat_api(request):
                 )
             )
             
-            # Get the text from the summary
-            raw_content = final_response.text if final_response.text else "I found data but couldn't summarize it."
+            raw_content = final_response.text if final_response.text else f"Found data: {result_data}"
         else:
-            # Normal chat (no search needed)
             raw_content = response.text if response.text else "I'm not sure how to answer that."
 
-        # 5. FORMAT AND RETURN
+        # 4. FORMAT AND RETURN
         html_content = markdown2.markdown(raw_content, extras=['fenced-code-blocks', 'tables'])
         return JsonResponse({'content': html_content})
 
@@ -178,6 +189,7 @@ def chat_api(request):
 from django.middleware.csrf import get_token
 
 @csrf_exempt
+@require_POST
 def index(request):
     # Let Django's middleware handle the CSRF cookie automatically
     return render(request, 'index.html')
@@ -221,14 +233,16 @@ def github_webhook(request):
 
 ### Delete chat history
 
+@csrf_exempt
 @require_POST
 def delete_chat_history(request):
-    """Clears history for the current session"""
-    session_id = request.session.session_key
-    if session_id:
-        ChatHistory.objects.filter(session_id=session_id).delete()
-        return JsonResponse({"status": "success"})
-    return JsonResponse({"status": "error"}, status=400)
+    """Clears the session data for the current user"""
+    try:
+        # This clears all data stored in the current user's session
+        request.session.flush() 
+        return JsonResponse({"status": "success", "message": "Session cleared"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 
 def serve_chatbot(request):
@@ -238,7 +252,8 @@ def serve_chatbot(request):
     """
     return render(request, 'chat.html')
 
-
+@csrf_exempt
+@require_POST
 def delete_cookies(request):
     if request.method == "POST":
         # 1. Clear any session data if you use it

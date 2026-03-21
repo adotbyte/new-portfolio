@@ -68,16 +68,6 @@ export default function Chatbot() {
     if (!isCollapsed && isOpen) scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, isCollapsed, isOpen]);
 
-  useEffect(() => {
-    if (isOpen) {
-        // This simple GET request triggers the @ensure_csrf_cookie view 
-        // and brings the cookie across the proxy to your browser.
-        fetch('/api/chat/') 
-            .then(res => console.log("CSRF Handshake initialized"))
-            .catch(err => console.error("Handshake failed", err));
-    }
-  }, [isOpen]);
-
   // --- 3. ACTIONS ---
   const sendMessage = async (overrideInput) => {
     const messageToSend = overrideInput || input;
@@ -182,26 +172,27 @@ export default function Chatbot() {
         minHeight: '52px'
       }} onClick={() => setIsCollapsed(!isCollapsed)}>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* ENHANCED LOGO: Added filter for glow and clear viewbox */}
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 1424 752" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ flexShrink: 0 }}
-          >
-        
-            {/* The Main Logo Shapes */}
-              <MessageCircle size={24} style={{ flexShrink: 0 }} />
-            {/* Note: I've truncated the path data for readability, paste your full paths here if the shapes look incomplete */}
-          </svg>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.2 }}>AdotByte AI</span>
-            {lastSaved && !isCollapsed && <span style={{ fontSize: '9px', opacity: 0.8 }}>Last saved: {lastSaved}</span>}
-          </div>
+      {/* Header Logo Section */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Replacing the broken SVG with a clean Lucide Icon */}
+        <div style={{ 
+          background: 'rgba(255, 255, 255, 0.2)', 
+          padding: '6px', 
+          borderRadius: '10px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center' 
+        }}>
+          <MessageCircle size={20} color="white" />
         </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.2 }}>AdotByte AI</span>
+          {lastSaved && !isCollapsed && (
+            <span style={{ fontSize: '9px', opacity: 0.8 }}>Last saved: {lastSaved}</span>
+          )}
+        </div>
+      </div>
         
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {!isCollapsed && (

@@ -43,6 +43,7 @@ def get_portfolio_collection():
         embedding_function=gemini_ef
     )
 
+
 def ensure_session(request):
     if not request.session.session_key:
         request.session.create()

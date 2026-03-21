@@ -111,20 +111,29 @@ if __name__ == "__main__":
     else:
         print(f"❌ Error: Could not find about_me.md at {about_me_file}")
 
-    # --- PATH C: YOUR KNOWLEDGE HTML ---
+# --- PATH C: YOUR KNOWLEDGE HTML ---
     html_path = os.path.join(os.getcwd(), "index", "templates", "my_knowledge.html")
     if os.path.exists(html_path):
         with open(html_path, "r", encoding="utf-8") as f:
-            from bs4 import BeautifulSoup
-            soup = BeautifulSoup(f.read(), "html.parser")
-            # Extract only the text to keep the brain clean
-            text = soup.get_text(separator=" ")
-            collection.add(
-                documents=[text],
-                metadatas=[{"source": "my_knowledge.html", "type": "knowledge"}],
-                ids=["knowledge_html_001"]
-            )
-        print("✅ Success: my_knowledge.html ingested!")
+            html_raw = f.read()
+            
+            # 1. REMOVE DJANGO TAGS FIRST
+            import re
+            clean_html = re.sub(r'\{%.*?%\}', '', html_raw)
+            clean_html = re.sub(r'\{\{.*?\}\}', '', clean_html)
+            
+            # 2. NOW USE SOUP
+            soup = BeautifulSoup(clean_html, "html.parser")
+            text = soup.get_text(separator=" ").strip()
+            
+            # 3. ONLY ADD IF NOT EMPTY
+            if text:
+                collection.add(
+                    documents=[text],
+                    metadatas=[{"source": "my_knowledge.html", "type": "knowledge"}],
+                    ids=["knowledge_html_001"]
+                )
+                print("✅ Success: Cleaned my_knowledge.html ingested!")
 
     print(f"\n✨ Total items in brain now: {collection.count()}")
 

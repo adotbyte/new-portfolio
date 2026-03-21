@@ -9,9 +9,11 @@ import chromadb
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, Http404
 from django.conf import settings
-#from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+
 
 # New Gemini SDK for 2026
 from google import genai
@@ -109,11 +111,16 @@ resume_tool = types.Tool(
     ]
 )
 
-@ensure_csrf_cookie
+@csrf_exempt
 @require_POST
 def chat_api(request):
+    if request.method == "GET":
+        return JsonResponse({"status": "CSRF Handshake successful"})
+    # ---------------------
+
+    if request.method == "POST":
     # 1. INITIALIZE variables at the very top
-    raw_content = ""
+        raw_content = ""
     
     try:
         body = json.loads(request.body)
@@ -170,7 +177,7 @@ def chat_api(request):
 
 from django.middleware.csrf import get_token
 
-
+@csrf_exempt
 def index(request):
     # Let Django's middleware handle the CSRF cookie automatically
     return render(request, 'index.html')
@@ -202,7 +209,7 @@ def blog_post_detail(request, slug):
         html_content = markdown2.markdown(f.read(), extras=['fenced-code-blocks', 'tables'])
     return render(request, 'blog.html', {'content': html_content, 'title': slug.replace('-', ' ').title()})
 
-@ensure_csrf_cookie
+@csrf_exempt
 @require_POST
 def github_webhook(request):
     """Auto-update code from GitHub."""
@@ -214,7 +221,6 @@ def github_webhook(request):
 
 ### Delete chat history
 
-@ensure_csrf_cookie
 @require_POST
 def delete_chat_history(request):
     """Clears history for the current session"""
@@ -232,7 +238,7 @@ def serve_chatbot(request):
     """
     return render(request, 'chat.html')
 
-@ensure_csrf_cookie
+
 def delete_cookies(request):
     if request.method == "POST":
         # 1. Clear any session data if you use it

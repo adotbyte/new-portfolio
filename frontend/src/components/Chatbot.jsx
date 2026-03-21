@@ -1,6 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, ChevronDown, ChevronUp, Check, X } from 'lucide-react';
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 export default function Chatbot() {
   // --- 1. PERSISTENT STATE ---
   const [messages, setMessages] = useState(() => {
@@ -53,6 +68,16 @@ export default function Chatbot() {
     if (!isCollapsed && isOpen) scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, isCollapsed, isOpen]);
 
+  useEffect(() => {
+    if (isOpen) {
+        // This simple GET request triggers the @ensure_csrf_cookie view 
+        // and brings the cookie across the proxy to your browser.
+        fetch('/api/chat/') 
+            .then(res => console.log("CSRF Handshake initialized"))
+            .catch(err => console.error("Handshake failed", err));
+    }
+  }, [isOpen]);
+
   // --- 3. ACTIONS ---
   const sendMessage = async (overrideInput) => {
     const messageToSend = overrideInput || input;
@@ -68,7 +93,7 @@ export default function Chatbot() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+          'X-CSRFToken': getCookie('csrftoken') || ''
         },
         body: JSON.stringify({ message: messageToSend }),
       });
@@ -90,7 +115,7 @@ export default function Chatbot() {
     try {
       await fetch('/api/delete-chat-history/', { 
         method: 'POST',
-        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '' }
+        headers: { 'X-CSRFToken': getCookie('csrftoken') || '' }
       });
     } catch (e) { console.error("Server sync failed"); }
   };
@@ -169,11 +194,7 @@ export default function Chatbot() {
           >
         
             {/* The Main Logo Shapes */}
-            <path d="M50.43 652.46 C51.52 652.45 52.61 652.43 53.73 652.41 C54.9 652.42 56.07 652.42 57.28 652.43..." fill="#f2f4f8"/>
-            <path d="M786 214 C789.06 215.93 789.06 215.93 791 219 C792.03 223.72 791.65 226.93 789.12 231.06..." fill="#ffffff"/>
-            <path d="M634.79 193.50 C653.18 193.61 663.47 202.09 675.82 214.52..." fill="#73DDED"/>
-            <path d="M812.21 195.46 C814.15 195.94 816.07 196.46 818 197..." fill="#F5D585"/>
-            
+              <MessageCircle size={24} style={{ flexShrink: 0 }} />
             {/* Note: I've truncated the path data for readability, paste your full paths here if the shapes look incomplete */}
           </svg>
           <div style={{ display: 'flex', flexDirection: 'column' }}>

@@ -17,6 +17,7 @@ sitemaps = {
 
 urlpatterns = [
     # 1. API Paths (Must be unique)
+    path('', ensure_csrf_cookie(TemplateView.as_view(template_name='index.html'))),
     path('api/chat/', views.chat_api, name='chat_api'),
     path('api/delete-chat-history/', views.delete_chat_history, name='delete_chat_history'),
     path('api/about_me/', views.about_me_api, name='about_me_api'), # <--- FIXED PATH

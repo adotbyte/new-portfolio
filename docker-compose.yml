@@ -1,12 +1,13 @@
 services:
   web:
-    #image: ghcr.io/adotbyte/resume_website:latest
-    build: .
+    build:
+      context: .
+      args:
+        - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
     container_name: resume_website
     restart: unless-stopped
-    # We use the full path so OMV can't miss it
     env_file:
-    - .env
+      - .env
     volumes:
       - ./.env:/home/app/web/.env
       - .:/code

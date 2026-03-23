@@ -43,7 +43,7 @@ const Privacy = () => {
           <p>
             To ensure the security and performance of this site, our server automatically 
             logs standard technical information when you visit. This includes your 
-            <strong>IP address</strong>, browser type, and the pages you access. 
+            <strong> IP address</strong>, browser type, and the pages you access. 
           </p>
           <p className="bg-slate-50 p-4 rounded-xl border border-slate-100">
             <strong>Legal Basis:</strong> We process this data based on our 
@@ -54,7 +54,7 @@ const Privacy = () => {
           <h3>5. Data Retention</h3>
           <p>
             Server logs are typically kept for 30 days before being automatically deleted. 
-            Your <strong>Chat History</strong> and <strong>Theme Preferences</strong> 
+            Your <strong>Chat History</strong> and <strong>Theme Preferences </strong> 
             stay on your device until you choose to clear them.
           </p>
         </article>

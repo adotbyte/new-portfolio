@@ -25,18 +25,20 @@ export default function App() {
       >
       <ScrollToTop />
       {/* Changed bg-light to bg-white to match your AboutMe background */}
-      <div className="flex flex-col min-h-screen bg-white">
+      <div className="flex flex-col min-h-screen bg-white overflow-x-hidden">
         <Navbar /> 
 
         {/* REMOVED "container" and "mb-5 mt-4" */}
         {/* Added "w-full" to ensure it uses the whole width */}
         <main className="flex-grow w-full pt-16">
+          <div className="max-w-6xl mx-auto px-4">
           <Routes>
             <Route path="/" element={<AboutMe />} />
             <Route path="/Portfolio" element={<Skills />} />
             <Route path="/Contact" element={<Contact />} />
             <Route path="/Privacy" element={<Privacy />} />
           </Routes>
+          </div>
         </main>
 
         <Footer />

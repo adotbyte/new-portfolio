@@ -120,9 +120,24 @@ resume_tool = types.Tool(
     ]
 )
 
+
+import re
+
+@csrf_exempt
+def clean_ai_output(text):
+    """Removes 'Found data:', Django tags, and excess whitespace."""
+    if not text:
+        return ""
+    # 1. Remove "Found data:" (case insensitive)
+    text = re.sub(r'(?i)Found data:\s*', '', text)
+    # 2. Remove Django template tags {% ... %}
+    text = re.sub(r'\{%.*?%\}', '', text)
+    # 3. Remove Django variables {{ ... }}
+    text = re.sub(r'\{\{.*?\}\}', '', text)
+    return text.strip()
+
 @csrf_exempt
 def chat_api(request):
-    # Just handle POST. No need for the GET handshake anymore!
     if request.method != "POST":
         return JsonResponse({'error': 'Only POST allowed'}, status=405)
 
@@ -135,50 +150,48 @@ def chat_api(request):
 
         # 1. START THE CHAT
         chat = client.chats.create(
-            model="gemini-2.5-flash-lite", 
+            model="gemini-2.5-flash-lite", # Fixed version string if needed
             config=types.GenerateContentConfig(
                 tools=[resume_tool],
-            system_instruction="""
-            You are AdotByte, the expert digital agent for Audrius. 
-            Your tone is professional, technical, and helpful. 
-            When providing project details:
-            1. Use bold headings for project titles.
-            2. Provide a brief 2-sentence summary.
-            3. List the tech stack used (Docker, Django, etc.).
-            4. If the user asks about the Raspberry Pi, highlight the hardware engineering aspect.
-            Always use the 'search_resume' tool to verify facts before speaking.
-            """
+                system_instruction="""
+                You are AdotByte, the expert digital agent for Audrius. 
+                Your tone is professional, technical, and helpful. 
+                Do not include internal labels like 'Found data:' or metadata.
+                If data contains Django tags like {% %}, ignore them.
+                Be direct. Avoid conversational filler like 'The user is asking about...' or 'Based on my search...'. Just provide the information requested.
+                """
             )
         )
 
-        # 2. SEND INITIAL MESSAGE
+        # 2. SEND INITIAL MESSAGE (This defines 'response')
         response = chat.send_message(user_query)
         raw_content = ""
 
         # 3. HANDLE THE TOOL LOOP
+        # Use the 'response' we just defined
         if response.candidates[0].content.parts and response.candidates[0].content.parts[0].function_call:
             call = response.candidates[0].content.parts[0].function_call
             
-            # Run your search function
             query_text = call.args.get("query", user_query)
-            result_data = search_resume(query_text)
+            # Clean the data from the DB before giving it back to the AI
+            result_data = clean_ai_output(search_resume(query_text))
             
-            # THE FIX: Send the response back in the simplest possible format
-            # The SDK handles the mapping if you provide the dictionary correctly
             final_response = chat.send_message(
                 types.Part.from_function_response(
                     name=call.name,
                     response={'result': str(result_data)}
                 )
             )
-            
-            raw_content = final_response.text if final_response.text else f"Found data: {result_data}"
+            # Use result_data as fallback instead of f"Found data:..."
+            raw_content = final_response.text if final_response.text else result_data
         else:
             raw_content = response.text if response.text else "I'm not sure how to answer that."
 
-        # 4. FORMAT AND RETURN
-        html_content = markdown2.markdown(raw_content, extras=['fenced-code-blocks', 'tables'])
-        return JsonResponse({'content': html_content})
+        # 4. FINAL CLEAN AND MARKDOWN CONVERSION
+        final_clean_text = clean_ai_output(raw_content)
+        html_content = markdown2.markdown(final_clean_text, extras=['fenced-code-blocks', 'tables'])
+        
+        return JsonResponse({'content': final_clean_text})
 
     except Exception as e:
         print(traceback.format_exc())
@@ -296,3 +309,4 @@ def project_list_api(request):
             "link": p.link,
         })
     return JsonResponse(data, safe=False)
+

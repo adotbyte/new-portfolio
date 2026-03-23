@@ -21,11 +21,11 @@ class ContactForm(forms.Form):
         widget=forms.Textarea(attrs={"placeholder": "Your message"})
     )
     
-#email checked validate email address
+#email checked validate email address. Theme - black, white, auto.
     email = forms.EmailField(validators=[validate_email_domain])
     message = forms.CharField(widget=forms.Textarea)
     captcha = TurnstileField(
-        theme='auto', 
+        theme='white', 
         size='compact',
         error_messages={
             'invalid': 'Verification failed. Please try the captcha again to prove you are human!'

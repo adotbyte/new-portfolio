@@ -60,17 +60,20 @@ jobs:
           echo "✅ .env and brain_sync.txt created successfully"
 
       - name: Build and Restart
-        env:
-          # We map the GitHub secret to a local variable for the build command
-          VITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
         run: |
-          # CRITICAL: We pass the Site Key as a build argument so Vite can use it
-          docker compose build --no-cache --build-arg VITE_TURNSTILE_SITE_KEY="$VITE_KEY"
-          
-          docker compose up -d --force-recreate
-          
-          # Clean up old unused images to save SD card space
-          docker image prune -f
+                # 1. Pull the absolute latest code first
+                git pull origin main 
+                
+                # 2. Build without cache
+                docker compose build --no-cache --build-arg VITE_TURNSTILE_SITE_KEY="${{ secrets.VITE_TURNSTILE_SITE_KEY }}"
+                
+                # 3. Kill the old version and start the new one
+                docker compose up -d --force-recreate
+                
+                # 4. CRITICAL: Force Django to refresh static files inside the running container
+                docker exec resume_website python manage.py collectstatic --noinput --clear
+                
+                docker image prune -f
 
       - name: Trigger AI Ingestion and Sync
         run: |

@@ -23,6 +23,7 @@ jobs:
           RS_ZOHO_EMAIL: ${{ secrets.ZOHO_EMAIL }}
           RS_ZOHO_PASSWORD: ${{ secrets.ZOHO_PASSWORD }}
           RS_CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+          RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
         run: |
           cd ${{ github.workspace }}
 
@@ -33,6 +34,7 @@ jobs:
           ZOHO_EMAIL="$RS_ZOHO_EMAIL"
           ZOHO_PASSWORD="$RS_ZOHO_PASSWORD"
           CONTACT_EMAIL="$RS_CONTACT_EMAIL"
+          NEXT_PUBLIC_FB_APP_ID="$RS_FB_APP_ID"
           ENVEOF
 
           echo "✅ .env created successfully"

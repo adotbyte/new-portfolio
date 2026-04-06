@@ -7,7 +7,7 @@ ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 
 # Copy package files first for layer caching
 COPY frontend/package*.json ./
-RUN npm install -g npm@latest && npm ci
+RUN npm ci
 
 # Copy source
 COPY frontend/ ./

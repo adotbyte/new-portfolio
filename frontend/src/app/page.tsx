@@ -2,8 +2,10 @@ import AboutMe from '@/components/AboutMe';
 import Skills from '@/components/Skills';
 import HomeLab from '@/components/HomeLab';
 import Contact from '@/components/Contact';
+import type { Metadata } from 'next';
 
-export const metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
   title: 'Audrius Morkūnas | Portfolio',
   description: 'Portfolio of Audrius Morkūnas — Creator AI chatbot, Next.js, Docker, Linux server admin on Raspberry Pi 5.',
   openGraph: {
@@ -22,7 +24,11 @@ export const metadata = {
     locale: 'en_US',
     type: 'website',
   },
+  other: {
+    'fb:app_id': process.env.NEXT_PUBLIC_FB_APP_ID ?? '',
+  },
 };
+}
 
 export default function Home() {
   return (

@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "esbuild": "0.24.0",
-    "jspdf": "^4.2.1",
-    "react-markdown": "^10.1.0"
-  }
-}

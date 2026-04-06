@@ -1,26 +1,27 @@
-# Local Python Virtual Environments (The "Heavy" folders)
-.venv/
-venv/
-env/
-bin/
-lib/
-include/
+# --- Git ---
+.git/
+.github/
 
-# Database (Never push your local DB to GitHub)
-*.sqlite3
+# --- Node ---
+node_modules/
+frontend/node_modules/
 
-# Environment Secrets (Don't leak your Gemini Key!)
+# --- Next.js build output (rebuilt inside Docker) ---
+.next/
+frontend/.next/
+out/
+
+# --- Environment secrets ---
 .env
+.env.local
+.env.*.local
 
-# Cache and OS junk
-__pycache__/
-*.pyc
+# --- OS & IDE junk ---
 .DS_Store
 Thumbs.db
+*.log
+.vscode/
+.idea/
 
-# Django Static/Media (These are generated during build)
-staticfiles/
-media/
-
-# Github
-.git/
+# --- Docs ---
+README.md

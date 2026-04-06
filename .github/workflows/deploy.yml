@@ -1,9 +1,9 @@
-name: Native Deploy to Raspberry Pi
+name: Deploy to Raspberry Pi
 
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -15,85 +15,52 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
       - name: Create .env
         env:
-          RS_SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          RS_EMAIL_USER: ${{ secrets.EMAIL_HOST_USER }}
-          RS_EMAIL_PASS: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          RS_NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
-          RS_EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          RS_EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          RS_EMAIL_TLS: ${{ secrets.EMAIL_USE_TLS }}
           RS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
-          RS_DEBUG: ${{ secrets.DEBUG }}
-          RS_ALLOWED: ${{ secrets.ALLOWED_HOSTS }}
-          RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
-          RS_CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          RS_VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
           RS_TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
+          RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          RS_ZOHO_EMAIL: ${{ secrets.ZOHO_EMAIL }}
+          RS_ZOHO_PASSWORD: ${{ secrets.ZOHO_PASSWORD }}
+          RS_CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
         run: |
           cd ${{ github.workspace }}
-          
-          cat <<EOF > .env
-          SECRET_KEY="$RS_SECRET_KEY"
-          EMAIL_HOST_USER="$RS_EMAIL_USER"
-          EMAIL_HOST_PASSWORD="$RS_EMAIL_PASS"
-          NOTIFY_EMAIL="$RS_NOTIFY_EMAIL"
-          EMAIL_HOST="$RS_EMAIL_HOST"
-          EMAIL_PORT="${RS_EMAIL_PORT:-587}"
-          EMAIL_USE_TLS="${RS_EMAIL_TLS:-True}"
+
+          cat > .env << ENVEOF
           GEMINI_API_KEY="$RS_GEMINI_KEY"
-          DEBUG="${RS_DEBUG:-False}"
-          ALLOWED_HOSTS="$RS_ALLOWED"
-          FB_APP_ID="$RS_FB_APP_ID"
-          CLOUDFLARE_TOKEN="$RS_CLOUDFLARE_TOKEN"
-          VITE_TURNSTILE_SITE_KEY="$RS_VITE_TURNSTILE_SITE_KEY"
           TURNSTILE_SECRET_KEY="$RS_TURNSTILE_SECRET_KEY"
-          EOF
-          
-          date "+%Y-%m-%d %H:%M:%S" > brain_sync.txt
-          echo "✅ .env and brain_sync.txt created successfully"
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY="$RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY"
+          ZOHO_EMAIL="$RS_ZOHO_EMAIL"
+          ZOHO_PASSWORD="$RS_ZOHO_PASSWORD"
+          CONTACT_EMAIL="$RS_CONTACT_EMAIL"
+          ENVEOF
+
+          echo "✅ .env created successfully"
 
       - name: Build and Restart
         run: |
-                # 1. Pull the absolute latest code first
-                git pull origin main 
-                
-                # 2. Build without cache
-                docker compose build --no-cache --build-arg VITE_TURNSTILE_SITE_KEY="${{ secrets.VITE_TURNSTILE_SITE_KEY }}"
-                
-                # 3. Kill the old version and start the new one
-                docker compose up -d --force-recreate
-                
-                # 4. CRITICAL: Force Django to refresh static files inside the running container
-                docker exec resume_website python manage.py collectstatic --noinput --clear
-                
-                docker image prune -f
+          git pull origin main
 
-      - name: Trigger AI Ingestion and Sync
-        run: |
-          echo "📥 Ingesting real data into AI..."
-          docker exec resume_website python ingest_data.py
-          
-          echo "🔄 Running Sync..."
-          docker exec resume_website python manage.py sync_brain
+          docker compose build --no-cache \
+            --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}"
+
+          docker compose up -d --force-recreate
+
+          docker image prune -f
+
+          echo "✅ Container started"
 
       - name: Verify Deployment
         run: |
           echo "Waiting for container to stabilize..."
           sleep 30
-          
+
           STATUS=$(docker inspect --format='{{json .State.Health.Status}}' resume_website)
-          
+
           if [ "$STATUS" = "\"healthy\"" ]; then
-            echo "Website is UP and Healthy!"
+            echo "✅ Website is UP and Healthy!"
           else
-            echo "Website is UNHEALTHY or CRASHED. Current status: $STATUS"
-            docker logs resume_website
+            echo "❌ Website is UNHEALTHY. Current status: $STATUS"
+            docker logs resume_website --tail 50
             exit 1
           fi

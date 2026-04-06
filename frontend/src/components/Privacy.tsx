@@ -1,0 +1,71 @@
+'use client';
+import { useRouter } from 'next/navigation';
+
+const Privacy = () => {
+  const router = useRouter();
+
+  return (
+    <section className="min-h-screen bg-white dark:bg-gray-950 w-full flex flex-col justify-center py-20">
+      <div className="w-full max-w-4xl mx-auto px-8">
+
+        <div className="mb-12 flex items-center gap-6">
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Privacy Policy</h1>
+          <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
+          <span className="text-xs font-mono text-gray-400 dark:text-gray-500">v.2026.03</span>
+        </div>
+
+        <article className="prose prose-slate prose-sm md:prose-base max-w-none dark:prose-invert
+          prose-h3:text-blue-600 dark:prose-h3:text-blue-400 prose-h3:font-bold prose-h3:mt-8
+          prose-strong:text-gray-900 dark:prose-strong:text-white
+          prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-p:leading-relaxed">
+
+          <p className="text-sm italic text-gray-400 dark:text-gray-500 mb-8">Last Updated: March 2026</p>
+
+          <h3>1. Data We Process</h3>
+          <p>This site is designed to be privacy-first. We do not sell your data.</p>
+          <ul>
+            <li><strong>Chat History:</strong> This is stored in your local session. If you clear your browser cookies, this history is deleted.</li>
+            <li><strong>Preferences:</strong> We store a small cookie to remember your Dark/Light mode choice.</li>
+            <li><strong>Security:</strong> Standard CSRF tokens are used to prevent cross-site attacks.</li>
+          </ul>
+
+          <h3>2. Third Parties</h3>
+          <p>We use <strong>Gemini AI</strong> to power the chat. Any prompts you send are processed by Google. We do not send your personal identity to them.</p>
+
+          <h3>3. Your Rights</h3>
+          <p>As an EU resident, you have the right to access or delete your data. Since we use local sessions, you can exercise this right simply by clicking "Wipe All My Data" in the footer or clearing your browser cache.</p>
+
+          <h3>4. Server Logs and SEO</h3>
+          <p>
+            To ensure the security and performance of this site, our server automatically
+            logs standard technical information when you visit. This includes your
+            <strong> IP address</strong>, browser type, and the pages you access.
+          </p>
+          <p className="bg-slate-50 dark:bg-gray-800 p-4 rounded-xl border border-slate-100 dark:border-gray-700">
+            <strong>Legal Basis:</strong> We process this data based on our
+            <em> Legitimate Interest</em> (GDPR Art. 6(1)(f)) to maintain website security,
+            prevent fraud, and allow search engines to crawl and index the site accurately.
+          </p>
+
+          <h3>5. Data Retention</h3>
+          <p>
+            Server logs are typically kept for 30 days before being automatically deleted.
+            Your <strong>Chat History</strong> and <strong>Theme Preferences </strong>
+            stay on your device until you choose to clear them.
+          </p>
+        </article>
+
+        <div className="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800">
+          <button
+            onClick={() => router.back()}
+            className="text-blue-600 dark:text-blue-400 font-bold text-sm hover:underline cursor-pointer flex items-center"
+          >
+            ← Back to Portfolio
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Privacy;

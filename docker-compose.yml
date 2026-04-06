@@ -3,19 +3,15 @@ services:
     build:
       context: .
       args:
-        - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+        - NEXT_PUBLIC_TURNSTILE_SITE_KEY=${NEXT_PUBLIC_TURNSTILE_SITE_KEY}
     container_name: resume_website
     restart: unless-stopped
     env_file:
       - .env
-    volumes:
-      - ./.env:/home/app/web/.env
-      #- .:/code
-      - ./chroma_db:/code/chroma_db
     ports:
-      - "8080:8000"
+      - "8080:3000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 30s
       timeout: 5s
       retries: 3

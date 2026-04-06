@@ -5,7 +5,23 @@ import Contact from '@/components/Contact';
 
 export const metadata = {
   title: 'Audrius Morkūnas | Portfolio',
-  description: 'Explore the portfolio of Audrius Morkūnas - Creator of AdotByte AI. Linux, Docker, Next.js, and React.',
+  description: 'Portfolio of Audrius Morkūnas — Creator AI chatbot, Next.js, Docker, Linux server admin on Raspberry Pi 5.',
+  openGraph: {
+    title: 'Audrius Morkūnas | Portfolio',
+    description: 'Portfolio of Audrius Morkūnas — Creator AI chatbot, Next.js, Docker, Linux server admin on Raspberry Pi 5.',
+    url: 'https://morkunas.info',
+    siteName: 'Audrius Morkūnas Portfolio',
+    images: [
+      {
+        url: 'https://morkunas.info/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'Audrius Morkūnas Portfolio',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 export default function Home() {

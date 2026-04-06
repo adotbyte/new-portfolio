@@ -2,9 +2,12 @@
 FROM node:22-slim AS builder
 WORKDIR /app
 
+# ✅ Suppress npm update notice
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+
 # Copy package files first for layer caching
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install -g npm@latest && npm ci
 
 # Copy source
 COPY frontend/ ./
@@ -21,6 +24,7 @@ FROM node:22-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV DEBIAN_FRONTEND=noninteractive
 
 # ✅ Install curl for health check
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*

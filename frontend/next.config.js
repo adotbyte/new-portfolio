@@ -1,12 +1,9 @@
-import crypto from 'crypto';
-
 const nextConfig = {
   output: 'standalone',
   experimental: {
     optimizeCss: true,
   },
   async headers() {
-    const nonce = crypto.randomBytes(16).toString('base64');
     return [
       {
         source: '/(.*)',
@@ -15,12 +12,13 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              `script-src 'self' 'nonce-${nonce}' https://challenges.cloudflare.com`,
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
-              "font-src 'self'",
-              "connect-src 'self' https://generativelanguage.googleapis.com",
-              "frame-src https://challenges.cloudflare.com",
+              "font-src 'self' data:",
+              "connect-src 'self' https://generativelanguage.googleapis.com https://challenges.cloudflare.com",
+              "frame-src 'self' https://challenges.cloudflare.com",
+              "worker-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",
             ].join('; '),
@@ -35,7 +33,7 @@ const nextConfig = {
           },
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN',
           },
           {
             key: 'Referrer-Policy',

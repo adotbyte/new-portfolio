@@ -26,17 +26,13 @@ jobs:
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
         run: |
           cd ${{ github.workspace }}
-
-          cat > .env << ENVEOF
-          GEMINI_API_KEY="$RS_GEMINI_KEY"
-          TURNSTILE_SECRET_KEY="$RS_TURNSTILE_SECRET_KEY"
-          NEXT_PUBLIC_TURNSTILE_SITE_KEY="$RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY"
-          ZOHO_EMAIL="$RS_ZOHO_EMAIL"
-          ZOHO_PASSWORD="$RS_ZOHO_PASSWORD"
-          CONTACT_EMAIL="$RS_CONTACT_EMAIL"
-          FB_APP_ID="$RS_FB_APP_ID"
-          ENVEOF
-
+          echo "GEMINI_API_KEY=$RS_GEMINI_KEY" > .env
+          echo "TURNSTILE_SECRET_KEY=$RS_TURNSTILE_SECRET_KEY" >> .env
+          echo "NEXT_PUBLIC_TURNSTILE_SITE_KEY=$RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY" >> .env
+          echo "ZOHO_EMAIL=$RS_ZOHO_EMAIL" >> .env
+          echo "ZOHO_PASSWORD=$RS_ZOHO_PASSWORD" >> .env
+          echo "CONTACT_EMAIL=$RS_CONTACT_EMAIL" >> .env
+          echo "FB_APP_ID=$RS_FB_APP_ID" >> .env
           echo "✅ .env created successfully"
 
       - name: Build and Restart

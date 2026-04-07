@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
     type: 'website',
   },
   other: {
-    'fb:app_id': process.env.NEXT_PUBLIC_FB_APP_ID ?? '',
+    'fb:app_id': process.env.FB_APP_ID ?? '',
   },
 };
 }

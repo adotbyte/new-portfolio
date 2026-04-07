@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, ChevronDown, ChevronUp, Check, X, Download, Copy } from 'lucide-react';
 import TypewriterMarkdown from './TypewriterMarkdown';
+import ReactMarkdown from 'react-markdown';
 
 function getCookie(name: string): string {
   let cookieValue = '';
@@ -283,7 +284,7 @@ export default function Chatbot() {
                       }}
                     />
                   ) : (
-                    <div dangerouslySetInnerHTML={{ __html: m.content }} />
+                    <ReactMarkdown>{m.content}</ReactMarkdown>
                   )}
                   {m.role === 'ai' && (
                     <button onClick={() => handleCopy(m.content, i)} style={{ position: 'absolute', bottom: '-20px', right: '5px', background: 'none', border: 'none', cursor: 'pointer', color: theme.text, opacity: 0.5 }}>

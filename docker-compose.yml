@@ -4,6 +4,7 @@ services:
       context: .
       args:
         - NEXT_PUBLIC_TURNSTILE_SITE_KEY=${NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+        - FB_APP_ID=${FB_APP_ID}
     container_name: resume_website
     restart: unless-stopped
     env_file:

@@ -3,11 +3,11 @@
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=google&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude_AI-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
 
 ## 🚀 AI-Powered Portfolio — Next.js
 
-A modern, self-hosted portfolio website featuring an **AI Chatbot** powered by **Gemini AI**, built with **Next.js**, containerized with **Docker**, and secured via **Cloudflare Zero Trust**.
+A modern, self-hosted portfolio website featuring an **AI Agent** powered by **Anthropic Claude**, built with **Next.js**, containerized with **Docker**, and secured via **Cloudflare Zero Trust**.
 
 ## 🛡️ Infrastructure & Security
 
@@ -19,10 +19,18 @@ A modern, self-hosted portfolio website featuring an **AI Chatbot** powered by *
 ## 🏗️ Technical Stack
 
 * **Frontend:** Next.js 16, React, Tailwind CSS
-* **AI Engine:** Gemini AI chatbot with `about_me.md` context (RAG-lite)
+* **AI Engine:** Anthropic Claude agent with tool use — fetches live GitHub repos, sends contact emails, checks availability
 * **Email:** Nodemailer via Zoho SMTP
 * **DevOps:** Docker, Docker Compose, GitHub Actions (self-hosted runner on Raspberry Pi 5)
 * **Network:** Cloudflare Zero Trust, Tunneling
+
+## 🤖 AI Agent Capabilities
+
+The chatbot is a true **agentic system** — not just a Q&A bot:
+
+* **🐙 Live GitHub repos** — fetches latest projects dynamically via GitHub API
+* **📧 Contact collection** — gathers visitor name, email, and message, then sends directly to Zoho inbox
+* **✅ Availability status** — answers whether Audrius is open to new opportunities
 
 ## 🖥️ Hardware
 
@@ -32,18 +40,20 @@ Running on a **Raspberry Pi 5 (16GB RAM)** with **2× 2TB NVMe SSD** storage, se
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/adotbyte/resume_website.git
-cd resume_website
+git clone https://github.com/adotbyte/new-portfolio.git
+cd new-portfolio
 ```
 
 ### 2. Create `.env` file
 ```bash
-GEMINI_API_KEY=your_key
+ANTHROPIC_API_KEY=your_key
 TURNSTILE_SECRET_KEY=your_key
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_key
 ZOHO_EMAIL=your@email.com
-ZOHO_PASSWORD=your_password
+ZOHO_PASSWORD=your_app_password
 CONTACT_EMAIL=your@email.com
+FB_APP_ID=your_fb_app_id
+GH_TOKEN=your_github_token
 ```
 
 ### 3. Run with Docker Compose

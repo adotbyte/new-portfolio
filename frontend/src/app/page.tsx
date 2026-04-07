@@ -4,6 +4,8 @@ import HomeLab from '@/components/HomeLab';
 import Contact from '@/components/Contact';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
   title: 'Audrius Morkūnas | Portfolio',

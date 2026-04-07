@@ -13,7 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <script dangerouslySetInnerHTML={{
+        <script
+          nonce={process.env.NEXT_PUBLIC_NONCE}
+          dangerouslySetInnerHTML={{
           __html: `
             (function() {
               const saved = localStorage.getItem('theme');

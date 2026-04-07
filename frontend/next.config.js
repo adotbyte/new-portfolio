@@ -1,10 +1,12 @@
-/** @type {import('next').NextConfig} */
+import crypto from 'crypto';
+
 const nextConfig = {
   output: 'standalone',
   experimental: {
     optimizeCss: true,
   },
   async headers() {
+    const nonce = crypto.randomBytes(16).toString('base64');
     return [
       {
         source: '/(.*)',
@@ -13,7 +15,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
+              `script-src 'self' 'nonce-${nonce}' https://challenges.cloudflare.com`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self'",
@@ -25,13 +27,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: [
-              'camera=()',
-              'microphone=()',
-              'geolocation=()',
-              'payment=()',
-              'usb=()',
-            ].join(', '),
+            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
           },
           {
             key: 'X-Content-Type-Options',

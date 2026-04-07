@@ -16,7 +16,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://generativelanguage.googleapis.com https://challenges.cloudflare.com",
+              "connect-src 'self' https://api.anthropic.com https://challenges.cloudflare.com",
               "frame-src 'self' https://challenges.cloudflare.com",
               "worker-src 'self' blob:",
               "object-src 'none'",

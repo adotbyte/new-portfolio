@@ -27,7 +27,7 @@ const projects = [
   {
     name: 'AI-Powered Portfolio',
     description: 'A self-hosted resume website with an integrated AI chatbot that answers questions about my experience. Built from scratch and running on my Raspberry Pi 5 via Cloudflare Tunnels.',
-    stack: ['Next.js', 'React', 'Tailwind', 'Gemini AI', 'Docker'],
+    stack: ['Next.js', 'React', 'Tailwind', 'Anthropic Claude', 'Docker'],
     link: 'https://morkunas.info',
     github: 'https://github.com/adotbyte',
     icon: '🚀',
@@ -48,7 +48,7 @@ const stackColors: Record<string, string> = {
   'Next.js': 'bg-black text-white dark:bg-white dark:text-black',
   'React': 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
   'Tailwind': 'bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300',
-  'Gemini AI': 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300',
+  'Anthropic Claude': 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300',
   'Docker': 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
   'Linux': 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300',
   'Cloudflare': 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300',

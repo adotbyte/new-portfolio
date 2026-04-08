@@ -13,7 +13,7 @@ const services = [
   { name: 'dockhand', desc: 'Docker container management UI', category: 'System', icon: '🐳', status: 'running' },
   { name: 'hbbr', desc: 'RustDesk relay server', category: 'Remote', icon: '🔗', status: 'running' },
   { name: 'hbbs', desc: 'RustDesk signaling server', category: 'Remote', icon: '📡', status: 'running' },
-  { name: 'resume_website', desc: 'This portfolio — Next.js + Django', category: 'Apps', icon: '🚀', status: 'running' },
+  { name: 'resume_website', desc: 'This portfolio — Next.js', category: 'Apps', icon: '🚀', status: 'running' },
   { name: 'rustdesk_bridge', desc: 'RustDesk network bridge', category: 'Remote', icon: '🌉', status: 'running' },
   { name: 'searxng', desc: 'Privacy-first meta search engine', category: 'Apps', icon: '🔍', status: 'running' },
   { name: 'searxng-valkey', desc: 'Valkey cache for SearXNG', category: 'Apps', icon: '⚡', status: 'running' },

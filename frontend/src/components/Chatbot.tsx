@@ -294,7 +294,15 @@ export default function Chatbot() {
                 </div>
               </div>
             ))}
-            {isTyping && <div style={{ alignSelf: 'flex-start', padding: '10px 14px' }}>Typing...</div>}
+            {isTyping && (
+              <div style={{ 
+                alignSelf: 'flex-start', 
+                padding: '10px 14px',
+                color: theme.text  // ✅ uses the same color as AI messages
+              }}>
+                Typing...
+              </div>
+            )}
             <div ref={scrollRef} />
           </div>
 

@@ -61,6 +61,7 @@ jobs:
       - name: Run Migrations
         run: |
           cd ${{ github.workspace }}/frontend
+          npm ci --omit=dev
           /usr/bin/npx prisma migrate deploy
           echo "✅ Migrations applied"
 

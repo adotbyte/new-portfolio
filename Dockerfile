@@ -5,6 +5,9 @@ WORKDIR /app
 # ✅ Suppress npm update notice
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 
+# Install OpenSSL
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Copy package files first for layer caching
 COPY frontend/package*.json ./
 RUN npm ci
@@ -29,6 +32,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y curl openssl && rm -rf /var/lib/apt/lists/*
 
 # ✅ Install curl for health check
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*

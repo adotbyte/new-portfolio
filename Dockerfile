@@ -20,6 +20,7 @@ ARG FB_APP_ID
 ENV FB_APP_ID=$FB_APP_ID
 
 # Build Next.js
+RUN npx prisma generate
 RUN npm run build
 
 # --- Production Stage ---

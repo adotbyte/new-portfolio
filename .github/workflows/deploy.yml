@@ -61,6 +61,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
+          sleep 10
           cd ${{ github.workspace }}/frontend
           npm ci --omit=dev
           /usr/bin/npx prisma migrate deploy

@@ -3,7 +3,6 @@ import Anthropic from '@anthropic-ai/sdk';
 import nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { PrismaClient } from '@prisma/client/edge';
 
 // ─── Clients ────────────────────────────────────────────────────────────────
 import { prisma } from '@/lib/prisma';

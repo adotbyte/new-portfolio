@@ -26,7 +26,6 @@ jobs:
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
           RS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RS_GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          RS_DATABASE_URL: ${{ secrets.DATABASE_URL }}
           RS_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           RS_ANTHROPIC_MODEL: ${{ secrets.ANTHROPIC_MODEL }}
         run: |
@@ -40,7 +39,7 @@ jobs:
           echo "FB_APP_ID=$RS_FB_APP_ID" >> .env
           echo "ANTHROPIC_API_KEY=$RS_ANTHROPIC_API_KEY" >> .env
           echo "GH_TOKEN=$RS_GH_TOKEN" >> .env
-          echo "DATABASE_URL=$RS_DATABASE_URL" >> .env
+          echo "DATABASE_URL=postgresql://portfolio:$RS_DB_PASSWORD@db:5432/portfolio" >> .env
           echo "DB_PASSWORD=$RS_DB_PASSWORD" >> .env
           echo "ANTHROPIC_MODEL=$RS_ANTHROPIC_MODEL" >> .env
           echo "✅ .env created successfully"

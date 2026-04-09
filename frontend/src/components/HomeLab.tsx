@@ -6,6 +6,7 @@ const services = [
   { name: 'alloy', desc: 'Grafana Alloy metrics collector', category: 'Monitoring', icon: '📊', status: 'running' },
   { name: 'cadvisor', desc: 'Container resource usage & performance', category: 'Monitoring', icon: '📈', status: 'running' },
   { name: 'cf-managed-beacon', desc: 'Cloudflare managed tunnel beacon', category: 'Network', icon: '☁️', status: 'running' },
+  { name: 'chromadb', desc: 'Vector database for AI embeddings', category: 'Apps', icon: '🧠', status: 'running' },
   { name: 'cloudflared', desc: 'Cloudflare Zero Trust tunnel daemon', category: 'Network', icon: '🔒', status: 'running' },
   { name: 'directus-app', desc: 'Headless CMS application layer', category: 'Apps', icon: '🗂️', status: 'running' },
   { name: 'directus-cache', desc: 'Redis cache for Directus CMS', category: 'Apps', icon: '⚡', status: 'running' },
@@ -13,6 +14,7 @@ const services = [
   { name: 'dockhand', desc: 'Docker container management UI', category: 'System', icon: '🐳', status: 'running' },
   { name: 'hbbr', desc: 'RustDesk relay server', category: 'Remote', icon: '🔗', status: 'running' },
   { name: 'hbbs', desc: 'RustDesk signaling server', category: 'Remote', icon: '📡', status: 'running' },
+  { name: 'portfolio_db', desc: 'PostgreSQL database for portfolio', category: 'Apps', icon: '🗄️', status: 'running' },
   { name: 'resume_website', desc: 'This portfolio — Next.js', category: 'Apps', icon: '🚀', status: 'running' },
   { name: 'rustdesk_bridge', desc: 'RustDesk network bridge', category: 'Remote', icon: '🌉', status: 'running' },
   { name: 'searxng', desc: 'Privacy-first meta search engine', category: 'Apps', icon: '🔍', status: 'running' },
@@ -40,7 +42,7 @@ export default function HomeLab() {
     : services.filter(s => s.category === activeCategory);
 
   const stats = {
-    containers: services.length,
+    containers: 20,
     storage: '4TB NVMe',
     ram: '16GB',
     uptime: '99.9%',
@@ -88,7 +90,7 @@ export default function HomeLab() {
           <h2 className="text-xl font-black text-gray-900 dark:text-white">Docker Services</h2>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-xs font-bold text-green-600 dark:text-green-400">{services.length} running</span>
+            <span className="text-xs font-bold text-green-600 dark:text-green-400">{20} running</span>
           </div>
         </div>
 
@@ -143,7 +145,7 @@ export default function HomeLab() {
           </div>
           <div className="space-y-1 text-xs">
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">docker ps</span> <span className="text-gray-500">--format "table"</span></p>
-            <p className="text-green-600 dark:text-green-400">✓ {services.length} containers running</p>
+            <p className="text-green-600 dark:text-green-400">✓ {20} containers running</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">uptime</span></p>
             <p className="text-gray-600 dark:text-gray-300">up 247 days, load average: 0.42, 0.38, 0.35</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">free -h</span></p>

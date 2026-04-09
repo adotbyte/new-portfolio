@@ -4,22 +4,6 @@ import { Send, MessageCircle, ChevronDown, ChevronUp, Check, X, Download, Copy }
 import TypewriterMarkdown from './TypewriterMarkdown';
 import ReactMarkdown from 'react-markdown';
 
-function getCookie(name: string): string {
-  let cookieValue = '';
-  if (typeof document === 'undefined') return '';
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === name + '=') {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
 type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
 
 const DEFAULT_MESSAGE: Message = {
@@ -44,25 +28,17 @@ export default function Chatbot() {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem('adotbyte_chat_history');
-    if (saved) setMessages(JSON.parse(saved));
-    const savedTime = localStorage.getItem('adotbyte_chat_time');
-    if (savedTime) setLastSaved(savedTime);
     setIsMobile(window.innerWidth < 500);
+    fetch('/api/chat')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.messages?.length) {
+          setMessages(data.messages);
+          setLastSaved('Restored from server');
+        }
+      })
+      .finally(() => setMounted(true)); // show only after history is ready
   }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    localStorage.setItem('adotbyte_chat_history', JSON.stringify(messages));
-    if (messages.length > 1) {
-      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const date = new Date().toLocaleDateString([], { month: 'short', day: 'numeric' });
-      const fullTime = `${date} at ${now}`;
-      localStorage.setItem('adotbyte_chat_time', fullTime);
-      setLastSaved(fullTime);
-    }
-  }, [messages, mounted]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 500);
@@ -141,8 +117,8 @@ export default function Chatbot() {
     try {
       const response = await fetch('/api/chat/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-        body: JSON.stringify({ message: messageToSend, history: messages }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: messageToSend, }),
       });
       const data = await response.json();
       setMessages((prev) => [...prev, { role: 'ai', content: data.content, isNew: true }]);
@@ -153,9 +129,8 @@ export default function Chatbot() {
     }
   };
 
-  const clearChat = () => {
-    localStorage.removeItem('adotbyte_chat_history');
-    localStorage.removeItem('adotbyte_chat_time');
+  const clearChat = async () => {
+    await fetch('/api/chat', { method: 'DELETE' });
     setLastSaved('');
     setMessages([{ role: 'ai', content: 'History cleared! Fresh start.' }]);
     setShowConfirm(false);

@@ -13,6 +13,10 @@ const Footer = () => {
   const handleFinalWipe = async () => {
     setIsWiping(true);
     try {
+      // Delete chat history from DB
+      await fetch('/api/chat', { method: 'DELETE' });
+
+      // Clear local storage and cookies as before
       localStorage.clear();
       sessionStorage.clear();
       document.cookie.split(';').forEach((c) => {
@@ -20,6 +24,7 @@ const Footer = () => {
           .replace(/^ +/, '')
           .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
       });
+
       setIsWiping(false);
       setShowConfirm(false);
       setShowPrivacy(false);
@@ -67,7 +72,7 @@ const Footer = () => {
               <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-left">
                 <p>To provide a functional experience, this site uses:</p>
                 <ul className="space-y-2">
-                  <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>Chat History:</strong> Saved in your browser locally.</span></li>
+                  <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>Chat History:</strong> Stored on our server, linked to an anonymous cookie.</span></li>
                   <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>Theme:</strong> Remembers your Dark/Light mode.</span></li>
                   <li className="flex gap-2">
                     <span className="text-blue-500">▹</span>

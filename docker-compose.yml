@@ -1,4 +1,17 @@
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: portfolio_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: portfolio
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   web:
     build:
       context: .
@@ -9,6 +22,9 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    depends_on:
+      db:
+        condition: service_started
     ports:
       - "8080:3000"
     healthcheck:
@@ -17,3 +33,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+
+volumes:
+  postgres_data:

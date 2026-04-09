@@ -3,9 +3,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { PrismaClient } from '@prisma/client/edge';
 
 // ─── Clients ────────────────────────────────────────────────────────────────
-
+import { prisma } from '@/lib/prisma';
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
 const mailer = nodemailer.createTransport({
@@ -247,72 +248,111 @@ ${aboutMe}
 
 // ─── API Route Handler ────────────────────────────────────────────────────────
 
+// GET — load history for this visitor
+export async function GET(req: NextRequest) {
+  const userId = req.cookies.get('visitor_id')?.value;
+  if (!userId) return NextResponse.json({ messages: [] });
+
+  const rows = await prisma.message.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  const messages = rows.map((r: { role: string; content: string }) => ({
+    role: r.role as 'user' | 'ai',
+    content: r.content,
+  }));
+
+  return NextResponse.json({ messages });
+}
+
+// DELETE — clear history for this visitor
+export async function DELETE(req: NextRequest) {
+  const userId = req.cookies.get('visitor_id')?.value;
+  if (!userId) return NextResponse.json({ ok: true });
+
+  await prisma.message.deleteMany({ where: { userId } });
+  return NextResponse.json({ ok: true });
+}
+
+// POST — send a message, persist both turns
 export async function POST(req: NextRequest) {
-  try {
-    const { message, history = [] }: { message: string; history: ChatMessage[] } =
-      await req.json();
+  const userId = req.cookies.get('visitor_id')?.value;
 
-    if (!message?.trim()) {
-      return NextResponse.json({ error: 'No message provided' }, { status: 400 });
-    }
+  const { message } = await req.json();
+  if (!message?.trim()) {
+    return NextResponse.json({ error: 'No message' }, { status: 400 });
+  }
 
-    // Build message history for Anthropic
-    const messages: Anthropic.MessageParam[] = [
-      ...history
-        .filter((m) => m.content?.trim())
-        .map((m) => ({
-          role: (m.role === 'ai' ? 'assistant' : 'user') as 'user' | 'assistant',
-          content: m.content.trim(),
-        })),
-      { role: 'user' as const, content: message.trim() },
-    ];
+  // Load full history from DB (not from the client anymore)
+  const rows = userId
+    ? await prisma.message.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'asc' },
+      })
+    : [];
 
-    const systemPrompt = buildSystemPrompt();
+  // Save the incoming user message
+  if (userId) {
+    await prisma.message.create({
+      data: { userId, role: 'user', content: message.trim() },
+    });
+  }
+
+  // Build Anthropic messages from DB history + new message
+  const messages: Anthropic.MessageParam[] = [
+    ...rows.map((r: { role: string; content: string }) => ({
+      role: (r.role === 'ai' ? 'assistant' : 'user') as 'user' | 'assistant',
+      content: r.content,
+    })),
+    { role: 'user', content: message.trim() },
+  ];
+
+  const systemPrompt = buildSystemPrompt();
 
     // ── Agentic loop ──────────────────────────────────────────────────────────
-    let response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5',
+  // ── Agentic loop (unchanged from your original) ──
+  let response = await anthropic.messages.create({
+    model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
+    max_tokens: 1024,
+    system: systemPrompt,
+    tools,
+    messages,
+  });
+
+  while (response.stop_reason === 'tool_use') {
+    const toolUseBlocks = response.content.filter(
+      (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use'
+    );
+    const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
+      toolUseBlocks.map(async (block) => ({
+        type: 'tool_result' as const,
+        tool_use_id: block.id,
+        content: await executeTool(block.name, block.input as Record<string, string>),
+      }))
+    );
+    messages.push({ role: 'assistant', content: response.content });
+    messages.push({ role: 'user', content: toolResults });
+    response = await anthropic.messages.create({
+      model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
       max_tokens: 1024,
       system: systemPrompt,
       tools,
       messages,
     });
-
-    // Keep going while Claude wants to use tools
-    while (response.stop_reason === 'tool_use') {
-      const toolUseBlocks = response.content.filter(
-        (b): b is Anthropic.ToolUseBlock => b.type === 'tool_use'
-      );
-
-      // Execute all requested tools (Claude may request multiple at once)
-      const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
-        toolUseBlocks.map(async (block) => ({
-          type: 'tool_result' as const,
-          tool_use_id: block.id,
-          content: await executeTool(block.name, block.input as Record<string, string>),
-        }))
-      );
-
-      // Feed results back to Claude
-      messages.push({ role: 'assistant', content: response.content });
-      messages.push({ role: 'user', content: toolResults });
-
-      response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1024,
-        system: systemPrompt,
-        tools,
-        messages,
-      });
-    }
-
-    // Extract final text response
-    const textBlock = response.content.find((b): b is Anthropic.TextBlock => b.type === 'text');
-    const content = textBlock?.text ?? "Sorry, I couldn't generate a response.";
-
-    return NextResponse.json({ content });
-  } catch (err) {
-    console.error('Agent error:', err);
-    return NextResponse.json({ error: 'Agent failed to respond' }, { status: 500 });
   }
+
+  const textBlock = response.content.find(
+    (b): b is Anthropic.TextBlock => b.type === 'text'
+  );
+  const content = textBlock?.text ?? "Sorry, I couldn't generate a response.";
+
+  // Save AI response to DB
+  if (userId) {
+    await prisma.message.create({
+      data: { userId, role: 'ai', content },
+    });
+  }
+
+  return NextResponse.json({ content });
 }

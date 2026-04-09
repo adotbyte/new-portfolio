@@ -11,7 +11,7 @@ const Privacy = () => {
         <div className="mb-12 flex items-center gap-6">
           <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Privacy Policy</h1>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
-          <span className="text-xs font-mono text-gray-400 dark:text-gray-500">v.2026.03</span>
+          <span className="text-xs font-mono text-gray-400 dark:text-gray-500">v.2026.04</span>
         </div>
 
         <article className="prose prose-slate prose-sm md:prose-base max-w-none dark:prose-invert
@@ -19,21 +19,21 @@ const Privacy = () => {
           prose-strong:text-gray-900 dark:prose-strong:text-white
           prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-p:leading-relaxed">
 
-          <p className="text-sm italic text-gray-400 dark:text-gray-500 mb-8">Last Updated: March 2026</p>
+          <p className="text-sm italic text-gray-400 dark:text-gray-500 mb-8">Last Updated: April 2026</p>
 
           <h3>1. Data We Process</h3>
           <p>This site is designed to be privacy-first. We do not sell your data.</p>
-          <ul>
-            <li><strong>Chat History:</strong> This is stored in your local session. If you clear your browser cookies, this history is deleted.</li>
-            <li><strong>Preferences:</strong> We store a small cookie to remember your Dark/Light mode choice.</li>
-            <li><strong>Security:</strong> Standard CSRF tokens are used to prevent cross-site attacks.</li>
-          </ul>
+            <ul>
+              <li><strong>Chat History:</strong> Stored server-side in a database, linked to an anonymous cookie. If you clear the chat using the button in the chat window, your history is permanently deleted.</li>
+              <li><strong>Preferences:</strong> We store a small cookie to remember your Dark/Light mode choice.</li>
+              <li><strong>Visitor ID:</strong> An anonymous cookie is used to link your chat history to your browser. It contains no personal information.</li>
+            </ul>
 
           <h3>2. Third Parties</h3>
-          <p>We use <strong>Gemini AI</strong> to power the chat. Any prompts you send are processed by Google. We do not send your personal identity to them.</p>
+          <p>We use <strong>Anthropic Claude AI</strong> to power the chat. Any prompts you send are processed by Anthropic. We do not send your personal identity to them.</p>
 
           <h3>3. Your Rights</h3>
-          <p>As an EU resident, you have the right to access or delete your data. Since we use local sessions, you can exercise this right simply by clicking "Wipe All My Data" in the footer or clearing your browser cache.</p>
+          <p>As an EU resident, you have the right to access or delete your data. You can delete your chat history at any time by clicking the clear button inside the chat window. This permanently removes your data from our servers.</p>
 
           <h3>4. Server Logs and SEO</h3>
           <p>
@@ -50,8 +50,9 @@ const Privacy = () => {
           <h3>5. Data Retention</h3>
           <p>
             Server logs are typically kept for 30 days before being automatically deleted.
-            Your <strong>Chat History</strong> and <strong>Theme Preferences </strong>
-            stay on your device until you choose to clear them.
+            Your <strong>Chat History</strong> is stored on our server until you choose to
+            clear it using the chat window. Your <strong>Theme Preferences</strong> stay
+            on your device until you clear your browser cookies.
           </p>
         </article>
 

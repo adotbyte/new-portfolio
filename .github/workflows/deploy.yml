@@ -49,7 +49,7 @@ jobs:
           git pull origin main
 
           docker compose build --no-cache \
-            --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}"
+            --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             --build-arg ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
 
           docker compose up -d --force-recreate

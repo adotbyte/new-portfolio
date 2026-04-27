@@ -5,14 +5,18 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const envPath = join(__dirname, '..', '.env.local');
-const env = readFileSync(envPath, 'utf-8');
-env.split('\n').forEach(line => {
-  const trimmed = line.trim();
-  if (!trimmed || trimmed.startsWith('#')) return;
-  const [key, ...vals] = trimmed.split('=');
-  if (key && vals.length) process.env[key.trim()] = vals.join('=').trim();
-});
+try {
+  const envPath = join(__dirname, '..', '.env.local');
+  const env = readFileSync(envPath, 'utf-8');
+  env.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) return;
+    const [key, ...vals] = trimmed.split('=');
+    if (key && vals.length) process.env[key.trim()] = vals.join('=').trim();
+  });
+} catch {
+  // .env.local not present — rely on environment variables already set
+}
 
 const enPath = join(__dirname, '../messages/en.json');
 const ltPath = join(__dirname, '../messages/lt.json');

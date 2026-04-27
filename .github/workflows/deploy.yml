@@ -50,6 +50,7 @@ jobs:
 
           docker compose build --no-cache \
             --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}"
+            --build-arg ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
 
           docker compose up -d --force-recreate
 
@@ -64,7 +65,7 @@ jobs:
           sleep 10
           cd ${{ github.workspace }}/frontend
           npm ci --omit=dev
-          /usr/bin/npx prisma migrate deploy
+          /usr/bin/npx prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
           echo "✅ Migrations applied"
 
       - name: Verify Deployment

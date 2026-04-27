@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   output: 'standalone',
   outputFileTracingIncludes: {
-    '/*': ['./middleware.ts'],
+    '/*': ['./src/middleware.ts'],
   },
   serverExternalPackages: ['@prisma/client', '@libsql/client'],
 };

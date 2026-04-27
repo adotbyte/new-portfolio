@@ -3,15 +3,19 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, MessageCircle, ChevronDown, ChevronUp, Check, X, Download, Copy } from 'lucide-react';
 import TypewriterMarkdown from './TypewriterMarkdown';
 import ReactMarkdown from 'react-markdown';
+import { useTranslations, useLocale } from 'next-intl';
 
 type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
 
-const DEFAULT_MESSAGE: Message = {
-  role: 'ai',
-  content: "Hi! I'm Audrius's AI Agent. I'll remember our chat even if you refresh!",
-};
-
 export default function Chatbot() {
+  const t = useTranslations('chatbot');
+  const locale = useLocale();
+
+  const DEFAULT_MESSAGE: Message = {
+    role: 'ai',
+    content: t('defaultMessage'),
+  };
+
   const [messages, setMessages] = useState<Message[]>([DEFAULT_MESSAGE]);
   const [lastSaved, setLastSaved] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -34,10 +38,10 @@ export default function Chatbot() {
       .then((data) => {
         if (data.messages?.length) {
           setMessages(data.messages);
-          setLastSaved('Restored from server');
+          setLastSaved(t('restored'));
         }
       })
-      .finally(() => setMounted(true)); // show only after history is ready
+      .finally(() => setMounted(true));
   }, []);
 
   useEffect(() => {
@@ -47,10 +51,7 @@ export default function Chatbot() {
   }, []);
 
   useEffect(() => {
-    const checkTheme = () => {
-      const dark = document.documentElement.classList.contains('dark');
-      setIsDark(dark);
-    };
+    const checkTheme = () => setIsDark(document.documentElement.classList.contains('dark'));
     checkTheme();
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -70,13 +71,9 @@ export default function Chatbot() {
     inputBorder: isDark ? '#444c56' : '#e2e8f0',
   };
 
-  // ✅ Close with animation
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      setIsOpen(false);
-    }, 350);
+    setTimeout(() => { setIsClosing(false); setIsOpen(false); }, 350);
   };
 
   const handleCopy = (text: string, index: number) => {
@@ -91,7 +88,7 @@ export default function Chatbot() {
       const doc = new jsPDF();
       let yPos = 20;
       doc.setFontSize(16);
-      doc.text('AdotByte AI Chat Transcript', 10, yPos);
+      doc.text(`${t('downloadLabel')} Chat Transcript`, 10, yPos);
       yPos += 15;
       messages.forEach((m) => {
         const cleanContent = m.content.replace(/<[^>]*>?/gm, '');
@@ -102,7 +99,7 @@ export default function Chatbot() {
         doc.text(splitText, 10, yPos);
         yPos += splitText.length * 7 + 10;
       });
-      doc.save('Audrius_Resume_Chat.pdf');
+      doc.save(`${t('downloadLabel')}.pdf`);
     } catch (err) {
       console.error('PDF Error:', err);
     }
@@ -118,12 +115,12 @@ export default function Chatbot() {
       const response = await fetch('/api/chat/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: messageToSend, }),
+        body: JSON.stringify({ message: messageToSend, locale }),
       });
       const data = await response.json();
       setMessages((prev) => [...prev, { role: 'ai', content: data.content, isNew: true }]);
     } catch {
-      setMessages((prev) => [...prev, { role: 'ai', content: 'Sorry, brain fog! Check connection.' }]);
+      setMessages((prev) => [...prev, { role: 'ai', content: t('connectionError') }]);
     } finally {
       setIsTyping(false);
     }
@@ -132,7 +129,7 @@ export default function Chatbot() {
   const clearChat = async () => {
     await fetch('/api/chat', { method: 'DELETE' });
     setLastSaved('');
-    setMessages([{ role: 'ai', content: 'History cleared! Fresh start.' }]);
+    setMessages([{ role: 'ai', content: t('cleared') }]);
     setShowConfirm(false);
   };
 
@@ -141,24 +138,21 @@ export default function Chatbot() {
   if (!isOpen) {
     return (
       <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 100000 }}>
-    <button
-      onClick={() => setIsOpen(true)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        width: '65px', height: '65px', borderRadius: '20px', border: 'none',
-        background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
-        color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: isHovered
-          ? '0 15px 35px rgba(37,99,235,0.6)'
-          : '0 10px 25px rgba(147,197,253,0.5)',
-        cursor: 'pointer',
-        transform: isHovered ? 'scale(1.12)' : 'scale(1)',
-        transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease',
-      }}
-    >
-      <MessageCircle size={isHovered ? 26 : 30} style={{ transition: 'all 0.2s ease' }} />
-    </button>
+        <button
+          onClick={() => setIsOpen(true)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          style={{
+            width: '65px', height: '65px', borderRadius: '20px', border: 'none',
+            background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
+            color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: isHovered ? '0 15px 35px rgba(37,99,235,0.6)' : '0 10px 25px rgba(147,197,253,0.5)',
+            cursor: 'pointer',
+            transform: isHovered ? 'scale(1.12)' : 'scale(1)',
+            transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease',
+          }}>
+          <MessageCircle size={isHovered ? 26 : 30} style={{ transition: 'all 0.2s ease' }} />
+        </button>
       </div>
     );
   }
@@ -176,7 +170,6 @@ export default function Chatbot() {
       border: `1px solid ${theme.inputBorder}`,
       transition: 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       boxSizing: 'border-box',
-      // ✅ Switch animation based on isClosing state
       animation: isClosing
         ? 'chatClose 0.35s cubic-bezier(0.36, 0, 0.66, -0.56) forwards'
         : 'chatOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -195,18 +188,15 @@ export default function Chatbot() {
       `}</style>
 
       {/* Header */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
-          padding: '12px 16px', display: 'flex', justifyContent: 'space-between',
-          alignItems: 'center', color: 'white', cursor: 'pointer', minHeight: '52px',
-        }}
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
+      <div style={{
+        background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
+        padding: '12px 16px', display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', color: 'white', cursor: 'pointer', minHeight: '52px',
+      }} onClick={() => setIsCollapsed(!isCollapsed)}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <MessageCircle size={20} />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>AdotByte AI</span>
+            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>{t('title')}</span>
             {lastSaved && !isCollapsed && <span style={{ fontSize: '9px', opacity: 0.8 }}>{lastSaved}</span>}
           </div>
         </div>
@@ -231,7 +221,6 @@ export default function Chatbot() {
           <button style={{ background: 'none', border: 'none', color: 'white' }}>
             {isCollapsed ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
-          {/* ✅ Use handleClose instead of setIsOpen(false) */}
           <button onClick={(e) => { e.stopPropagation(); handleClose(); }} style={{ background: 'none', border: 'none', color: 'white' }}>
             <X size={18} />
           </button>
@@ -250,14 +239,9 @@ export default function Chatbot() {
                   border: m.role === 'user' ? 'none' : `1px solid ${theme.msgAiBorder}`,
                 }}>
                   {m.role === 'ai' && i === messages.length - 1 && m.isNew ? (
-                    <TypewriterMarkdown
-                      content={m.content}
-                      onComplete={() => {
-                        setMessages((prev) =>
-                          prev.map((msg, idx) => idx === i ? { ...msg, isNew: false } : msg)
-                        );
-                      }}
-                    />
+                    <TypewriterMarkdown content={m.content} onComplete={() => {
+                      setMessages((prev) => prev.map((msg, idx) => idx === i ? { ...msg, isNew: false } : msg));
+                    }} />
                   ) : (
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   )}
@@ -270,12 +254,8 @@ export default function Chatbot() {
               </div>
             ))}
             {isTyping && (
-              <div style={{ 
-                alignSelf: 'flex-start', 
-                padding: '10px 14px',
-                color: theme.text  // ✅ uses the same color as AI messages
-              }}>
-                Typing...
+              <div style={{ alignSelf: 'flex-start', padding: '10px 14px', color: theme.text }}>
+                {t('typing')}
               </div>
             )}
             <div ref={scrollRef} />
@@ -286,7 +266,7 @@ export default function Chatbot() {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type a message..."
+                placeholder={t('placeholder')}
                 style={{ width: '100%', padding: '10px', paddingRight: '48px', borderRadius: '10px', border: `1px solid ${theme.inputBorder}`, backgroundColor: theme.inputBg, color: theme.text }}
               />
               <button type="submit" style={{ position: 'absolute', right: '6px', top: '6px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', padding: '10px' }}>

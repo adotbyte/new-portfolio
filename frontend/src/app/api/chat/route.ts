@@ -204,18 +204,29 @@ async function executeTool(
 
 // ─── System Prompt ────────────────────────────────────────────────────────────
 
-function buildSystemPrompt(): string {
+function buildSystemPrompt(locale: string = 'en'): string {
   const aboutMe = (() => {
     try {
-      return readFileSync(join(process.cwd(), 'public', 'about_me.md'), 'utf-8');
+      return readFileSync(join(process.cwd(), 'public', `about_me.${locale}.md`), 'utf-8');
     } catch {
-      return '';
+      try {
+        return readFileSync(join(process.cwd(), 'public', 'about_me.md'), 'utf-8');
+      } catch {
+        return '';
+      }
     }
   })();
+
+  const languageInstruction = locale === 'lt'
+    ? 'IMPORTANT: Always respond in Lithuanian (Lietuvių kalba), regardless of what language the visitor writes in.'
+    : 'Respond in the same language the visitor uses.';
 
   return `You are AdotByte AI — a smart, friendly assistant on Audrius Morkūnas's personal portfolio website.
 
 Your job is to help visitors learn about Audrius, his skills, and his projects — and to connect interested people with him.
+
+## Language
+${languageInstruction}
 
 ## Personality
 - Warm, concise, and professional
@@ -278,7 +289,7 @@ export async function DELETE(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const userId = req.cookies.get('visitor_id')?.value;
 
-  const { message } = await req.json();
+  const { message, locale } = await req.json();
   if (!message?.trim()) {
     return NextResponse.json({ error: 'No message' }, { status: 400 });
   }
@@ -307,7 +318,7 @@ export async function POST(req: NextRequest) {
     { role: 'user', content: message.trim() },
   ];
 
-  const systemPrompt = buildSystemPrompt();
+  const systemPrompt = buildSystemPrompt(locale);
 
     // ── Agentic loop ──────────────────────────────────────────────────────────
   // ── Agentic loop (unchanged from your original) ──

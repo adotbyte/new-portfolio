@@ -1,0 +1,134 @@
+{
+  "nav": {
+    "about": "About",
+    "portfolio": "Portfolio",
+    "homeLab": "Home Lab",
+    "contact": "Contact"
+  },
+  "about": {
+    "technicalStack": "Technical Stack",
+    "status": "Status",
+    "online": "ONLINE",
+    "categories": {
+      "infrastructure": "Infrastructure",
+      "backend": "Backend",
+      "frontend": "Frontend"
+    }
+  },
+  "skills": {
+    "title": "Technical Expertise",
+    "description": "I approach technology from the",
+    "descriptionHighlight": "Server-side down",
+    "descriptionRest": ". With a deep foundation in computer hardware, OS architecture, and networking, I build web applications that aren't just code—they are stable, optimized systems.",
+    "deepTechLabel": "🛠️ Deep Tech Knowledge:",
+    "deepTechText": "From PC building and hardware troubleshooting to complex internet protocols—I understand the physical and logical layers of the web.",
+    "projectsTitle": "Projects",
+    "built": "built",
+    "categories": {
+      "systemsTitle": "Systems & Infrastructure",
+      "systemsSubtitle": "The Core",
+      "backendTitle": "Backend & Servers",
+      "backendSubtitle": "The Engine",
+      "securityTitle": "Security & Web",
+      "securitySubtitle": "The Shield",
+      "toolsTitle": "Modern Tools",
+      "toolsSubtitle": "The Workflow"
+    },
+    "skills": {
+      "linuxAdmin": "Linux Server Admin",
+      "virtualization": "Virtualization",
+      "hardware": "Hardware Diagnostics",
+      "network": "Network Architecture",
+      "django": "Django",
+      "python": "Python",
+      "postgresql": "PostgreSQL",
+      "nginx": "Nginx/Apache",
+      "dns": "DNS Management",
+      "cloudflare": "Cloudflare",
+      "ssl": "SSL/TLS",
+      "hardening": "Server Hardening",
+      "docker": "Docker",
+      "git": "Git/GitHub",
+      "nextjs": "Next.js",
+      "react": "React (Frontend)",
+      "tailwind": "Tailwind CSS"
+    },
+    "projects": {
+      "portfolioName": "AI-Powered Portfolio",
+      "portfolioDesc": "A self-hosted resume website with an integrated AI chatbot that answers questions about my experience. Built from scratch and running on my Raspberry Pi 5 via Cloudflare Tunnels.",
+      "portfolioStatus": "Live",
+      "homelabName": "Self-Hosted Home Lab",
+      "homelabDesc": "A production-grade home server running 20 Docker containers including AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN and more — all secured behind Cloudflare Zero Trust.",
+      "homelabStatus": "Running"
+    }
+  },
+  "homeLab": {
+    "title": "🏠 Home Lab",
+    "device": "Device",
+    "ram": "RAM",
+    "storage": "Storage",
+    "containers": "Containers",
+    "containersRunning": "running",
+    "storageDetail": "Storage:",
+    "storageDetailText": "2× 2TB NVMe SSD in software RAID for redundancy & performance",
+    "dockerServices": "Docker Services",
+    "filterAll": "All",
+    "terminal": {
+      "dockerCmd": "docker ps",
+      "dockerArg": "--format \"table\"",
+      "dockerResult": "containers running",
+      "uptimeCmd": "uptime",
+      "uptimeResult": "up 247 days, load average: 0.42, 0.38, 0.35",
+      "freeCmd": "free -h",
+      "freeResult": "Mem:",
+      "freeTotal": "total, 8.2G used, 7.8G free"
+    },
+    "services": {
+      "adguardhome": "DNS-level ad & tracker blocking",
+      "alloy": "Grafana Alloy metrics collector",
+      "cadvisor": "Container resource usage & performance",
+      "cfBeacon": "Cloudflare managed tunnel beacon",
+      "chromadb": "Vector database for AI embeddings",
+      "cloudflared": "Cloudflare Zero Trust tunnel daemon",
+      "directusApp": "Headless CMS application layer",
+      "directusCache": "Redis cache for Directus CMS",
+      "directusDb": "PostgreSQL database for Directus",
+      "dockhand": "Docker container management UI",
+      "hbbr": "RustDesk relay server",
+      "hbbs": "RustDesk signaling server",
+      "portfolioDb": "PostgreSQL database for portfolio",
+      "resumeWebsite": "This portfolio — Next.js",
+      "rustdeskBridge": "RustDesk network bridge",
+      "searxng": "Privacy-first meta search engine",
+      "searxngValkey": "Valkey cache for SearXNG",
+      "tailscale": "Mesh VPN for secure remote access",
+      "webtop": "Browser-based Linux desktop",
+      "wireguard": "WireGuard VPN server"
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "I'll get back to you as soon as possible.",
+    "namePlaceholder": "Audrius ...",
+    "emailPlaceholder": "name@example.com",
+    "messagePlaceholder": "Tell me about your project...",
+    "nameLabel": "Name",
+    "emailLabel": "Email Address",
+    "messageLabel": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "captchaError": "Please complete the captcha verification.",
+    "success": "✅ Message sent successfully!",
+    "error": "❌ Something went wrong. Please try again."
+  },
+  "chatbot": {
+  "title": "AdotByte AI",
+  "defaultMessage": "Hi! I'm Audrius's AI Agent. I'll remember our chat even if you refresh!",
+  "placeholder": "Type a message...",
+  "typing": "Typing...",
+  "restored": "Restored from server",
+  "cleared": "History cleared! Fresh start.",
+  "connectionError": "Sorry, brain fog! Check connection.",
+  "downloadLabel": "Audrius_Resume_Chat"
+}
+}

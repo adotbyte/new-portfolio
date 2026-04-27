@@ -1,48 +1,4 @@
-'use client';
-
-const skillCategories = [
-  {
-    title: 'Systems & Infrastructure',
-    subtitle: 'The Core',
-    skills: ['Linux Server Admin', 'Virtualization', 'Hardware Diagnostics', 'Network Architecture'],
-  },
-  {
-    title: 'Backend & Servers',
-    subtitle: 'The Engine',
-    skills: ['Django', 'Python', 'PostgreSQL', 'Nginx/Apache'],
-  },
-  {
-    title: 'Security & Web',
-    subtitle: 'The Shield',
-    skills: ['DNS Management', 'Cloudflare', 'SSL/TLS', 'Server Hardening'],
-  },
-  {
-    title: 'Modern Tools',
-    subtitle: 'The Workflow',
-    skills: ['Docker', 'Git/GitHub', 'Next.js', 'React (Frontend)', 'Tailwind CSS'],
-  },
-];
-
-const projects = [
-  {
-    name: 'AI-Powered Portfolio',
-    description: 'A self-hosted resume website with an integrated AI chatbot that answers questions about my experience. Built from scratch and running on my Raspberry Pi 5 via Cloudflare Tunnels.',
-    stack: ['Next.js', 'React', 'Tailwind', 'Anthropic Claude', 'Docker'],
-    link: 'https://morkunas.info',
-    github: 'https://github.com/adotbyte',
-    icon: '🚀',
-    status: 'Live',
-  },
-  {
-    name: 'Self-Hosted Home Lab',
-    description: 'A production-grade home server running 18 Docker containers including AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN and more — all secured behind Cloudflare Zero Trust.',
-    stack: ['Docker', 'Linux', 'Cloudflare', 'Raspberry Pi 5', 'WireGuard'],
-    link: null,
-    github: null,
-    icon: '🏠',
-    status: 'Running',
-  },
-];
+import { getTranslations } from 'next-intl/server';
 
 const stackColors: Record<string, string> = {
   'Next.js': 'bg-black text-white dark:bg-white dark:text-black',
@@ -58,33 +14,57 @@ const stackColors: Record<string, string> = {
   'PostgreSQL': 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300',
 };
 
-const Skills = () => {
+const Skills = async () => {
+  const t = await getTranslations('skills');
+
+  const skillCategories = [
+    { title: t('categories.systemsTitle'), subtitle: t('categories.systemsSubtitle'), skills: [t('skills.linuxAdmin'), t('skills.virtualization'), t('skills.hardware'), t('skills.network')] },
+    { title: t('categories.backendTitle'), subtitle: t('categories.backendSubtitle'), skills: [t('skills.django'), t('skills.python'), t('skills.postgresql'), t('skills.nginx')] },
+    { title: t('categories.securityTitle'), subtitle: t('categories.securitySubtitle'), skills: [t('skills.dns'), t('skills.cloudflare'), t('skills.ssl'), t('skills.hardening')] },
+    { title: t('categories.toolsTitle'), subtitle: t('categories.toolsSubtitle'), skills: [t('skills.docker'), t('skills.git'), t('skills.nextjs'), t('skills.react'), t('skills.tailwind')] },
+  ];
+
+  const projects = [
+    {
+      name: t('projects.portfolioName'),
+      description: t('projects.portfolioDesc'),
+      stack: ['Next.js', 'React', 'Tailwind', 'Anthropic Claude', 'Docker'],
+      link: 'https://morkunas.info',
+      github: 'https://github.com/adotbyte',
+      icon: '🚀',
+      status: t('projects.portfolioStatus'),
+    },
+    {
+      name: t('projects.homelabName'),
+      description: t('projects.homelabDesc'),
+      stack: ['Docker', 'Linux', 'Cloudflare', 'Raspberry Pi 5', 'WireGuard'],
+      link: null,
+      github: null,
+      icon: '🏠',
+      status: t('projects.homelabStatus'),
+    },
+  ];
+
   return (
     <section className="min-h-[87vh] flex flex-col justify-center bg-white dark:bg-gray-950 py-12">
       <div className="w-full max-w-7xl mx-auto px-6">
 
-        {/* Skills Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight sm:text-5xl">
-            Technical Expertise
+            {t('title')}
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mt-6 text-lg leading-relaxed">
-            I approach technology from the{' '}
+            {t('description')}{' '}
             <span className="text-blue-700 dark:text-blue-400 font-bold underline decoration-blue-200 underline-offset-4">
-              Server-side down
+              {t('descriptionHighlight')}
             </span>
-            . With a deep foundation in computer hardware, OS architecture, and networking,
-            I build web applications that aren't just code—they are stable, optimized systems.
+            {t('descriptionRest')}
           </p>
         </div>
 
-        {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {skillCategories.map((category, index) => (
-            <div
-              key={index}
-              className="group p-8 bg-slate-50 dark:bg-gray-800 rounded-3xl border border-slate-100 dark:border-gray-700 hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 hover:-translate-y-2"
-            >
+            <div key={index} className="group p-8 bg-slate-50 dark:bg-gray-800 rounded-3xl border border-slate-100 dark:border-gray-700 hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 hover:-translate-y-2">
               <span className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400 group-hover:text-blue-100 transition-colors">
                 {category.subtitle}
               </span>
@@ -103,34 +83,28 @@ const Skills = () => {
           ))}
         </div>
 
-        {/* Deep Tech Note */}
         <div className="mt-16 p-8 bg-blue-50 dark:bg-blue-950 rounded-2xl border border-blue-100 dark:border-blue-900 text-center max-w-4xl mx-auto shadow-sm">
           <p className="text-blue-900 dark:text-blue-200 font-bold text-sm">
-            🛠️ Deep Tech Knowledge:{' '}
+            {t('deepTechLabel')}{' '}
             <span className="text-blue-800 dark:text-blue-300 font-medium ml-1">
-              From PC building and hardware troubleshooting to complex internet protocols—I understand the physical and logical layers of the web.
+              {t('deepTechText')}
             </span>
           </p>
         </div>
 
-        {/* Projects Section */}
         <div className="mt-24">
           <div className="mb-12 flex items-center gap-6">
             <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight whitespace-nowrap">
-              Projects
+              {t('projectsTitle')}
             </h2>
             <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
-            <span className="text-xs font-mono text-gray-400 dark:text-gray-500 whitespace-nowrap">{projects.length} built</span>
+            <span className="text-xs font-mono text-gray-400 dark:text-gray-500 whitespace-nowrap">{projects.length} {t('built')}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project) => (
-              <div
-                key={project.name}
-                className="group bg-slate-50 dark:bg-gray-800 rounded-3xl border border-slate-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-xl hover:shadow-blue-50 dark:hover:shadow-blue-950 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-              >
+              <div key={project.name} className="group bg-slate-50 dark:bg-gray-800 rounded-3xl border border-slate-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-xl hover:shadow-blue-50 dark:hover:shadow-blue-950 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="p-8">
-                  {/* Card Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <span className="text-3xl">{project.icon}</span>
@@ -144,26 +118,18 @@ const Skills = () => {
                     </div>
                     <div className="flex gap-2">
                       {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <a href={project.github} target="_blank" rel="noopener noreferrer"
                           className="p-2 rounded-xl bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:border-blue-300 transition-colors text-gray-600 dark:text-gray-300 hover:text-blue-600"
-                          aria-label="GitHub"
-                        >
+                          aria-label="GitHub">
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                           </svg>
                         </a>
                       )}
                       {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <a href={project.link} target="_blank" rel="noopener noreferrer"
                           className="p-2 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors text-white"
-                          aria-label="Live site"
-                        >
+                          aria-label="Live site">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
@@ -171,19 +137,10 @@ const Skills = () => {
                       )}
                     </div>
                   </div>
-
-                  {/* Description */}
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                    {project.description}
-                  </p>
-
-                  {/* Stack */}
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {project.stack.map((tech) => (
-                      <span
-                        key={tech}
-                        className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${stackColors[tech] ?? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
-                      >
+                      <span key={tech} className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${stackColors[tech] ?? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}>
                         {tech}
                       </span>
                     ))}

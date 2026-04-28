@@ -29,6 +29,11 @@ if (ltExists >= enModified) {
   process.exit(0);
 }
 
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.log('⚠️ No ANTHROPIC_API_KEY set, skipping translation.');
+  process.exit(0);
+}
+
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const enJson = readFileSync(enPath, 'utf-8');
@@ -56,8 +61,9 @@ ${enJson}`,
 const translated = response.content[0].text.trim();
 
 try {
-  JSON.parse(translated); // validate
-  writeFileSync(ltPath, translated, 'utf-8');
+  const cleaned = translated.replace(/^```json\s*|^```\s*|```$/gm, '').trim();
+  JSON.parse(cleaned); // validate
+  writeFileSync(ltPath, cleaned, 'utf-8');
   console.log('✅ lt.json written successfully!');
 } catch {
   console.error('❌ Claude returned invalid JSON. Raw output:');

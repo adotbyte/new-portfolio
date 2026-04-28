@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 const Footer = () => {
+  const t = useTranslations('footer');
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isWiping, setIsWiping] = useState(false);
@@ -13,10 +15,8 @@ const Footer = () => {
   const handleFinalWipe = async () => {
     setIsWiping(true);
     try {
-      // Delete chat history from DB
       await fetch('/api/chat', { method: 'DELETE' });
 
-      // Clear local storage and cookies as before
       localStorage.clear();
       sessionStorage.clear();
       document.cookie.split(';').forEach((c) => {
@@ -42,7 +42,7 @@ const Footer = () => {
       {showSuccess && (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[10002] bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-bounce">
           <span className="font-bold">✓</span>
-          History and preferences cleared.
+          {t('historyCleared')}
         </div>
       )}
 
@@ -55,7 +55,7 @@ const Footer = () => {
               onClick={() => setShowPrivacy(true)}
               className="ml-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 font-bold transition-colors underline underline-offset-4 decoration-gray-200 hover:decoration-blue-200"
             >
-              Privacy & Cookies
+              {t('privacyCookies')}
             </button>
           </p>
         </div>
@@ -66,31 +66,31 @@ const Footer = () => {
           <div className="bg-white dark:bg-gray-800 w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 dark:border-gray-700">
             <div className="p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-black text-gray-900 dark:text-white">Privacy & Cookies</h2>
+                <h2 className="text-xl font-black text-gray-900 dark:text-white">{t('modalTitle')}</h2>
                 <button onClick={() => setShowPrivacy(false)} aria-label="Close" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
               </div>
               <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-left">
-                <p>To provide a functional experience, this site uses:</p>
+                <p>{t('modalIntro')}</p>
                 <ul className="space-y-2">
-                  <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>Chat History:</strong> Stored on our server, linked to an anonymous cookie.</span></li>
-                  <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>Theme:</strong> Remembers your Dark/Light mode.</span></li>
+                  <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>{t('chatHistoryLabel')}</strong> {t('chatHistoryText')}</span></li>
+                  <li className="flex gap-2"><span className="text-blue-500">▹</span><span><strong>{t('themeLabel')}</strong> {t('themeText')}</span></li>
                   <li className="flex gap-2">
                     <span className="text-blue-500">▹</span>
                     <span>
-                      <strong>Read:</strong>
+                      <strong>{t('readLabel')}</strong>
                       <Link href="/Privacy" className="font-bold hover:underline ml-1" onClick={() => setShowPrivacy(false)}>
-                        Full Privacy Policy.
+                        {t('readLink')}
                       </Link>
                     </span>
                   </li>
                 </ul>
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 p-4 rounded-xl text-amber-800 dark:text-amber-300 text-xs italic">
-                  <strong>Safety Note:</strong> Clicking "Wipe Data" will permanently delete your chat history and reset all preferences.
+                  <strong>{t('safetyNote')}</strong> {t('safetyText')}
                 </div>
               </div>
               <div className="mt-8 flex gap-3">
-                <button onClick={() => setShowConfirm(true)} className="flex-1 px-4 py-2.5 text-xs font-bold text-red-600 border border-red-100 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">Wipe Data</button>
-                <button onClick={() => setShowPrivacy(false)} className="flex-1 px-4 py-2.5 text-xs font-bold bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">I Understand</button>
+                <button onClick={() => setShowConfirm(true)} className="flex-1 px-4 py-2.5 text-xs font-bold text-red-600 border border-red-100 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">{t('wipeData')}</button>
+                <button onClick={() => setShowPrivacy(false)} className="flex-1 px-4 py-2.5 text-xs font-bold bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">{t('iUnderstand')}</button>
               </div>
             </div>
           </div>
@@ -101,13 +101,13 @@ const Footer = () => {
         <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
           <div className="bg-slate-900 w-full max-w-sm rounded-[2rem] p-8 border border-slate-800 shadow-2xl text-center">
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-2xl">⚠</div>
-            <h3 className="text-white font-bold text-lg mb-2">Final Warning</h3>
-            <p className="text-slate-400 text-sm mb-8">This action is permanent. All settings and history will be destroyed.</p>
+            <h3 className="text-white font-bold text-lg mb-2">{t('finalWarningTitle')}</h3>
+            <p className="text-slate-400 text-sm mb-8">{t('finalWarningText')}</p>
             <div className="flex flex-col gap-2">
               <button onClick={handleFinalWipe} disabled={isWiping} className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all disabled:opacity-50">
-                {isWiping ? 'Processing...' : 'Yes, Delete Everything'}
+                {isWiping ? t('processing') : t('deleteEverything')}
               </button>
-              <button onClick={() => setShowConfirm(false)} className="w-full py-3 text-slate-400 hover:text-white font-medium transition-colors">Cancel</button>
+              <button onClick={() => setShowConfirm(false)} className="w-full py-3 text-slate-400 hover:text-white font-medium transition-colors">{t('cancel')}</button>
             </div>
           </div>
         </div>

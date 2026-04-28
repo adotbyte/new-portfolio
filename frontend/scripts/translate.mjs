@@ -42,7 +42,7 @@ console.log('Translating en.json → lt.json using Claude...');
 
 const response = await client.messages.create({
   model: 'claude-opus-4-5',
-  max_tokens: 4096,
+  max_tokens: 8096,
   messages: [
     {
       role: 'user',
@@ -58,12 +58,21 @@ ${enJson}`,
   ],
 });
 
-const translated = response.content[0].text.trim();
+const raw = response.content[0].text.trim();
+console.log('RAW LENGTH:', raw.length);
+console.log('RAW PREVIEW:', raw.substring(0, 200));
+
+let translated = raw;
+
+// Strip markdown code fences if present
+const fenceMatch = translated.match(/```(?:json)?\s*([\s\S]*?)```/);
+if (fenceMatch) {
+  translated = fenceMatch[1].trim();
+}
 
 try {
-  const cleaned = translated.replace(/^```json\s*|^```\s*|```$/gm, '').trim();
-  JSON.parse(cleaned); // validate
-  writeFileSync(ltPath, cleaned, 'utf-8');
+  JSON.parse(translated); // validate
+  writeFileSync(ltPath, translated, 'utf-8');
   console.log('✅ lt.json written successfully!');
 } catch {
   console.error('❌ Claude returned invalid JSON. Raw output:');
@@ -79,7 +88,7 @@ console.log('Translating about_me.md → about_me.lt.md...');
 
 const mdResponse = await client.messages.create({
   model: 'claude-opus-4-5',
-  max_tokens: 2048,
+  max_tokens: 8096,
   messages: [{
     role: 'user',
     content: `Translate this markdown file from English to Lithuanian.

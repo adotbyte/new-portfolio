@@ -145,6 +145,27 @@
   "section5Text": "Server logs are typically kept for 30 days before being automatically deleted. Your Chat History is stored on our server until you choose to clear it using the chat window. Your Theme Preferences stay on your device until you clear your browser cookies.",
   "back": "← Back to Portfolio"
 },
+"footer": {
+  "privacyCookies": "Privacy & Cookies",
+  "historyCleared": "History and preferences cleared.",
+  "modalTitle": "Privacy & Cookies",
+  "modalIntro": "To provide a functional experience, this site uses:",
+  "chatHistoryLabel": "Chat History:",
+  "chatHistoryText": "Stored on our server, linked to an anonymous cookie.",
+  "themeLabel": "Theme:",
+  "themeText": "Remembers your Dark/Light mode.",
+  "readLabel": "Read:",
+  "readLink": "Full Privacy Policy.",
+  "safetyNote": "Safety Note:",
+  "safetyText": "Clicking \"Wipe Data\" will permanently delete your chat history and reset all preferences.",
+  "wipeData": "Wipe Data",
+  "iUnderstand": "I Understand",
+  "finalWarningTitle": "Final Warning",
+  "finalWarningText": "This action is permanent. All settings and history will be destroyed.",
+  "deleteEverything": "Yes, Delete Everything",
+  "processing": "Processing...",
+  "cancel": "Cancel"
+},
   "chatbot": {
   "title": "AdotByte AI",
   "defaultMessage": "Hi! I'm Audrius's AI Agent. I'll remember our chat even if you refresh!",

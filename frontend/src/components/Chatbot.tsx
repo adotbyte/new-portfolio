@@ -7,7 +7,11 @@ import { useTranslations, useLocale } from 'next-intl';
 
 type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
 
-export default function Chatbot() {
+interface ChatbotProps {
+  nonce?: string;
+}
+
+export default function Chatbot({ nonce }: ChatbotProps) {
   const t = useTranslations('chatbot');
   const locale = useLocale();
 
@@ -112,7 +116,7 @@ export default function Chatbot() {
     setInput('');
     setIsTyping(true);
     try {
-      const response = await fetch('/api/chat/', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: messageToSend, locale }),

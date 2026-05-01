@@ -7,6 +7,7 @@ import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing'; // Ensure this path is correct
 import { notFound } from 'next/navigation';
 import ThemeScript from '@/components/ThemeScript';
+import { headers } from 'next/headers';
 
 export default async function LocaleLayout({
   children,

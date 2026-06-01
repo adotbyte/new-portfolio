@@ -9,7 +9,7 @@ import { prisma } from '@/lib/prisma';
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
 const mailer = nodemailer.createTransport({
-  host: 'smtp.zoho.com',          // or smtp.zoho.com depending on your region
+  host: 'smtp.zoho.com',
   port: 587,
   secure: false,
   auth: {
@@ -157,7 +157,6 @@ async function sendContactEmail(
 }
 
 function getAvailability(): string {
-  // ✏️  Update this object whenever your status changes — no code changes needed elsewhere
   const status = {
     available: true,
     note: 'Open to interesting projects, freelance work, and full-time opportunities.',
@@ -287,27 +286,30 @@ export async function DELETE(req: NextRequest) {
 
 // POST — send a message, persist both turns
 export async function POST(req: NextRequest) {
-  const userId = req.cookies.get('visitor_id')?.value;
+  // ── Resolve or generate visitor_id cookie ──────────────────────────────────
+  let userId = req.cookies.get('visitor_id')?.value;
+  let isNewVisitor = false;
+
+  if (!userId) {
+    userId = crypto.randomUUID();
+    isNewVisitor = true;
+  }
 
   const { message, locale } = await req.json();
   if (!message?.trim()) {
     return NextResponse.json({ error: 'No message' }, { status: 400 });
   }
 
-  // Load full history from DB (not from the client anymore)
-  const rows = userId
-    ? await prisma.message.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'asc' },
-      })
-    : [];
+  // Load full history from DB
+  const rows = await prisma.message.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'asc' },
+  });
 
   // Save the incoming user message
-  if (userId) {
-    await prisma.message.create({
-      data: { userId, role: 'user', content: message.trim() },
-    });
-  }
+  await prisma.message.create({
+    data: { userId, role: 'user', content: message.trim() },
+  });
 
   // Build Anthropic messages from DB history + new message
   const messages: Anthropic.MessageParam[] = [
@@ -320,8 +322,7 @@ export async function POST(req: NextRequest) {
 
   const systemPrompt = buildSystemPrompt(locale);
 
-    // ── Agentic loop ──────────────────────────────────────────────────────────
-  // ── Agentic loop (unchanged from your original) ──
+  // ── Agentic loop ──────────────────────────────────────────────────────────
   let response = await anthropic.messages.create({
     model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
     max_tokens: 1024,
@@ -358,11 +359,21 @@ export async function POST(req: NextRequest) {
   const content = textBlock?.text ?? "Sorry, I couldn't generate a response.";
 
   // Save AI response to DB
-  if (userId) {
-    await prisma.message.create({
-      data: { userId, role: 'ai', content },
+  await prisma.message.create({
+    data: { userId, role: 'ai', content },
+  });
+
+  // ── Build response, set cookie for new visitors ───────────────────────────
+  const res = NextResponse.json({ content });
+
+  if (isNewVisitor) {
+    res.cookies.set('visitor_id', userId, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      sameSite: 'lax',
+      path: '/',
     });
   }
 
-  return NextResponse.json({ content });
+  return res;
 }

@@ -48,5 +48,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|apple-touch-icon.png|site.webmanifest).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|apple-touch-icon.png|site.webmanifest|logo.png).*)'],
 };

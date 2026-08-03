@@ -156,6 +156,45 @@ async function sendContactEmail(
   }
 }
 
+async function generateHints(
+  lastUserMessage: string,
+  aiReply: string,
+  locale: string
+): Promise<string[]> {
+  const hintLanguage = locale === 'lt' ? 'Lithuanian' : 'English';
+
+  try {
+    const res = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 150,
+      system: `Based on a short exchange between a portfolio site visitor and an assistant, suggest 2-3 short natural follow-up questions the visitor might ask next.
+
+Rules:
+- Each hint under 6 words
+- Write hints in ${hintLanguage}
+- Base them on what was just discussed, not generic questions
+- Respond with ONLY a JSON array of strings, nothing else. Example: ["Show project examples", "How can I contact you?"]
+- If nothing relevant comes to mind, respond with []`,
+      messages: [
+        {
+          role: 'user',
+          content: `Visitor asked: "${lastUserMessage}"\nAssistant replied: "${aiReply}"`,
+        },
+      ],
+    });
+
+    const block = res.content.find((b): b is Anthropic.TextBlock => b.type === 'text');
+    if (!block) return [];
+
+    const cleaned = block.text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(cleaned);
+    return Array.isArray(parsed) ? parsed.slice(0, 3) : [];
+  } catch (err) {
+    console.error('Hint generation error:', err);
+    return [];
+  }
+}
+
 function getAvailability(): string {
   const status = {
     available: true,
@@ -363,8 +402,11 @@ export async function POST(req: NextRequest) {
     data: { userId, role: 'ai', content },
   });
 
+  // Generate contextual follow-up hints (best-effort, non-blocking on failure)
+  const hints = await generateHints(message.trim(), content, locale);
+
   // ── Build response, set cookie for new visitors ───────────────────────────
-  const res = NextResponse.json({ content });
+  const res = NextResponse.json({ content, hints });
 
   if (isNewVisitor) {
     res.cookies.set('visitor_id', userId, {

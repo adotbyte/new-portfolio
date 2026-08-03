@@ -51,7 +51,9 @@
       "git": "Git/GitHub",
       "nextjs": "Next.js",
       "react": "React (Frontend)",
-      "tailwind": "Tailwind CSS"
+      "tailwind": "Tailwind CSS",
+      "javascript": "JavaScript (ES6+)",
+      "html/css3": "HTML5/CSS3"
     },
     "projects": {
       "portfolioName": "AI-Powered Portfolio",

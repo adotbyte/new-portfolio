@@ -14,7 +14,8 @@ I currently manage a self-hosted environment powered by:
 ## 🛠️ Technical Skills
 - **Infrastructure:** Docker, Linux (Debian/Ubuntu OS), Cloudflare Networking
 - **Cloud:** AWS ([AWS Cloud Quest: Cloud Practitioner - Training Badge 🟢](https://www.credly.com/badges/6a3d2231-79c9-485e-9442-981ac2b4049f/public_url))
-- **Frontend:** Next.js, React, Tailwind CSS
+- **Frontend:** Next.js (App Router), React, Tailwind CSS, JavaScript (ES6+), HTML5/CSS3
+- **Integrations & APIs:** AI / LLM API integration, REST API, JSON
 - **Backend:** Python, Django
 - **GitHub Actions:** Continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline.
 - **Hardware:** Computer building and troubleshooting

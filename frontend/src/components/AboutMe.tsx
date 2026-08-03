@@ -22,7 +22,7 @@ const AboutMe = async () => {
   const skillCategories = [
     { name: t('categories.infrastructure'), items: ['Linux', 'Docker', 'Nginx'] },
     { name: t('categories.backend'),        items: ['Django', 'Postgres'] },
-    { name: t('categories.frontend'),       items: ['Next.js', 'React', 'Tailwind'] },
+    { name: t('categories.frontend'),       items: ['Next.js', 'React', 'Tailwind', 'JavaScript (ES6+)', 'HTML5/CSS3'] },
   ];
 
   return (

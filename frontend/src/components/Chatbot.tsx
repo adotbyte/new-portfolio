@@ -40,6 +40,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
   const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [hints, setHints] = useState<string[]>([]);
 
   function handleSuggestionClick(text: string) {
   setInput(text);
@@ -125,6 +126,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     if (!messageToSend.trim()) return;
     setMessages((prev) => [...prev, { role: 'user', content: messageToSend }]);
     setInput('');
+    setHints([]); // clear stale hints while waiting for reply
     setIsTyping(true);
     try {
       const response = await fetch('/api/chat', {
@@ -134,6 +136,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
       });
       const data = await response.json();
       setMessages((prev) => [...prev, { role: 'ai', content: data.content, isNew: true }]);
+      setHints(data.hints || []);
     } catch {
       setMessages((prev) => [...prev, { role: 'ai', content: t('connectionError') }]);
     } finally {
@@ -145,6 +148,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     await fetch('/api/chat', { method: 'DELETE' });
     setLastSaved('');
     setMessages([{ role: 'ai', content: t('cleared') }]);
+    setHints([]);
     setShowConfirm(false);
   };
 
@@ -276,23 +280,37 @@ export default function Chatbot({ nonce }: ChatbotProps) {
             <div ref={scrollRef} />
           </div>
 
-          {messages.length === 1 && (
+          {messages.length === 1 && hints.length === 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '0 12px 10px' }}>
               {suggestions.map((q) => (
                 <button
                   key={q}
                   onClick={() => handleSuggestionClick(q)}
                   style={{
-                    fontSize: '12px',
-                    padding: '6px 10px',
-                    borderRadius: '999px',
-                    border: `1px solid ${theme.inputBorder}`,
-                    background: theme.inputBg,
-                    color: theme.text,
-                    cursor: 'pointer',
+                    fontSize: '12px', padding: '6px 10px', borderRadius: '999px',
+                    border: `1px solid ${theme.inputBorder}`, background: theme.inputBg,
+                    color: theme.text, cursor: 'pointer',
                   }}
                 >
                   {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {!isTyping && hints.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '0 12px 10px' }}>
+              {hints.map((h) => (
+                <button
+                  key={h}
+                  onClick={() => handleSuggestionClick(h)}
+                  style={{
+                    fontSize: '12px', padding: '6px 10px', borderRadius: '999px',
+                    border: `1px solid ${theme.inputBorder}`, background: theme.inputBg,
+                    color: theme.text, cursor: 'pointer',
+                  }}
+                >
+                  {h}
                 </button>
               ))}
             </div>

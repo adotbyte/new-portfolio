@@ -26,9 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
     locale: 'en_US',
     type: 'website',
   },
-  other: {
-    'fb:app_id': process.env.FB_APP_ID ?? '',
-  },
 };
 }
 

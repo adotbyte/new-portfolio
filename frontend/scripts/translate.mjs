@@ -70,13 +70,43 @@ if (fenceMatch) {
   translated = fenceMatch[1].trim();
 }
 
+// Recursively collect all leaf key paths from a nested object,
+// e.g. { chatbot: { suggestion1: "..." } } → ["chatbot.suggestion1"]
+function getAllKeys(obj, prefix = '') {
+  let keys = [];
+  for (const [k, v] of Object.entries(obj)) {
+    const fullKey = prefix ? `${prefix}.${k}` : k;
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      keys = keys.concat(getAllKeys(v, fullKey));
+    } else {
+      keys.push(fullKey);
+    }
+  }
+  return keys;
+}
+
 try {
-  JSON.parse(translated); // validate
+  const parsedEn = JSON.parse(enJson);
+  const parsedLt = JSON.parse(translated); // validate
+
+  const enKeys = getAllKeys(parsedEn);
+  const ltKeys = new Set(getAllKeys(parsedLt));
+  const missingKeys = enKeys.filter((k) => !ltKeys.has(k));
+
+  if (missingKeys.length > 0) {
+    console.error('❌ Translation incomplete — missing keys:');
+    missingKeys.forEach((k) => console.error(`   - ${k}`));
+    console.error('Refusing to write lt.json. Fix manually or re-run.');
+    process.exit(1);
+  }
+
   writeFileSync(ltPath, translated, 'utf-8');
-  console.log('✅ lt.json written successfully!');
-} catch {
-  console.error('❌ Claude returned invalid JSON. Raw output:');
+  console.log('✅ lt.json written successfully! All keys verified.');
+} catch (err) {
+  console.error('❌ Claude returned invalid JSON, or key verification failed. Raw output:');
   console.error(translated);
+  console.error(err.message);
+  process.exit(1);
 }
 
 // Translate about_me.md to Lithuanian

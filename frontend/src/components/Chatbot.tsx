@@ -20,6 +20,12 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     content: t('defaultMessage'),
   };
 
+  const suggestions = [
+    t('suggestion1'),
+    t('suggestion2'),
+    t('suggestion3')
+  ];
+
   const [messages, setMessages] = useState<Message[]>([DEFAULT_MESSAGE]);
   const [lastSaved, setLastSaved] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +40,11 @@ export default function Chatbot({ nonce }: ChatbotProps) {
   const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+
+  function handleSuggestionClick(text: string) {
+  setInput(text);
+  sendMessage(text); // reuse your existing send function
+}
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 500);
@@ -265,6 +276,28 @@ export default function Chatbot({ nonce }: ChatbotProps) {
             <div ref={scrollRef} />
           </div>
 
+          {messages.length === 1 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '0 12px 10px' }}>
+              {suggestions.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => handleSuggestionClick(q)}
+                  style={{
+                    fontSize: '12px',
+                    padding: '6px 10px',
+                    borderRadius: '999px',
+                    border: `1px solid ${theme.inputBorder}`,
+                    background: theme.inputBg,
+                    color: theme.text,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div style={{ padding: '12px', borderTop: `1px solid ${theme.inputBorder}` }}>
             <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} style={{ display: 'flex', position: 'relative' }}>
               <input
@@ -283,5 +316,3 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     </div>
   );
 }
-
-

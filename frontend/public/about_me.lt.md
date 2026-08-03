@@ -1,27 +1,27 @@
 # Sveiki, aš esu Audrius 👋
 
-Esu technologijų entuziastas, kuriam šis hobis labai patinka. Labiausiai mane domina interneto pasaulis plačiąja prasme. Kasdien mokytis kažko naujo man yra malonumas.
+Esu technologijų entuziastas, kuriam šis hobis labai patinka. Labiausiai mane domina interneto pasaulis plačiąja prasme. Kasdien išmokti ką nors naujo man yra malonumas.
 
 ## 🏠 Mano namų laboratorija
 
-Šiuo metu administruoju savarankiškai talpinamus sprendimus, kuriuos sudaro:
+Šiuo metu valdau savarankiškai prižiūrimą aplinką, kurią sudaro:
 
-- **Kompiuterija:** Raspberry Pi 5 (16GB) & OpenMediaVault (OMV)
+- **Kompiuteriniai ištekliai:** Raspberry Pi 5 (16GB) & OpenMediaVault (OMV)
 - **Konteinerizacija:** Docker & Docker Compose
 - **Tinklas:** Cloudflare Zero Trust Tunnels & Reverse Proxies
-    - **Reverse Proxies:** Efektyvus srauto nukreipimas ir SSL valdymas visoms talpinamos programoms
+    - **Reverse Proxies:** Efektyvus srauto nukreipimas ir SSL valdymas visoms talpinamoms aplikacijoms
 
 ## 🛠️ Techniniai įgūdžiai
 - **Infrastruktūra:** Docker, Linux (Debian/Ubuntu OS), Cloudflare Networking
-- **Debesis:** AWS ([AWS Cloud Quest: Cloud Practitioner - Training Badge 🟢](https://www.credly.com/badges/6a3d2231-79c9-485e-9442-981ac2b4049f/public_url))
+- **Debesija:** AWS ([AWS Cloud Quest: Cloud Practitioner - Training Badge 🟢](https://www.credly.com/badges/6a3d2231-79c9-485e-9442-981ac2b4049f/public_url))
 - **Frontend:** Next.js, React, Tailwind CSS
 - **Backend:** Python, Django
-- **GitHub Actions:** Nuolatinės integracijos ir nuolatinio diegimo (CI/CD) platforma, leidžianti automatizuoti kūrimo, testavimo ir diegimo procesus.
-- **Aparatinė įranga:** Kompiuterių surinkimas ir trikčių šalinimas
+- **GitHub Actions:** Nuolatinės integracijos ir nuolatinio pristatymo (CI/CD) platforma, leidžianti automatizuoti kūrimo, testavimo ir diegimo procesus.
+- **Techninė įranga:** Kompiuterių surinkimas ir trikčių šalinimas
 
 ## 🚀 Išskirtinis projektas
-**[AI-Powered Interactive Resume](https://morkunas.info/)**
-*Next.js aplikacija, veikianti Docker konteineryje mano Pi 5, saugiai pasiekiama per Cloudflare Tunnels. Ji leidžia darbdaviams pateikti užklausas apie mano patirtį naudojant AI.*
+**[AI valdomas interaktyvus gyvenimo aprašymas](https://morkunas.info/)**
+*Next.js aplikacija, veikianti Docker konteineryje mano Pi 5, saugiai pasiekiama per Cloudflare Tunnels. Ji leidžia darbdaviams užklausti informacijos apie mano patirtį naudojant AI.*
 
 ---
 
@@ -29,4 +29,4 @@ Esu technologijų entuziastas, kuriam šis hobis labai patinka. Labiausiai mane 
 
 ---
 
-> **Pastaba:** Šis portfolio yra **gyvas dokumentas**. Esu įsipareigojęs nuolat tobulėti ir reguliariai atnaujinu šią erdvę naujausiais pasiekimais, techniniais etapais ir naujomis žiniomis, kurias įgyju kasdienėje praktikoje.
+> **Pastaba:** Šis portfolio yra **nuolat atnaujinamas dokumentas**. Esu įsipareigojęs nuolat tobulėti ir reguliariai atnaujinu šią erdvę naujausiais pasiekimais, techniniais etapais ir naujomis žiniomis, kurias įgyju per kasdienę praktiką.

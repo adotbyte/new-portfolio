@@ -18,13 +18,14 @@ try {
   // .env.local not present — rely on environment variables already set
 }
 
+const force = process.argv.includes('--force');
 const enPath = join(__dirname, '../messages/en.json');
 const ltPath = join(__dirname, '../messages/lt.json');
 
 const enModified = statSync(enPath).mtimeMs;
 const ltExists = (() => { try { return statSync(ltPath).mtimeMs; } catch { return 0; } })();
 
-if (ltExists >= enModified) {
+if (!force && ltExists >= enModified) {
   console.log('✅ lt.json is up to date, skipping translation.');
   process.exit(0);
 }
@@ -37,38 +38,9 @@ if (!process.env.ANTHROPIC_API_KEY) {
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const enJson = readFileSync(enPath, 'utf-8');
+const parsedEn = JSON.parse(enJson);
 
 console.log('Translating en.json → lt.json using Claude...');
-
-const response = await client.messages.create({
-  model: 'claude-opus-4-5',
-  max_tokens: 8096,
-  messages: [
-    {
-      role: 'user',
-      content: `Translate the values in this JSON from English to Lithuanian. 
-Rules:
-- Keep all JSON keys exactly the same
-- Only translate the string values
-- Keep emojis, technical terms (Docker, Linux, Next.js etc), URLs, and code snippets untranslated
-- Return ONLY the raw JSON, no markdown, no explanation
-
-${enJson}`,
-    },
-  ],
-});
-
-const raw = response.content[0].text.trim();
-console.log('RAW LENGTH:', raw.length);
-console.log('RAW PREVIEW:', raw.substring(0, 200));
-
-let translated = raw;
-
-// Strip markdown code fences if present
-const fenceMatch = translated.match(/```(?:json)?\s*([\s\S]*?)```/);
-if (fenceMatch) {
-  translated = fenceMatch[1].trim();
-}
 
 // Recursively collect all leaf key paths from a nested object,
 // e.g. { chatbot: { suggestion1: "..." } } → ["chatbot.suggestion1"]
@@ -85,29 +57,130 @@ function getAllKeys(obj, prefix = '') {
   return keys;
 }
 
-try {
-  const parsedEn = JSON.parse(enJson);
-  const parsedLt = JSON.parse(translated); // validate
+// Build a JSON Schema mirroring the shape of a given object, with every
+// leaf typed as a string. Used as a tool's input_schema so the model
+// returns structured output instead of free-text JSON it has to escape.
+function buildSchema(obj) {
+  if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+    const properties = {};
+    const required = [];
+    for (const [k, v] of Object.entries(obj)) {
+      properties[k] = buildSchema(v);
+      required.push(k);
+    }
+    return { type: 'object', properties, required, additionalProperties: false };
+  }
+  return { type: 'string' };
+}
 
-  const enKeys = getAllKeys(parsedEn);
-  const ltKeys = new Set(getAllKeys(parsedLt));
-  const missingKeys = enKeys.filter((k) => !ltKeys.has(k));
+// Translate a single top-level section via a forced tool call.
+// Smaller payloads per call make it far less likely the model silently
+// drops nested keys, which is what happened when the whole file was
+// translated in one giant forced tool call.
+async function translateSection(sectionName, sectionObj) {
+  const schema = buildSchema(sectionObj);
+  const sectionJson = JSON.stringify(sectionObj);
 
-  if (missingKeys.length > 0) {
-    console.error('❌ Translation incomplete — missing keys:');
-    missingKeys.forEach((k) => console.error(`   - ${k}`));
-    console.error('Refusing to write lt.json. Fix manually or re-run.');
-    process.exit(1);
+  const response = await client.messages.create({
+    model: 'claude-opus-4-5',
+    max_tokens: 4096,
+    tools: [
+      {
+        name: 'submit_translation',
+        description: 'Submit the Lithuanian translation matching the exact structure of the source JSON.',
+        input_schema: schema,
+      },
+    ],
+    tool_choice: { type: 'tool', name: 'submit_translation' },
+    messages: [
+      {
+        role: 'user',
+        content: `Translate every string value in this JSON object from English to Lithuanian, then call submit_translation with the complete result. Every key present in the input must be present in your tool call — do not omit any keys.
+Rules:
+- Keep all JSON keys exactly the same (the tool schema already enforces this)
+- Only translate the string values
+- Keep emojis, technical terms (Docker, Linux, Next.js etc), URLs, and code snippets untranslated
+- If a translated phrase needs internal quotation marks, use Lithuanian typographic quotes „ and " rather than straight double quotes
+
+${sectionJson}`,
+      },
+    ],
+  });
+
+  if (response.stop_reason !== 'tool_use') {
+    throw new Error(`Unexpected stop_reason "${response.stop_reason}" for section "${sectionName}"`);
   }
 
-  writeFileSync(ltPath, translated, 'utf-8');
-  console.log('✅ lt.json written successfully! All keys verified.');
-} catch (err) {
-  console.error('❌ Claude returned invalid JSON, or key verification failed. Raw output:');
-  console.error(translated);
-  console.error(err.message);
+  const toolUseBlock = response.content.find((b) => b.type === 'tool_use' && b.name === 'submit_translation');
+  if (!toolUseBlock) {
+    throw new Error(`No submit_translation tool call returned for section "${sectionName}"`);
+  }
+
+  return toolUseBlock.input;
+}
+
+const MAX_ATTEMPTS = 3;
+const translated = {};
+const failedSections = [];
+
+for (const [sectionName, sectionObj] of Object.entries(parsedEn)) {
+  const expectedKeys = getAllKeys(sectionObj).map((k) => `${sectionName}.${k}`);
+  // Leaf values at the top level (rare, but handle gracefully) count as themselves
+  const isLeaf = !(sectionObj && typeof sectionObj === 'object' && !Array.isArray(sectionObj));
+  const expected = isLeaf ? [sectionName] : expectedKeys;
+
+  let result = null;
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const candidate = await translateSection(sectionName, sectionObj);
+      const gotKeys = new Set(
+        isLeaf ? [sectionName] : getAllKeys(candidate).map((k) => `${sectionName}.${k}`)
+      );
+      const missing = expected.filter((k) => !gotKeys.has(k));
+
+      if (missing.length === 0) {
+        result = candidate;
+        break;
+      }
+      lastError = `missing keys: ${missing.join(', ')}`;
+      console.warn(`⚠️  "${sectionName}" attempt ${attempt}/${MAX_ATTEMPTS} incomplete (${lastError}), retrying...`);
+    } catch (err) {
+      lastError = err.message;
+      console.warn(`⚠️  "${sectionName}" attempt ${attempt}/${MAX_ATTEMPTS} failed (${lastError}), retrying...`);
+    }
+  }
+
+  if (result === null) {
+    failedSections.push({ sectionName, lastError });
+  } else {
+    translated[sectionName] = result;
+    console.log(`✅ "${sectionName}" translated (${expected.length} keys).`);
+  }
+}
+
+if (failedSections.length > 0) {
+  console.error('❌ Translation incomplete after retries for the following sections:');
+  failedSections.forEach(({ sectionName, lastError }) => console.error(`   - ${sectionName}: ${lastError}`));
+  console.error('Refusing to write lt.json. Fix manually or re-run.');
   process.exit(1);
 }
+
+// Final sanity check across the whole merged object
+const enKeys = getAllKeys(parsedEn);
+const ltKeys = new Set(getAllKeys(translated));
+const missingKeys = enKeys.filter((k) => !ltKeys.has(k));
+
+if (missingKeys.length > 0) {
+  console.error('❌ Final verification failed — missing keys:');
+  missingKeys.forEach((k) => console.error(`   - ${k}`));
+  console.error('Refusing to write lt.json. Fix manually or re-run.');
+  process.exit(1);
+}
+
+writeFileSync(ltPath, JSON.stringify(translated, null, 2), 'utf-8');
+console.log('✅ lt.json written successfully! All keys verified.');
 
 // Translate about_me.md to Lithuanian
 const mdPath = join(__dirname, '..', 'public', 'about_me.md');

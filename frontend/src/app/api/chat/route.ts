@@ -4,11 +4,19 @@ import { Resend } from 'resend';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
+// Force route to be strictly dynamic at runtime
+export const dynamic = 'force-dynamic';
+
 // ─── Clients ────────────────────────────────────────────────────────────────
 import { prisma } from '@/lib/prisma';
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
-const resend = new Resend(process.env.RESEND_API_KEY!);
+function getAnthropicClient() {
+  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+}
+
+function getResendClient() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -126,6 +134,7 @@ async function sendContactEmail(
     // Escape HTML first, then format newlines cleanly for HTML display
     const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
 
+    const resend = getResendClient();
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Portfolio Contact <audrius@morkunas.info>',
       to: [process.env.CONTACT_EMAIL!],
@@ -176,6 +185,7 @@ async function generateHints(
   const hintLanguage = locale === 'lt' ? 'Lithuanian' : 'English';
 
   try {
+    const anthropic = getAnthropicClient();
     const res = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 150,
@@ -372,6 +382,7 @@ export async function POST(req: NextRequest) {
   ];
 
   const systemPrompt = buildSystemPrompt(locale);
+  const anthropic = getAnthropicClient();
 
   // ── Agentic loop ──────────────────────────────────────────────────────────
   let response = await anthropic.messages.create({

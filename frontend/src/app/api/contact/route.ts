@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Prevent Next.js from attempting static analysis during build
+export const dynamic = 'force-dynamic';
+
+// Provide a fallback string so top-level initialization doesn't throw during Docker builds
+const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder_for_build');
 
 function escapeHtml(str: string): string {
   return str

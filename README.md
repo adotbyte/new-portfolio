@@ -20,7 +20,7 @@ A modern, self-hosted portfolio website featuring an **AI Agent** powered by **A
 
 * **Frontend:** Next.js 16, React, Tailwind CSS
 * **AI Engine:** Anthropic Claude agent with tool use — fetches live GitHub repos, sends contact emails, checks availability
-* **Email:** Nodemailer via Zoho SMTP
+* **Email:** Resend
 * **DevOps:** Docker, Docker Compose, GitHub Actions (self-hosted runner on Raspberry Pi 5)
 * **Network:** Cloudflare Zero Trust, Tunneling
 
@@ -49,8 +49,8 @@ cd new-portfolio
 ANTHROPIC_API_KEY=your_key
 TURNSTILE_SECRET_KEY=your_key
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_key
-ZOHO_EMAIL=your@email.com
-ZOHO_PASSWORD=your_app_password
+RESEND_API_KEY=your@email.com
+RESEND_FROM_EMAIL=your@email.com
 CONTACT_EMAIL=your@email.com
 FB_APP_ID=your_fb_app_id
 GH_TOKEN=your_github_token

@@ -20,8 +20,7 @@ jobs:
           RS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
           RS_TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
           RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
-          RS_ZOHO_EMAIL: ${{ secrets.ZOHO_EMAIL }}
-          RS_ZOHO_PASSWORD: ${{ secrets.ZOHO_PASSWORD }}
+          RS_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RS_CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
           RS_FB_APP_ID: ${{ secrets.FB_APP_ID }}
           RS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -33,8 +32,7 @@ jobs:
           echo "GEMINI_API_KEY=$RS_GEMINI_KEY" > .env
           echo "TURNSTILE_SECRET_KEY=$RS_TURNSTILE_SECRET_KEY" >> .env
           echo "NEXT_PUBLIC_TURNSTILE_SITE_KEY=$RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY" >> .env
-          echo "ZOHO_EMAIL=$RS_ZOHO_EMAIL" >> .env
-          echo "ZOHO_PASSWORD=$RS_ZOHO_PASSWORD" >> .env
+          echo "RESEND_API_KEY=$RS_RESEND_API_KEY" >> .env
           echo "CONTACT_EMAIL=$RS_CONTACT_EMAIL" >> .env
           echo "FB_APP_ID=$RS_FB_APP_ID" >> .env
           echo "ANTHROPIC_API_KEY=$RS_ANTHROPIC_API_KEY" >> .env

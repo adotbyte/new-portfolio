@@ -1,22 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // ─── Clients ────────────────────────────────────────────────────────────────
 import { prisma } from '@/lib/prisma';
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
-const mailer = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.ZOHO_EMAIL!,
-    pass: process.env.ZOHO_PASSWORD!,
-  },
-});
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -114,44 +106,64 @@ async function getGithubRepos(): Promise<string> {
   }
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 async function sendContactEmail(
   visitorName: string,
   visitorEmail: string,
   message: string
 ): Promise<string> {
   try {
-    await mailer.sendMail({
-      from: `"Portfolio Contact" <${process.env.ZOHO_EMAIL}>`,
-      to: process.env.ZOHO_EMAIL,
-      replyTo: visitorEmail,
-      subject: `💼 Portfolio message from ${visitorName}`,
+    const safeName = escapeHtml(visitorName);
+    const safeEmail = escapeHtml(visitorEmail);
+    // Escape HTML first, then format newlines cleanly for HTML display
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
+
+    const { error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'Portfolio Contact <audrius@morkunas.info>',
+      to: [process.env.CONTACT_EMAIL!],
+      replyTo: visitorEmail, // Keep raw string for clean mail client reply headers
+      subject: `💼 Portfolio message from ${safeName}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2563eb;">New message from your portfolio</h2>
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
               <td style="padding: 8px; font-weight: bold; color: #64748b; width: 120px;">Name</td>
-              <td style="padding: 8px;">${visitorName}</td>
+              <td style="padding: 8px;">${safeName}</td>
             </tr>
             <tr style="background: #f8fafc;">
               <td style="padding: 8px; font-weight: bold; color: #64748b;">Email</td>
-              <td style="padding: 8px;"><a href="mailto:${visitorEmail}">${visitorEmail}</a></td>
+              <td style="padding: 8px;"><a href="mailto:${safeEmail}">${safeEmail}</a></td>
             </tr>
             <tr>
               <td style="padding: 8px; font-weight: bold; color: #64748b; vertical-align: top;">Message</td>
-              <td style="padding: 8px; white-space: pre-wrap;">${message}</td>
+              <td style="padding: 8px;">${safeMessage}</td>
             </tr>
           </table>
           <p style="color: #94a3b8; font-size: 12px; margin-top: 24px;">
-            Sent via adotbyte portfolio chatbot · Reply directly to this email to respond to ${visitorName}.
+            Sent via portfolio chatbot · Reply directly to this email to respond to ${safeName}.
           </p>
         </div>
       `,
     });
 
-    return `✅ Message sent successfully! Audrius will receive an email and can reply directly to ${visitorEmail}.`;
-  } catch (err) {
-    console.error('Email send error:', err);
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return `✅ Message sent successfully! Audrius will receive an email and can reply directly to ${safeEmail}.`;
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Email send error:', errorMessage);
+
     return `❌ Could not send the email right now. Please contact Audrius directly on LinkedIn: https://www.linkedin.com/in/audrius-morkunas-939a2581/`;
   }
 }

@@ -2,12 +2,14 @@ import '../globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Chatbot from '@/components/Chatbot';
+import BackToTop from '@/components/BackToTop';
+import ThemeScript from '@/components/ThemeScript';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { routing } from '@/i18n/routing'; // Ensure this path is correct
+import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
-import ThemeScript from '@/components/ThemeScript';
 import { headers } from 'next/headers';
+import Script from 'next/script';
 
 export default async function LocaleLayout({
   children,
@@ -46,6 +48,7 @@ export default async function LocaleLayout({
             </main>
             <Footer />
             <Chatbot />
+            <BackToTop />
           </div>
         </NextIntlClientProvider>
       </body>

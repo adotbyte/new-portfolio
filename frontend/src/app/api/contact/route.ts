@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',  // or smtp.zoho.com depending on your region
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.ZOHO_EMAIL,
-    pass: process.env.ZOHO_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
+    // 1. Verify Turnstile token first to save processing resources
     const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -34,25 +36,36 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Captcha failed' }, { status: 400 });
     }
 
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.ZOHO_EMAIL}>`,
-      to: process.env.ZOHO_EMAIL,
-      replyTo: email,
-      subject: `Portfolio message from ${name}`,
+    // 2. Sanitize user inputs for HTML rendering
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
+
+    // 3. Dispatch email via Resend
+    const { data, error } = await resend.emails.send({
+      from: 'Portfolio Contact <audrius@morkunas.info>',
+      to: [process.env.CONTACT_EMAIL!],
+      replyTo: email, // Raw email string for proper mail client reply-to headers
+      subject: `Portfolio message from ${safeName}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       html: `
         <h2>New message from your portfolio</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
         <hr />
         <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br/>')}</p>
+        <p>${safeMessage}</p>
       `,
     });
 
-    return NextResponse.json({ status: 'success' });
+    if (error) {
+      console.error('Resend delivery error:', error);
+      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    }
+
+    return NextResponse.json({ status: 'success', id: data?.id });
   } catch (err) {
     console.error('Contact API error:', err);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

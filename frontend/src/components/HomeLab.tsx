@@ -130,7 +130,7 @@ export default function HomeLab() {
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span></p>
             <p className="text-gray-600 dark:text-gray-300">{t('terminal.uptimeResult')}</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span></p>
-            <p className="text-gray-600 dark:text-gray-300">{t('terminal.freeResult')} <span className="text-white">16G</span> {t('terminal.freeTotal')}</p>
+            <p className="text-gray-600 dark:text-gray-300">{t('terminal.freeResult')} <span className="text-gray">16G</span> {t('terminal.freeTotal')}</p>
             <p className="text-blue-600 dark:text-blue-400 animate-pulse">█</p>
           </div>
         </div>

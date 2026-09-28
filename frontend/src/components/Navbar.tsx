@@ -57,13 +57,24 @@ const Navbar = () => {
     localStorage.setItem('theme', next ? 'dark' : 'light');
   };
 
-  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const id = href.replace('#', '');
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-    setIsOpen(false);
-  };
+const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  e.preventDefault();
+  const id = href.replace('#', '');
+  const el = document.getElementById(id);
+  
+  if (el) {
+    const navHeight = 64; // Height of h-16 navbar (64px)
+    const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+    const offsetPosition = elementPosition - navHeight - 16; // Extra 16px padding
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+  }
+  
+  setIsOpen(false);
+};
 
   const MoonIcon = () => (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
       {
         source: '/(.*)',
         headers: [
-          // NO CSP here — middleware handles it with nonce
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
@@ -33,7 +32,5 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
-
 
 export default withNextIntl(nextConfig);

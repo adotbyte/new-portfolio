@@ -4,12 +4,12 @@ import Footer from '@/components/Footer';
 import Chatbot from '@/components/Chatbot';
 import BackToTop from '@/components/BackToTop';
 import ThemeScript from '@/components/ThemeScript';
+import ThemeSync from '@/components/ThemeSync';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
-import Script from 'next/script';
 
 export default async function LocaleLayout({
   children,
@@ -26,20 +26,23 @@ export default async function LocaleLayout({
   }
 
   // Fetch messages on the server
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
   const messages = await getMessages();
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="light dark" />
+        <ThemeScript nonce={nonce} />
         <meta property="fb:app_id" content="914320204924075" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <ThemeScript />
       </head>
       <body className="bg-white dark:bg-gray-950">
+        <ThemeSync />
         <NextIntlClientProvider messages={messages}>
           <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
             <Navbar />
@@ -55,3 +58,4 @@ export default async function LocaleLayout({
     </html>
   );
 }
+

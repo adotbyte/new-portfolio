@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background-color: #ffffff;
+  color-scheme: light;
+}
+html.dark {
+  background-color: #030712; /* gray-950 */
+  color-scheme: dark;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

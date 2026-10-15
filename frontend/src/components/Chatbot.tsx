@@ -37,7 +37,6 @@ export default function Chatbot({ nonce }: ChatbotProps) {
   const [isDark, setIsDark] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [hints, setHints] = useState<string[]>([]);
@@ -57,7 +56,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
           setLastSaved(t('restored'));
         }
       })
-      .finally(() => setMounted(true));
+      .catch(() => {}); // no more .finally(setMounted)
   }, []);
 
   useEffect(() => {
@@ -151,8 +150,6 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     setHints([]);
     setShowConfirm(false);
   };
-
-  if (!mounted) return null;
 
   if (!isOpen) {
     return (

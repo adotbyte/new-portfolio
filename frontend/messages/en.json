@@ -75,6 +75,7 @@
     "storageDetailText": "2× 2TB NVMe SSD in software RAID for redundancy & performance",
     "dockerServices": "Docker Services",
     "filterAll": "All",
+    "showingTop": "Showing top {count} of {total}+ running",
     "terminal": {
       "dockerCmd": "docker ps",
       "dockerArg": "--format \"table\"",
@@ -85,28 +86,28 @@
       "freeResult": "Mem:",
       "freeTotal": "total, 8.2G used, 7.8G free"
     },
-    "services": {
-      "adguardhome": "DNS-level ad & tracker blocking",
-      "alloy": "Grafana Alloy metrics collector",
-      "cadvisor": "Container resource usage & performance",
-      "cfBeacon": "Cloudflare managed tunnel beacon",
-      "chromadb": "Vector database for AI embeddings",
-      "cloudflared": "Cloudflare Zero Trust tunnel daemon",
-      "directusApp": "Headless CMS application layer",
-      "directusCache": "Redis cache for Directus CMS",
-      "directusDb": "PostgreSQL database for Directus",
-      "dockhand": "Docker container management UI",
-      "hbbr": "RustDesk relay server",
-      "hbbs": "RustDesk signaling server",
-      "portfolioDb": "PostgreSQL database for portfolio",
-      "resumeWebsite": "This portfolio — Next.js",
-      "rustdeskBridge": "RustDesk network bridge",
-      "searxng": "Privacy-first meta search engine",
-      "searxngValkey": "Valkey cache for SearXNG",
-      "tailscale": "Mesh VPN for secure remote access",
-      "webtop": "Browser-based Linux desktop",
-      "wireguard": "WireGuard VPN server"
-    }
+  "services": {
+    "adguardhome": "Network-wide ad & tracker blocking for my entire home.",
+    "alloy": "Ships metrics from my Pi to Grafana Cloud for monitoring.",
+    "cadvisor": "Tracks CPU and memory usage of every running container.",
+    "cfBeacon": "Keeps my Cloudflare Zero Trust tunnel alive and secure.",
+    "chromadb": "Vector database that powers my AI agent's memory.",
+    "cloudflared": "Exposes my homelab to the web without opening a single port.",
+    "directusApp": "Headless CMS for managing content across my projects.",
+    "directusCache": "Redis cache to keep the CMS fast and responsive.",
+    "directusDb": "PostgreSQL database storing all my structured content.",
+    "dockhand": "A lightweight UI to manage Docker containers on the go.",
+    "hbbr": "RustDesk relay server for remote access to my devices.",
+    "hbbs": "RustDesk signaling server for secure P2P connections.",
+    "portfolioDb": "PostgreSQL database storing my portfolio and AI chat logs.",
+    "resumeWebsite": "This portfolio – built, hosted, and served from this Pi.",
+    "rustdeskBridge": "Bridges my remote desktop sessions across networks.",
+    "searxng": "My daily search engine. No tracking, no profiling, just results.",
+    "searxngValkey": "Fast in-memory cache for SearXNG search queries.",
+    "tailscale": "Mesh VPN to securely access my homelab from anywhere.",
+    "webtop": "A full Linux desktop running in the browser. My cloud PC.",
+    "wireguard": "VPN server for secure, encrypted access to my home network."
+  }
   },
   "contact": {
     "title": "Get in Touch",

@@ -80,7 +80,7 @@ export default function HomeLab() {
           <h2 className="text-xl font-black text-gray-900 dark:text-white">{t('dockerServices')}</h2>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-xs font-bold text-green-600 dark:text-green-400">Showing top {services.length} of {totalContainers}+ running</span>
+            <span className="text-xs font-bold text-green-600 dark:text-green-400">{t('showingTop', { count: services.length, total: totalContainers })}</span>
           </div>
         </div>
 

@@ -1,6 +1,8 @@
 # Hi, I'm Audrius 👋
 
-„I am a self-taught infrastructure and systems enthusiast. I don't just build websites; I build the secure, self-hosted environments they run on. From Linux server administration to AI agent integration, I love solving complex problems from the ground up.
+"I am a self-taught infrastructure enthusiast who approaches technology from the server-side down. With a deep foundation in computer hardware, Linux administration, and networking, I don't just write code—I build the stable, secure systems it runs on.
+
+My passion lies in self-hosting, AI integration, and understanding how the internet works from the ground up. Whether it's configuring Cloudflare Zero Trust, managing Docker containers, or building AI agents, I love solving complex problems with practical, hands-on solutions."
 
 ## 🏠 My Home Lab
 
@@ -13,7 +15,7 @@ I currently manage a self-hosted environment powered by:
 
 ## 🚀 Featured Project
 **[AI-Powered Interactive Resume](https://morkunas.info/)**
-*A Next.js application running in Docker on my Pi 5, exposed securely via Cloudflare Tunnels. It allows recruiters to query my experience using AI. This project features a custom AI agent built with Claude API that uses tools to fetch live GitHub data and send emails via Resend. It is protected by Cloudflare Turnstile and Zero Trust, ensuring a secure, serverless-like experience on self-hosted hardware.*
+*This isn't just a static portfolio. It's a full-stack Next.js application, containerized and self-hosted on a Raspberry Pi 5. The built-in AI agent uses Claude API with tool-use capabilities to fetch live GitHub data and send emails securely via Resend. It is protected by Cloudflare Zero Trust, Turnstile, and custom XSS-safe backend logic.*
 
 ---
 

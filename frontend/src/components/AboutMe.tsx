@@ -6,6 +6,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 const AboutMe = async () => {
   const t = await getTranslations('about');
   const locale = await getLocale();
+  const totalContainers = 25;
 
   const content = (() => {
     try {
@@ -73,7 +74,20 @@ const AboutMe = async () => {
                   <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
                   <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
                 </div>
-                <span className="text-gray-400 dark:text-gray-500">$</span> uptime: <span className="text-gray-900 dark:text-white">up 24/7</span>
+                <p>
+                  <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
+                  <span className="text-blue-600 dark:text-blue-400">docker ps -q | wc -l</span>
+                </p>
+                <p className="text-green-600 dark:text-green-400">
+                  {totalContainers}
+                </p>
+                <p>
+                  <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
+                  <span className="text-blue-600 dark:text-blue-400">uptime</span>
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  up 24/7
+                </p>
               </div>
             </div>
           </aside>

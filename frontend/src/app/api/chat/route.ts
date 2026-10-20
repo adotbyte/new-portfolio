@@ -129,6 +129,12 @@ async function sendContactEmail(
   message: string
 ): Promise<string> {
   try {
+    if (visitorName.length > 100) {
+    return "❌ Name is too long. Please keep it under 100 characters.";
+    }
+    if (message.length > 1000) {
+    return "❌ Message is too long. Please keep it under 1000 characters.";
+    }
     const safeName = escapeHtml(visitorName);
     const safeEmail = escapeHtml(visitorEmail);
     // Escape HTML first, then format newlines cleanly for HTML display

@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const path = searchParams.get('path') || '/';
+  const safePath = path.replace(/[<>]/g, '').slice(0, 200);
 
   // Customize your Markdown rendering logic here
-  const markdownContent = `# Page content for ${path}\n\nThis is clean markdown provided for AI agents.`;
+  const markdownContent = `# Page content for ${safePath}\n\nThis is clean markdown provided for AI agents.`;
 
   return new NextResponse(markdownContent, {
     status: 200,

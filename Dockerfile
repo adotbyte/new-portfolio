@@ -20,8 +20,11 @@ COPY frontend/scripts/translate.mjs ./scripts/translate.mjs
 COPY frontend/messages/ ./messages/
 COPY frontend/public/about_me.md ./public/about_me.md
 
+ARG ANTHROPIC_API_KEY
+ENV ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
+
 # Run translation (if API key is present)
-RUN node translate.mjs --force
+RUN node translate.mjs --force || (echo "TRANSLATION FAILED" && exit 1)
 
 # Build args for public env vars
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY
@@ -29,9 +32,6 @@ ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 ARG FB_APP_ID
 ENV FB_APP_ID=$FB_APP_ID
-
-ARG ANTHROPIC_API_KEY
-ENV ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
 
 # Build Next.js
 RUN npx prisma generate

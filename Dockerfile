@@ -15,6 +15,14 @@ RUN npm ci
 # Copy source
 COPY frontend/ ./
 
+# Copy translation script and messages from root
+COPY translate.mjs ./
+COPY frontend/messages/ ./messages/
+COPY public/about_me.md ./public/about_me.md
+
+# Run translation (if API key is present)
+RUN node translate.mjs --force
+
 # Build args for public env vars
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY

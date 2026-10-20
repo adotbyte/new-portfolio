@@ -24,7 +24,7 @@ ARG ANTHROPIC_API_KEY
 ENV ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
 
 # Run translation (if API key is present)
-RUN node translate.mjs --force || (echo "TRANSLATION FAILED" && exit 1)
+RUN node scripts/translate.mjs --force || (echo "TRANSLATION FAILED" && exit 1)
 
 # Build args for public env vars
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY

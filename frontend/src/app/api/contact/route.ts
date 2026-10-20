@@ -17,7 +17,6 @@ function escapeHtml(str: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  try {
     const body = await req.json();
     const { name, email, message } = body;
     const turnstileToken = body['cf-turnstile-response'];
@@ -39,13 +38,16 @@ export async function POST(req: NextRequest) {
     if (!turnstileData.success) {
       return NextResponse.json({ error: 'Captcha failed' }, { status: 400 });
     }
-
+    if (body.message.length > 1000) {
+       return NextResponse.json({ error: "Message too long" }, { status: 400 });
+    }
     // 2. Sanitize user inputs for HTML rendering
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
     const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
-
+  
     // 3. Dispatch email via Resend
+  try {
     const { data, error } = await resend.emails.send({
       from: 'Portfolio Contact <audrius@morkunas.info>',
       to: [process.env.CONTACT_EMAIL!],
@@ -66,7 +68,7 @@ export async function POST(req: NextRequest) {
       console.error('Resend delivery error:', error);
       return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
     }
-
+  
     return NextResponse.json({ status: 'success', id: data?.id });
   } catch (err) {
     console.error('Contact API error:', err);

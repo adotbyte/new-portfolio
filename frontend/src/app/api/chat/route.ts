@@ -214,7 +214,14 @@ Rules:
     const block = res.content.find((b): b is Anthropic.TextBlock => b.type === 'text');
     if (!block) return [];
 
-    const cleaned = block.text.replace(/```json|```/g, '').trim();
+    let cleaned = block.text.replace(/```json|```/g, '').trim();
+    
+    const start = cleaned.indexOf('[');
+    const end = cleaned.lastIndexOf(']');
+    if (start !== -1 && end !== -1) {
+      cleaned = cleaned.substring(start, end + 1);
+    }
+
     const parsed = JSON.parse(cleaned);
     return Array.isArray(parsed) ? parsed.slice(0, 3) : [];
   } catch (err) {

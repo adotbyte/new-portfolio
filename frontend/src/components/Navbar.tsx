@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
@@ -11,8 +12,8 @@ const Navbar = () => {
   const params = useParams();
   const currentLocale = params.locale as string;
 
+  const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
 
   const navLinks = [
@@ -25,14 +26,6 @@ const Navbar = () => {
   const switchLocale = (locale: string) => {
     router.replace(pathname, { locale });
   };
-
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const dark = saved ? saved === 'dark' : prefersDark;
-    setIsDark(dark);
-    document.documentElement.classList.toggle('dark', dark);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,12 +43,9 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleDark = () => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-  };
+const toggleDark = () => {
+  setTheme(theme === 'dark' ? 'light' : 'dark');
+};
 
 const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
   e.preventDefault();
@@ -77,13 +67,13 @@ const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
 };
 
   const MoonIcon = () => (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg className="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
     </svg>
   );
 
   const SunIcon = () => (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg className="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
     </svg>
   );
@@ -134,9 +124,9 @@ const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
               </button>
             </div>
 
-            <button onClick={toggleDark} aria-label="Toggle dark mode"
-              className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              {isDark ? <SunIcon /> : <MoonIcon />}
+            <button onClick={toggleDark} aria-label="Toggle dark mode" className="...">
+              <SunIcon />
+              <MoonIcon />
             </button>
           </div>
 
@@ -163,7 +153,8 @@ const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
 
             <button onClick={toggleDark} aria-label="Toggle dark mode"
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              {isDark ? <SunIcon /> : <MoonIcon />}
+              <SunIcon /> 
+              <MoonIcon />
             </button>
 
             <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu"

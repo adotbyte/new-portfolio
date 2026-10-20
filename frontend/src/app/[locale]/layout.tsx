@@ -10,6 +10,7 @@ import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
+import { ThemeProvider } from 'next-themes'
 
 export default async function LocaleLayout({
   children,
@@ -42,6 +43,7 @@ export default async function LocaleLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className="bg-white dark:bg-gray-950">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <ThemeSync />
         <NextIntlClientProvider messages={messages}>
           <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
@@ -54,6 +56,7 @@ export default async function LocaleLayout({
             <BackToTop />
           </div>
         </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 # Hi, I'm Audrius 👋
 
-I am a technology enthusiast who loves this hobby. I am most interested in the world of the Internet in a broad sense. Learning something new every day is a pleasure for me.
+„I am a self-taught infrastructure and systems enthusiast. I don't just build websites; I build the secure, self-hosted environments they run on. From Linux server administration to AI agent integration, I love solving complex problems from the ground up.
 
 ## 🏠 My Home Lab
 
@@ -11,18 +11,9 @@ I currently manage a self-hosted environment powered by:
 - **Network:** Cloudflare Zero Trust Tunnels & Reverse Proxies
     - **Reverse Proxies:** Efficient traffic routing and SSL management for all hosted applications
 
-## 🛠️ Technical Skills
-- **Infrastructure:** Docker, Linux (Debian/Ubuntu OS), Cloudflare Networking
-- **Cloud:** AWS ([AWS Cloud Quest: Cloud Practitioner - Training Badge 🟢](https://www.credly.com/badges/6a3d2231-79c9-485e-9442-981ac2b4049f/public_url))
-- **Frontend:** Next.js (App Router), React, Tailwind CSS, JavaScript (ES6+), HTML5/CSS3
-- **Integrations & APIs:** AI / LLM API integration, REST API, JSON
-- **Backend:** Python, Django
-- **GitHub Actions:** Continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline.
-- **Hardware:** Computer building and troubleshooting
-
 ## 🚀 Featured Project
 **[AI-Powered Interactive Resume](https://morkunas.info/)**
-*A Next.js application running in Docker on my Pi 5, exposed securely via Cloudflare Tunnels. It allows recruiters to query my experience using AI.*
+*A Next.js application running in Docker on my Pi 5, exposed securely via Cloudflare Tunnels. It allows recruiters to query my experience using AI. This project features a custom AI agent built with Claude API that uses tools to fetch live GitHub data and send emails via Resend. It is protected by Cloudflare Turnstile and Zero Trust, ensuring a secure, serverless-like experience on self-hosted hardware.*
 
 ---
 

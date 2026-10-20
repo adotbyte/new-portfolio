@@ -15,6 +15,7 @@ const categories = ['All', 'Network', 'Monitoring', 'Apps', 'System', 'Remote'];
 export default function HomeLab() {
   const t = useTranslations('homeLab');
   const [activeCategory, setActiveCategory] = useState('All');
+  const totalContainers = 25; 
 
   const services = [
     { name: 'adguardhome',      desc: t('services.adguardhome'), category: 'Network',     icon: '🛡️' },
@@ -58,7 +59,7 @@ export default function HomeLab() {
             { label: t('device'), value: 'Raspberry Pi 5', icon: '🖥️' },
             { label: t('ram'),     value: '16GB',           icon: '💾' },
             { label: t('storage'), value: '4TB NVMe',       icon: '💿' },
-            { label: t('containers'), value: `20 ${t('containersRunning')}`, icon: '🐳' },
+            { label: t('containers'), value: `${totalContainers}+ ${t('containersRunning')}`, icon: '🐳' },
           ].map((stat) => (
             <div key={stat.label} className="bg-slate-50 dark:bg-gray-800 rounded-2xl p-5 border border-slate-100 dark:border-gray-700 flex flex-col gap-1">
               <span className="text-2xl">{stat.icon}</span>
@@ -79,7 +80,7 @@ export default function HomeLab() {
           <h2 className="text-xl font-black text-gray-900 dark:text-white">{t('dockerServices')}</h2>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-xs font-bold text-green-600 dark:text-green-400">20 {t('containersRunning')}</span>
+            <span className="text-xs font-bold text-green-600 dark:text-green-400">Showing top {services.length} of {totalContainers}+ running</span>
           </div>
         </div>
 
@@ -126,7 +127,7 @@ export default function HomeLab() {
           </div>
           <div className="space-y-1 text-xs">
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.dockerCmd')}</span> <span className="text-gray-500">{t('terminal.dockerArg')}</span></p>
-            <p className="text-green-600 dark:text-green-400">✓ 20 {t('terminal.dockerResult')}</p>
+            <p className="text-green-600 dark:text-green-400">✓ {totalContainers} {t('terminal.dockerResult')}</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span></p>
             <p className="text-gray-600 dark:text-gray-300">{t('terminal.uptimeResult')}</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span></p>

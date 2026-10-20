@@ -16,7 +16,7 @@ RUN npm ci
 COPY frontend/ ./
 
 # Copy translation script and messages from root
-COPY translate.mjs ./
+COPY frontend/scripts/translate.mjs ./
 COPY frontend/messages/ ./messages/
 COPY frontend/public/about_me.md ./public/about_me.md
 

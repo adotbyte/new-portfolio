@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 import { useTranslations } from 'next-intl';
 
 const categoryColors: Record<string, string> = {
@@ -8,37 +8,32 @@ const categoryColors: Record<string, string> = {
   Apps: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
   System: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300',
   Remote: 'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300',
+  Media: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
 };
 
-const categories = ['All', 'Network', 'Monitoring', 'Apps', 'System', 'Remote'];
+const categories = ['All', 'Network', 'Monitoring', 'Apps', 'System', 'Remote', 'Media'];
 
 export default function HomeLab() {
   const t = useTranslations('homeLab');
   const [activeCategory, setActiveCategory] = useState('All');
-  const totalContainers = 25; 
+  const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const services = [
-    { name: 'adguardhome',      desc: t('services.adguardhome'), category: 'Network',     icon: '🛡️' },
-    { name: 'alloy',            desc: t('services.alloy'),       category: 'Monitoring',   icon: '📊' },
-    { name: 'cadvisor',         desc: t('services.cadvisor'),    category: 'Monitoring',   icon: '📈' },
-    { name: 'cf-managed-beacon',desc: t('services.cfBeacon'),    category: 'Network',      icon: '☁️' },
-    { name: 'chromadb',         desc: t('services.chromadb'),    category: 'Apps',         icon: '🧠' },
-    { name: 'cloudflared',      desc: t('services.cloudflared'), category: 'Network',      icon: '🔒' },
-    { name: 'directus-app',     desc: t('services.directusApp'), category: 'Apps',         icon: '🗂️' },
-    { name: 'directus-cache',   desc: t('services.directusCache'),category: 'Apps',        icon: '⚡' },
-    { name: 'directus-db',      desc: t('services.directusDb'),  category: 'Apps',         icon: '🗄️' },
-    { name: 'dockhand',         desc: t('services.dockhand'),    category: 'System',       icon: '🐳' },
-    { name: 'hbbr',             desc: t('services.hbbr'),        category: 'Remote',       icon: '🔗' },
-    { name: 'hbbs',             desc: t('services.hbbs'),        category: 'Remote',       icon: '📡' },
-    { name: 'portfolio_db',     desc: t('services.portfolioDb'), category: 'Apps',         icon: '🗄️' },
-    { name: 'resume_website',   desc: t('services.resumeWebsite'),category: 'Apps',        icon: '🚀' },
-    { name: 'rustdesk_bridge',  desc: t('services.rustdeskBridge'),category: 'Remote',     icon: '🌉' },
-    { name: 'searxng',          desc: t('services.searxng'),     category: 'Apps',         icon: '🔍' },
-    { name: 'searxng-valkey',   desc: t('services.searxngValkey'),category: 'Apps',        icon: '⚡' },
-    { name: 'tailscale',        desc: t('services.tailscale'),   category: 'Network',      icon: '🔐' },
-    { name: 'webtop',           desc: t('services.webtop'),      category: 'System',       icon: '🖥️' },
-    { name: 'wireguard',        desc: t('services.wireguard'),   category: 'Network',      icon: '🛡️' },
-  ];
+    useEffect(() => {
+    fetch('/api/homelab')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.length > 0) {
+          setServices(data[0].services); // We take the services from the Raspberry Pi 5
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error loading homelab data:', err);
+        setLoading(false);
+      });
+  }, []);
+
 
   const filtered = activeCategory === 'All' ? services : services.filter(s => s.category === activeCategory);
 
@@ -59,7 +54,7 @@ export default function HomeLab() {
             { label: t('device'), value: 'Raspberry Pi 5', icon: '🖥️' },
             { label: t('ram'),     value: '16GB',           icon: '💾' },
             { label: t('storage'), value: '4TB NVMe',       icon: '💿' },
-            { label: t('containers'), value: `${totalContainers}+ ${t('containersRunning')}`, icon: '🐳' },
+            { label: t('containers'), value: `$Math.max(services.length, 20)+ ${t('containersRunning')}`, icon: '🐳' },
           ].map((stat) => (
             <div key={stat.label} className="bg-slate-50 dark:bg-gray-800 rounded-2xl p-5 border border-slate-100 dark:border-gray-700 flex flex-col gap-1">
               <span className="text-2xl">{stat.icon}</span>
@@ -80,7 +75,7 @@ export default function HomeLab() {
           <h2 className="text-xl font-black text-gray-900 dark:text-white">{t('dockerServices')}</h2>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-xs font-bold text-green-600 dark:text-green-400">{t('showingTop', { count: services.length, total: totalContainers })}</span>
+            <span className="text-xs font-bold text-green-600 dark:text-green-400">{t('showingTop', { count: services.length, total: Math.max(services.length, 20) })}</span>
           </div>
         </div>
 
@@ -102,19 +97,29 @@ export default function HomeLab() {
             <div key={service.name}
               className="group bg-slate-50 dark:bg-gray-800 rounded-2xl p-5 border border-slate-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-50 dark:hover:shadow-blue-950 transition-all duration-300 hover:-translate-y-1"
               style={{ animationDelay: `${i * 30}ms` }}>
-              <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{service.icon}</span>
+                  {/* Paprasta ikonų logika pagal kategoriją */}
+                  <span className="text-xl">
+                    {service.category === 'Media' ? '🎬' : 
+                     service.category === 'Network' ? '🌐' : 
+                     service.category === 'Monitoring' ? '📊' : 
+                     service.category === 'System' ? '⚙️' : 
+                     service.category === 'Remote' ? '🔗' : '📦'}
+                  </span>
                   <div>
                     <p className="font-mono text-sm font-bold text-gray-900 dark:text-white">{service.name}</p>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${categoryColors[service.category]}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${categoryColors[service.category] || 'bg-gray-100 text-gray-700'}`}>
                       {service.category}
                     </span>
                   </div>
                 </div>
                 <span className="w-2 h-2 bg-green-500 rounded-full mt-1 shrink-0"></span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{service.desc}</p>
+              {/* Vietoj desc rodome portą */}
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                Port: {service.port}
+              </p>
             </div>
           ))}
         </div>
@@ -127,7 +132,7 @@ export default function HomeLab() {
           </div>
           <div className="space-y-1 text-xs">
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.dockerCmd')}</span> <span className="text-gray-500">{t('terminal.dockerArg')}</span></p>
-            <p className="text-green-600 dark:text-green-400">✓ {totalContainers} {t('terminal.dockerResult')}</p>
+            <p className="text-green-600 dark:text-green-400">✓ Math.max(services.length, 20) {t('terminal.dockerResult')}</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span></p>
             <p className="text-gray-600 dark:text-gray-300">{t('terminal.uptimeResult')}</p>
             <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span></p>

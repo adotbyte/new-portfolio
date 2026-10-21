@@ -26,6 +26,7 @@ jobs:
           RS_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RS_GH_TOKEN: ${{ secrets.GH_TOKEN }}
           RS_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          RS_HOMELAB_DATABASE_URL: ${{ secrets.HOMELAB_DATABASE_URL }}
           RS_ANTHROPIC_MODEL: ${{ secrets.ANTHROPIC_MODEL }}
         run: |
           cd ${{ github.workspace }}
@@ -38,6 +39,7 @@ jobs:
           echo "ANTHROPIC_API_KEY=$RS_ANTHROPIC_API_KEY" >> .env
           echo "GH_TOKEN=$RS_GH_TOKEN" >> .env
           echo "DATABASE_URL=postgresql://portfolio:$RS_DB_PASSWORD@db:5432/portfolio" >> .env
+          echo "HOMELAB_DATABASE_URL=$RS_HOMELAB_DATABASE_URL >> .env
           echo "DB_PASSWORD=$RS_DB_PASSWORD" >> .env
           echo "ANTHROPIC_MODEL=$RS_ANTHROPIC_MODEL" >> .env
           echo "✅ .env created successfully"

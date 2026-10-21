@@ -35,6 +35,7 @@ ENV FB_APP_ID=$FB_APP_ID
 
 # Build Next.js
 RUN npx prisma generate
+RUN npx prisma generate --schema=prisma-homelab/schema.prisma
 RUN npm run build
 
 # --- Production Stage ---

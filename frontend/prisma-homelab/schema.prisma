@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client-homelab"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Device {
+  id       Int       @id @default(autoincrement())
+  name     String
+  ip       String?
+  ramGb    Int?
+  services Service[]
+}
+
+model Service {
+  id        Int    @id @default(autoincrement())
+  name      String
+  port      Int
+  category  String
+  deviceId  Int
+  device    Device @relation(fields: [deviceId], references: [id])
+}

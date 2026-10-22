@@ -8,61 +8,62 @@ const prisma = new PrismaClient({ adapter });
 
 export async function GET() {
   try {
-    // 1. Gauname duomenis iš mūsų homelab duomenų bazės
+    // 1. DB duomenys
     const devices = await prisma.device.findMany({
       include: { services: true },
     });
 
-    // 2. Gauname tikrą Docker konteinerių skaičių per saugų proxy
+    // 2. Docker skaičius
     let dockerCount = 0;
     try {
-      const dockerRes = await fetch('http://socket-proxy:2375/containers/json?all=false', {
-        cache: 'no-store',
-      });
+      const dockerRes = await fetch('http://socket-proxy:2375/containers/json?all=false', { cache: 'no-store' });
       if (dockerRes.ok) {
         const containers = await dockerRes.json();
         dockerCount = containers.length;
       }
     } catch (e) {
-      console.error('Failed to reach the Docker proxy:', e);
+      console.error('Docker proxy error:', e);
     }
 
-    // 3. Nuskaitome TIKRĄ atmintį iš avietės /proc/meminfo failo
-    let memTotal = "16G";
-    let memUsed = "8.2G";
-    let memFree = "7.8G";
+    // 3. Atmintis, Uptime ir Load iš /proc
+    let memTotal = "16G", memUsed = "8.2G", memFree = "7.8G";
+    let uptimeDays = 247;
+    let load = "0.00, 0.00, 0.00";
 
     try {
       const memInfo = fs.readFileSync('/host/proc/meminfo', 'utf8');
-      
       const totalMatch = memInfo.match(/MemTotal:\s+(\d+)/);
       const availableMatch = memInfo.match(/MemAvailable:\s+(\d+)/);
-
       if (totalMatch && availableMatch) {
         const totalKb = parseInt(totalMatch[1]);
         const availableKb = parseInt(availableMatch[1]);
         const usedKb = totalKb - availableKb;
-
-        // Konvertuojame į GB (1 GB = 1048576 kB)
         memTotal = (totalKb / 1048576).toFixed(1) + 'G';
         memUsed = (usedKb / 1048576).toFixed(1) + 'G';
         memFree = (availableKb / 1048576).toFixed(1) + 'G';
       }
+
+      // Nuskaitome uptime (pirmas skaičius yra sekundės)
+      const uptimeInfo = fs.readFileSync('/host/proc/uptime', 'utf8');
+      const uptimeSeconds = parseFloat(uptimeInfo.split(' ')[0]);
+      uptimeDays = Math.floor(uptimeSeconds / 86400);
+
+      // Nuskaitome load average
+      const loadInfo = fs.readFileSync('/host/proc/loadavg', 'utf8');
+      const loadParts = loadInfo.split(' ');
+      load = `${loadParts[0]}, ${loadParts[1]}, ${loadParts[2]}`;
+
     } catch (e) {
-      console.error('Failed to read /host/proc/meminfo:', e);
+      console.error('Failed to read /proc failų:', e);
     }
 
-    // 4. Formuojame atsakymą
     return NextResponse.json({
-      devices: devices,
+      devices,
       stats: {
-        load: "0.42, 0.38, 0.35", // Kol kas paliekame statinį, nes os.loadavg() konteineryje rodo 0
-        memory: {
-          total: memTotal,
-          used: memUsed,
-          free: memFree,
-        },
-        dockerCount: dockerCount,
+        load,
+        uptimeDays,
+        memory: { total: memTotal, used: memUsed, free: memFree },
+        dockerCount,
       },
     });
   } catch (error) {

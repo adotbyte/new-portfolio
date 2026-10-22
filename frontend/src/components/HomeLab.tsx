@@ -148,7 +148,10 @@ export default function HomeLab() {
               <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span>
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              {t('terminal.uptimeResult', { days: 247, load: stats?.load || '0.00, 0.00, 0.00' })}
+              {t('terminal.uptimeResult', { 
+                days: stats?.uptimeDays || 0, 
+                load: stats?.load || '0.00, 0.00, 0.00' 
+              })}
             </p>
             
             <p>

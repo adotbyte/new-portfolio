@@ -2,23 +2,25 @@ import ReactMarkdown from 'react-markdown';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { getTranslations, getLocale } from 'next-intl/server';
+import TerminalWidget from './TerminalWidget'; // <--- Teisingas importas
 
-const AboutMe = async () => {
+export default async function AboutMe() {
   const t = await getTranslations('about');
   const locale = await getLocale();
-  const totalContainers = 25;
 
-  const content = (() => {
-    try {
-      return readFileSync(join(process.cwd(), 'public', `about_me.${locale}.md`), 'utf-8');
-    } catch {
-      try {
-        return readFileSync(join(process.cwd(), 'public', 'about_me.md'), 'utf-8');
-      } catch {
-        return '';
-      }
-    }
-  })();
+  let filePath = join(process.cwd(), 'public', `about_me.${locale}.md`);
+  try {
+    readFileSync(filePath); 
+  } catch {
+    filePath = join(process.cwd(), 'public', 'about_me.md');
+  }
+
+  let content = '';
+  try {
+    content = readFileSync(filePath, 'utf-8');
+  } catch {
+    content = 'Nepavyko įkelti teksto.';
+  }
 
   const skillCategories = [
     { name: t('categories.infrastructure'), items: ['Linux', 'Docker', 'Nginx'] },
@@ -35,10 +37,7 @@ const AboutMe = async () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-16 items-start w-full max-w-full">
           <div className="lg:col-span-8 w-full min-w-0">
-            <article className="prose prose-sm md:prose-base max-w-none break-words overflow-hidden
-              dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight
-              prose-h1:text-3xl prose-h1:mb-4 prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3
-              prose-p:leading-relaxed prose-hr:my-6">
+            <article className="prose prose-sm md:prose-base max-w-none break-words overflow-hidden dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h1:text-3xl prose-h1:mb-4 prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-p:leading-relaxed prose-hr:my-6">
               <ReactMarkdown>{content}</ReactMarkdown>
             </article>
           </div>
@@ -68,33 +67,14 @@ const AboutMe = async () => {
                   {t('online')}
                 </span>
               </div>
-              <div className="mt-5 bg-gray-100 dark:bg-slate-900 p-4 rounded-2xl font-mono text-[11px] text-blue-600 dark:text-blue-300 shadow-inner overflow-hidden">
-                <div className="flex gap-1.5 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
-                  <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
-                  <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
-                </div>
-                <p>
-                  <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
-                  <span className="text-blue-600 dark:text-blue-400">docker ps -q | wc -l</span>
-                </p>
-                <p className="text-green-600 dark:text-green-400">
-                  {totalContainers}
-                </p>
-                <p>
-                  <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
-                  <span className="text-blue-600 dark:text-blue-400">uptime</span>
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  up 24/7
-                </p>
-              </div>
+              
+              {/* --- ĮTERPIAME TERMINALĄ --- */}
+              <TerminalWidget />
+              
             </div>
           </aside>
         </div>
       </div>
     </section>
   );
-};
-
-export default AboutMe;
+}

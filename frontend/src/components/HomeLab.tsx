@@ -31,7 +31,7 @@ export default function HomeLab() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Klaida kraunant homelab duomenis:', err);
+        console.error('Error loading homelab data:', err);
         setLoading(false);
       });
   }, []);

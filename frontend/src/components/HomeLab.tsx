@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 const categoryColors: Record<string, string> = {
@@ -20,24 +20,24 @@ export default function HomeLab() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-      fetch('/api/homelab')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.devices && data.devices.length > 0) {
-            setServices(data.devices[0].services);
-          }
-          setStats(data.stats); // Išsaugome statistiką
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setLoading(false);
-        });
-    }, []);
-
+  useEffect(() => {
+    fetch('/api/homelab')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.devices && data.devices.length > 0) {
+          setServices(data.devices[0].services);
+        }
+        setStats(data.stats);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Klaida kraunant homelab duomenis:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const filtered = activeCategory === 'All' ? services : services.filter(s => s.category === activeCategory);
+  const totalContainers = stats?.dockerCount || services.length;
 
   return (
     <section className="w-full bg-white dark:bg-gray-950 py-12 overflow-x-hidden">
@@ -56,7 +56,7 @@ export default function HomeLab() {
             { label: t('device'), value: 'Raspberry Pi 5', icon: '🖥️' },
             { label: t('ram'),     value: '16GB',           icon: '💾' },
             { label: t('storage'), value: '4TB NVMe',       icon: '💿' },
-            { label: t('containers'), value: `${Math.max(services.length, 20)}+ ${t('containersRunning')}`, icon: '🐳' },
+            { label: t('containers'), value: `${totalContainers}+ ${t('containersRunning')}`, icon: '🐳' },
           ].map((stat) => (
             <div key={stat.label} className="bg-slate-50 dark:bg-gray-800 rounded-2xl p-5 border border-slate-100 dark:border-gray-700 flex flex-col gap-1">
               <span className="text-2xl">{stat.icon}</span>
@@ -78,7 +78,7 @@ export default function HomeLab() {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             <span className="text-xs font-bold text-green-600 dark:text-green-400">
-              {t('showingTop', { count: services.length, total: Math.max(services.length, 20) })}
+              {t('showingTop', { count: services.length, total: totalContainers })}
             </span>
           </div>
         </div>
@@ -96,37 +96,43 @@ export default function HomeLab() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((service, i) => (
-            <div key={service.name}
-              className="group bg-slate-50 dark:bg-gray-800 rounded-2xl p-5 border border-slate-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-50 dark:hover:shadow-blue-950 transition-all duration-300 hover:-translate-y-1"
-              style={{ animationDelay: `${i * 30}ms` }}>
-                            <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  {/* Paprasta ikonų logika pagal kategoriją */}
-                  <span className="text-xl">
-                    {service.category === 'Media' ? '🎬' : 
-                     service.category === 'Network' ? '🌐' : 
-                     service.category === 'Monitoring' ? '📊' : 
-                     service.category === 'System' ? '⚙️' : 
-                     service.category === 'Remote' ? '🔗' : '📦'}
-                  </span>
-                  <div>
-                    <p className="font-mono text-sm font-bold text-gray-900 dark:text-white">{service.name}</p>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${categoryColors[service.category] || 'bg-gray-100 text-gray-700'}`}>
-                      {service.category}
+        {/* --- SKELETON EFEKTAS PRASIDEDA ČIA --- */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[200px]">
+          {loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="animate-pulse bg-slate-100 dark:bg-gray-800/50 rounded-2xl h-32 border border-slate-200 dark:border-gray-700"></div>
+            ))
+          ) : (
+            filtered.map((service, i) => (
+              <div key={service.name}
+                className="group bg-slate-50 dark:bg-gray-800 rounded-2xl p-5 border border-slate-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-50 dark:hover:shadow-blue-950 transition-all duration-300 hover:-translate-y-1"
+                style={{ animationDelay: `${i * 30}ms` }}>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">
+                      {service.category === 'Media' ? '🎬' : 
+                       service.category === 'Network' ? '🌐' : 
+                       service.category === 'Monitoring' ? '📊' : 
+                       service.category === 'System' ? '⚙️' : 
+                       service.category === 'Remote' ? '🔗' : '📦'}
                     </span>
+                    <div>
+                      <p className="font-mono text-sm font-bold text-gray-900 dark:text-white">{service.name}</p>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${categoryColors[service.category] || 'bg-gray-100 text-gray-700'}`}>
+                        {service.category}
+                      </span>
+                    </div>
                   </div>
+                  <span className="w-2 h-2 bg-green-500 rounded-full mt-1 shrink-0"></span>
                 </div>
-                <span className="w-2 h-2 bg-green-500 rounded-full mt-1 shrink-0"></span>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                  Port: {service.port}
+                </p>
               </div>
-              {/* Vietoj desc rodome portą */}
-              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                Port: {service.port}
-              </p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
+        {/* --- SKELETON EFEKTAS PASIBAIGIA ČIA --- */}
 
         <div className="mt-12 bg-gray-100 dark:bg-slate-900 rounded-2xl p-6 font-mono text-sm border border-gray-200 dark:border-gray-700">
           <div className="flex gap-1.5 mb-4">
@@ -135,29 +141,15 @@ export default function HomeLab() {
             <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
           </div>
           <div className="space-y-1 text-xs">
-            <p>
-              <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
-              <span className="text-blue-600 dark:text-blue-400">{t('terminal.dockerCmd')}</span>
-            </p>
-            <p className="text-green-600 dark:text-green-400">
-              ✓ {stats?.dockerCount || 0} {t('terminal.dockerResult')}
-            </p>
+            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.dockerCmd')}</span></p>
+            <p className="text-green-600 dark:text-green-400">✓ {stats?.dockerCount || 0} {t('terminal.dockerResult')}</p>
             
-            <p>
-              <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
-              <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span>
-            </p>
+            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span></p>
             <p className="text-gray-600 dark:text-gray-300">
-              {t('terminal.uptimeResult', { 
-                days: stats?.uptimeDays || 0, 
-                load: stats?.load || '0.00, 0.00, 0.00' 
-              })}
+              {t('terminal.uptimeResult', { days: stats?.uptimeDays || 0, load: stats?.load || '0.00, 0.00, 0.00' })}
             </p>
             
-            <p>
-              <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
-              <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span>
-            </p>
+            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span></p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('terminal.freeTotal', { 
                 total: stats?.memory?.total || '16G', 

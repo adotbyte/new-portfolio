@@ -17,22 +17,24 @@ export default function HomeLab() {
   const t = useTranslations('homeLab');
   const [activeCategory, setActiveCategory] = useState('All');
   const [services, setServices] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-    fetch('/api/homelab')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.length > 0) {
-          setServices(data[0].services); // We take the services from the Raspberry Pi 5
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error loading homelab data:', err);
-        setLoading(false);
-      });
-  }, []);
+      fetch('/api/homelab')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.devices && data.devices.length > 0) {
+            setServices(data.devices[0].services);
+          }
+          setStats(data.stats); // Išsaugome statistiką
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
+    }, []);
 
 
   const filtered = activeCategory === 'All' ? services : services.filter(s => s.category === activeCategory);
@@ -133,13 +135,14 @@ export default function HomeLab() {
             <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
           </div>
           <div className="space-y-1 text-xs">
-            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.dockerCmd')}</span> <span className="text-gray-500">{t('terminal.dockerArg')}</span></p>
-            <p className="text-green-600 dark:text-green-400">✓ {Math.max(services.length, 20)} {t('terminal.dockerResult')}</p>
-            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span></p>
-            <p className="text-gray-600 dark:text-gray-300">{t('terminal.uptimeResult')}</p>
-            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span></p>
-            <p className="text-gray-600 dark:text-gray-300">{t('terminal.freeResult')} <span className="text-gray">16G</span> {t('terminal.freeTotal')}</p>
-            <p className="text-blue-600 dark:text-blue-400 animate-pulse">█</p>
+            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">docker ps --format "table"</span></p>
+            <p className="text-green-600 dark:text-green-400">✓ {stats?.dockerCount || 0} konteineriai veikia</p>
+            
+            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">uptime</span></p>
+            <p className="text-gray-600 dark:text-gray-300">veikia 247 dienas, apkrovos vidurkis: {stats?.load || '0.00, 0.00, 0.00'}</p>
+            
+            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">free -h</span></p>
+            <p className="text-gray-600 dark:text-gray-300">Atmintis: {stats?.memory?.total} iš viso, {stats?.memory?.used} naudojama, {stats?.memory?.free} laisva</p>
           </div>
         </div>
 

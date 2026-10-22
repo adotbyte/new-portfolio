@@ -11,7 +11,23 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-      
+    networks:
+      - internal_net
+
+  # --- NAUJAS SAUGUS DOCKER PROXY ---
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:0.1.5
+    container_name: socket-proxy
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1 # Leidžiame tik skaityti konteinerių sąrašą
+      - POST=0       # Draudžiame bet kokius keitimus
+    networks:
+      - internal_net
+    # Jokių ports: čia nereikia, nes jis pasiekiamas tik vidiniame tinkle
+
   web:
     build:
       context: .
@@ -21,12 +37,13 @@ services:
     container_name: resume_website
     restart: unless-stopped
     env_file:
-      - .env    
+      - .env
     environment:
       - HOMELAB_DATABASE_URL=${HOMELAB_DATABASE_URL}
-    
     depends_on:
       db:
+        condition: service_started
+      socket-proxy:
         condition: service_started
     ports:
       - "8080:3000"
@@ -36,6 +53,12 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    networks:
+      - internal_net
+
+networks:
+  internal_net:
+    driver: bridge
 
 volumes:
   postgres_data:

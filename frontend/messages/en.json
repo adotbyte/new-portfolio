@@ -77,14 +77,13 @@
     "filterAll": "All",
     "showingTop": "Showing top {count} of {total}+ running",
     "terminal": {
-      "dockerCmd": "docker ps",
-      "dockerArg": "--format \"table\"",
+      "dockerCmd": "docker ps --format \"table\"",
       "dockerResult": "containers running",
       "uptimeCmd": "uptime",
-      "uptimeResult": "up 247 days, load average: 0.42, 0.38, 0.35",
+      "uptimeResult": "up {days} days, load average: {load}",
       "freeCmd": "free -h",
       "freeResult": "Mem:",
-      "freeTotal": "total, 8.2G used, 7.8G free"
+      "freeTotal": "{total} total, {used} used, {free} free"
     },
   "services": {
     "adguardhome": "Network-wide ad & tracker blocking for my entire home.",

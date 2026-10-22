@@ -40,6 +40,8 @@ services:
       - .env
     environment:
       - HOMELAB_DATABASE_URL=${HOMELAB_DATABASE_URL}
+    volumes:
+      - /proc:/host/proc:ro
     depends_on:
       db:
         condition: service_started

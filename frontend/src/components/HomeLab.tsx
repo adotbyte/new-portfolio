@@ -135,14 +135,35 @@ export default function HomeLab() {
             <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
           </div>
           <div className="space-y-1 text-xs">
-            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">docker ps --format "table"</span></p>
-            <p className="text-green-600 dark:text-green-400">✓ {stats?.dockerCount || 0} konteineriai veikia</p>
+            <p>
+              <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
+              <span className="text-blue-600 dark:text-blue-400">{t('terminal.dockerCmd')}</span>
+            </p>
+            <p className="text-green-600 dark:text-green-400">
+              ✓ {stats?.dockerCount || 0} {t('terminal.dockerResult')}
+            </p>
             
-            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">uptime</span></p>
-            <p className="text-gray-600 dark:text-gray-300">veikia 247 dienas, apkrovos vidurkis: {stats?.load || '0.00, 0.00, 0.00'}</p>
+            <p>
+              <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
+              <span className="text-blue-600 dark:text-blue-400">{t('terminal.uptimeCmd')}</span>
+            </p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t('terminal.uptimeResult', { days: 247, load: stats?.load || '0.00, 0.00, 0.00' })}
+            </p>
             
-            <p><span className="text-gray-400 dark:text-gray-500">$</span> <span className="text-blue-600 dark:text-blue-400">free -h</span></p>
-            <p className="text-gray-600 dark:text-gray-300">Atmintis: {stats?.memory?.total} iš viso, {stats?.memory?.used} naudojama, {stats?.memory?.free} laisva</p>
+            <p>
+              <span className="text-gray-400 dark:text-gray-500">$</span>{" "}
+              <span className="text-blue-600 dark:text-blue-400">{t('terminal.freeCmd')}</span>
+            </p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t('terminal.freeTotal', { 
+                total: stats?.memory?.total || '16G', 
+                used: stats?.memory?.used || '8.2G', 
+                free: stats?.memory?.free || '7.8G' 
+              })}
+            </p>
+            
+            <p className="text-blue-600 dark:text-blue-400 animate-pulse">█</p>
           </div>
         </div>
 

@@ -43,6 +43,15 @@ const Skills = async () => {
       icon: '🏠',
       status: t('projects.homelabStatus'),
     },
+        {
+      name: t('projects.knowledgeBaseName'),
+      description: t('projects.knowledgeBaseDesc'),
+      stack: ['Next.js 16', 'Prisma', 'PostgreSQL', 'Google Gemini', 'Cloudflare'],
+      link: 'https://knowledge.morkunas.info/public',
+      github: 'https://github.com/adotbyte/knowledge-base',
+      icon: '🧠',
+      status: t('projects.knowledgeBaseStatus'),
+    },
   ];
 
   return (

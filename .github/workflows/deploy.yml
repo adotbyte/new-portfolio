@@ -55,9 +55,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-
 
+      - name: Install dependencies
+        run: cd frontend && npm ci --legacy-peer-deps
+
+      - name: Translate content
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: cd frontend && node scripts/translate.mjs
+
+      - name: Commit translated files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add frontend/messages/lt.json frontend/public/about_me.lt.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update translations [skip ci]" && git push)
+
       - name: Build and Restart
         run: |
-          git pull origin main
+          git pull --rebase origin main
 
           docker compose build \
             --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \

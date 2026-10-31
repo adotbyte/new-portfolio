@@ -28,45 +28,60 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    // 1. Išjungiame naršyklės automatinį slinkties atkūrimą
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
     const sections = ['about', 'portfolio', 'homelab', 'contact'];
+    let rafId: number;
 
     const handleScroll = () => {
-      const navHeight = 64;
-      const offset = navHeight + 16; // 84px
+      // Jei jau vykdomas rėmelis, atšaukiame jį
+      if (rafId) cancelAnimationFrame(rafId);
 
-      // Special case: bottom of the page
-      const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
+      rafId = requestAnimationFrame(() => {
+        const navHeight = 64;
+        const offset = navHeight + 16;
 
-      if (isAtBottom) {
-        setActiveSection('contact');
-        return;
-      }
-
-      // We find the section that is closest to the top (but not below the offset)
-      let currentSection = 'about';
-      let closestDistance = Infinity;
-
-      for (const id of sections) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-
-        const rect = el.getBoundingClientRect();
-        // Distance from the top of the section to the offset line
-        const distance = Math.abs(rect.top - offset);
-
-        // The section closest to the offset line becomes active.
-        if (rect.top <= offset + 10 && distance < closestDistance) {
-          closestDistance = distance;
-          currentSection = id;
+        // Patikriname "Contact" sekciją
+        const contactEl = document.getElementById('contact');
+        if (contactEl) {
+          const rect = contactEl.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.5) {
+            setActiveSection((prev) => (prev === 'contact' ? prev : 'contact'));
+            return;
+          }
         }
-      }
 
-      setActiveSection(currentSection);
+        let currentSection = 'about';
+        let closestDistance = Infinity;
+
+        for (const id of sections) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          const distance = Math.abs(rect.top - offset);
+
+          if (rect.top <= offset + 10 && distance < closestDistance) {
+            closestDistance = distance;
+            currentSection = id;
+          }
+        }
+
+        // Atnaujiname būseną TIK jei ji pasikeitė (išvengiame nereikalingų perpiešimų)
+        setActiveSection((prev) => (prev === currentSection ? prev : currentSection));
+      });
     };
 
+    // Paleidžiame iš karto, bet per rAF
+    handleScroll();
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // launch immediately
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const toggleDark = () => {
@@ -79,9 +94,9 @@ const Navbar = () => {
     const el = document.getElementById(id);
 
     if (el) {
-      const navHeight = 64; // Height of h-16 navbar (64px)
+      const navHeight = 64;
       const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - navHeight - 16; // Extra 16px padding
+      const offsetPosition = elementPosition - navHeight - 16;
 
       window.scrollTo({
         top: offsetPosition,
@@ -174,7 +189,11 @@ const Navbar = () => {
               </button>
             </div>
 
-            <button onClick={toggleDark} aria-label="Toggle dark mode" className="...">
+            <button
+              onClick={toggleDark}
+              aria-label="Toggle dark mode"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            >
               <SunIcon />
               <MoonIcon />
             </button>

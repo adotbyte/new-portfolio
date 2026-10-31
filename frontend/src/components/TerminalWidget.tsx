@@ -6,14 +6,19 @@ import { useTranslations } from 'next-intl';
 export default function TerminalWidget() {
   const t = useTranslations('about');
   const [liveStats, setLiveStats] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true); // <-- Pridėta krovimo būsena
 
   useEffect(() => {
     fetch('/api/homelab')
       .then((res) => res.json())
       .then((data) => {
         if (data.stats) setLiveStats(data.stats);
+        setIsLoading(false); // <-- Baigiame krautis
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false); // <-- Baigiame krautis net ir klaidos atveju
+      });
   }, []);
 
   return (
@@ -29,9 +34,13 @@ export default function TerminalWidget() {
         <span className="text-blue-600 dark:text-blue-400">docker ps -q | wc -l</span>
       </p>
       <p className="text-green-600 dark:text-green-400">
-        {liveStats?.dockerCount !== undefined
-          ? `${liveStats.dockerCount}${t('dockerContainers') ? ` ${t('dockerContainers')}` : ''}`
-          : '...'}
+        {isLoading ? (
+          <span className="animate-pulse">...</span> // <-- Kol kraunasi, rodoma "..." su animacija
+        ) : liveStats?.dockerCount !== undefined ? (
+          `${liveStats.dockerCount}${t('dockerContainers') ? ` ${t('dockerContainers')}` : ''}`
+        ) : (
+          'N/A'
+        )}
       </p>
 
       <p className="mt-1">
@@ -39,10 +48,14 @@ export default function TerminalWidget() {
         <span className="text-blue-600 dark:text-blue-400">uptime</span>
       </p>
       <p className="text-gray-600 dark:text-gray-300">
-        {t('uptime', {
-          days: liveStats?.uptimeDays !== undefined ? liveStats.uptimeDays : '...',
-          load: liveStats?.load || '0.00, 0.00, 0.00',
-        })}
+        {isLoading ? (
+          <span className="animate-pulse">...</span> // <-- Kol kraunasi, rodoma "..." su animacija
+        ) : (
+          t('uptime', {
+            days: liveStats?.uptimeDays !== undefined ? liveStats.uptimeDays : '...',
+            load: liveStats?.load || '0.00, 0.00, 0.00',
+          })
+        )}
       </p>
     </div>
   );

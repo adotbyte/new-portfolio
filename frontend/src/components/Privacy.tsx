@@ -22,6 +22,7 @@ const Privacy = () => {
 
           <h3>{t('section1Title')}</h3>
           <p>{t('section1Intro')}</p>
+
           <ul>
             <li>
               <strong>{t('chatHistoryLabel')}</strong> {t('chatHistoryText')}

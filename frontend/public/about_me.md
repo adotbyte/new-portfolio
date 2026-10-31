@@ -11,11 +11,12 @@ I currently manage a self-hosted environment powered by:
 - **Compute:** Raspberry Pi 5 (16GB) & OpenMediaVault (OMV)
 - **Containerization:** Docker & Docker Compose
 - **Network:** Cloudflare Zero Trust Tunnels & Reverse Proxies
-    - **Reverse Proxies:** Efficient traffic routing and SSL management for all hosted applications
+  - **Reverse Proxies:** Efficient traffic routing and SSL management for all hosted applications
 
 ## 🚀 Featured Project
+
 **[AI-Powered Interactive Resume](https://morkunas.info/)**
-*This isn't just a static portfolio. It's a full-stack Next.js application, containerized and self-hosted on a Raspberry Pi 5. The built-in AI agent uses Claude API with tool-use capabilities to fetch live GitHub data and send emails securely via Resend. It is protected by Cloudflare Zero Trust, Turnstile, and custom XSS-safe backend logic.*
+_This isn't just a static portfolio. It's a full-stack Next.js application, containerized and self-hosted on a Raspberry Pi 5. The built-in AI agent uses Claude API with tool-use capabilities to fetch live GitHub data and send emails securely via Resend. It is protected by Cloudflare Zero Trust, Turnstile, and custom XSS-safe backend logic._
 
 ---
 

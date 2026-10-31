@@ -104,10 +104,8 @@ async function translateSection(sectionName, sectionObj) {
         role: 'user',
         content: `Translate every string value in this JSON object from English to Lithuanian, then call submit_translation with the complete result. Every key present in the input must be present in your tool call — do not omit any keys.
 Rules:
-- Keep all JSON keys exactly the same (the tool schema already enforces this)
-- Only translate the string values
 - Keep emojis, technical terms (Docker, Linux, Next.js etc), URLs, and code snippets untranslated
-- If a translated phrase needs internal quotation marks, use Lithuanian typographic quotes „ and " rather than straight double quotes
+- If a string contains both a technical term and additional descriptive text in parentheses, keep the technical term as is, but translate the descriptive text inside the parentheses.
 
 ${sectionJson}`,
       },
@@ -202,9 +200,6 @@ console.log('✅ lt.json written successfully! All keys verified.');
 // Translate about_me.md to Lithuanian
 const mdPath = join(__dirname, '..', 'public', 'about_me.md');
 const mdLtPath = join(__dirname, '..', 'public', 'about_me.lt.md');
-const mdContent = readFileSync(mdPath, 'utf-8');
-
-console.log('Translating about_me.md → about_me.lt.md...');
 
 const mdModified = statSync(mdPath).mtimeMs;
 const mdLtExists = (() => {
@@ -220,6 +215,7 @@ if (!force && mdLtExists >= mdModified) {
 } else {
   console.log('Translating about_me.md → about_me.lt.md...');
 
+  const mdContent = readFileSync(mdPath, 'utf-8');
   const mdResponse = await client.messages.create({
     model: 'claude-opus-4-5',
     max_tokens: 8096,
@@ -240,23 +236,3 @@ ${mdContent}`,
   writeFileSync(mdLtPath, mdResponse.content[0].text.trim(), 'utf-8');
   console.log('✅ about_me.lt.md written successfully!');
 }
-
-const mdResponse = await client.messages.create({
-  model: 'claude-opus-4-5',
-  max_tokens: 8096,
-  messages: [
-    {
-      role: 'user',
-      content: `Translate this markdown file from English to Lithuanian.
-Rules:
-- Keep all markdown formatting exactly the same
-- Keep technical terms, product names, URLs, and code untranslated
-- Return ONLY the translated markdown, no explanation
-
-${mdContent}`,
-    },
-  ],
-});
-
-writeFileSync(mdLtPath, mdResponse.content[0].text.trim(), 'utf-8');
-console.log('✅ about_me.lt.md written successfully!');

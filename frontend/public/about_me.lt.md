@@ -9,9 +9,10 @@ Esu technologijų entuziastas, kuriam patinka šis hobis. Labiausiai mane domina
 - **Kompiuterinė įranga:** Raspberry Pi 5 (16GB) & OpenMediaVault (OMV)
 - **Konteinerizacija:** Docker & Docker Compose
 - **Tinklas:** Cloudflare Zero Trust Tunnels & Reverse Proxies
-    - **Reverse Proxies:** Efektyvus srauto nukreipimas ir SSL valdymas visoms talpinamoms programoms
+  - **Reverse Proxies:** Efektyvus srauto nukreipimas ir SSL valdymas visoms talpinamoms programoms
 
 ## 🛠️ Techniniai įgūdžiai
+
 - **Infrastruktūra:** Docker, Linux (Debian/Ubuntu OS), Cloudflare Networking
 - **Debesis:** AWS ([AWS Cloud Quest: Cloud Practitioner - Training Badge 🟢](https://www.credly.com/badges/6a3d2231-79c9-485e-9442-981ac2b4049f/public_url))
 - **Frontend:** Next.js (App Router), React, Tailwind CSS, JavaScript (ES6+), HTML5/CSS3
@@ -21,8 +22,9 @@ Esu technologijų entuziastas, kuriam patinka šis hobis. Labiausiai mane domina
 - **Techninė įranga:** Kompiuterių surinkimas ir trikčių šalinimas
 
 ## 🚀 Išskirtinis projektas
+
 **[Dirbtinio intelekto valdomas interaktyvus gyvenimo aprašymas](https://morkunas.info/)**
-*Next.js programa, veikianti Docker konteineryje mano Pi 5, saugiai pasiekiama per Cloudflare Tunnels. Ji leidžia darbdaviams užklausti mano patirtį naudojant dirbtinį intelektą.*
+_Next.js programa, veikianti Docker konteineryje mano Pi 5, saugiai pasiekiama per Cloudflare Tunnels. Ji leidžia darbdaviams užklausti mano patirtį naudojant dirbtinį intelektą._
 
 ---
 

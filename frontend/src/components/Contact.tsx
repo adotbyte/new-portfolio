@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 const Contact = () => {
   const t = useTranslations('contact');
@@ -9,6 +10,8 @@ const Contact = () => {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(false);
+  const params = useParams();
+  const currentLocale = params.locale as string;
 
   useEffect(() => {
     const check = () => setIsDark(document.documentElement.classList.contains('dark'));
@@ -88,7 +91,7 @@ const Contact = () => {
           <Turnstile
             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
             onSuccess={(token) => setTurnstileToken(token)}
-            options={{ theme: isDark ? 'dark' : 'light' }}
+            options={{ theme: isDark ? 'dark' : 'light', language: currentLocale === 'lt' ? 'lt' : 'en' }}
           />
         </div>
 

@@ -39,7 +39,10 @@ export default function TerminalWidget() {
         <span className="text-blue-600 dark:text-blue-400">uptime</span>
       </p>
       <p className="text-gray-600 dark:text-gray-300">
-        {t('uptime', { days: liveStats?.uptimeDays !== undefined ? liveStats.uptimeDays : '...' })}
+        {t('uptime', {
+          days: liveStats?.uptimeDays !== undefined ? liveStats.uptimeDays : '...',
+          load: liveStats?.load || '0.00, 0.00, 0.00',
+        })}
       </p>
     </div>
   );

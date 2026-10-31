@@ -72,6 +72,12 @@ jobs:
 
       - name: Build and Restart
         run: |
+
+          # Išvalome visus likusius nepageidaujamus pakeitimus
+          git reset --hard HEAD
+          git clean -fd
+
+
           git pull --rebase origin main
 
           docker compose build \

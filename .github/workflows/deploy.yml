@@ -67,8 +67,17 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add frontend/messages/lt.json frontend/public/about_me.lt.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update translations [skip ci]" && git push)
+
+          # Pridedame TIK vertimų failus, ignoruodami node_modules
+          git add -f frontend/messages/lt.json frontend/public/about_me.lt.md
+
+          # Jei yra pakeitimų, darome commit
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-update translations [skip ci]"
+            git push
+          else
+            echo "No translation changes to commit."
+          fi
 
       - name: Build and Restart
         run: |

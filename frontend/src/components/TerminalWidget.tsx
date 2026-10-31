@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 export default function TerminalWidget() {
-  const t = useTranslations('TerminalWidget');
+  const t = useTranslations('about')
   const [liveStats, setLiveStats] = useState<any>(null);
 
   useEffect(() => {

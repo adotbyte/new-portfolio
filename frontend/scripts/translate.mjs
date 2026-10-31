@@ -189,6 +189,33 @@ const mdContent = readFileSync(mdPath, 'utf-8');
 
 console.log('Translating about_me.md → about_me.lt.md...');
 
+const mdModified = statSync(mdPath).mtimeMs;
+const mdLtExists = (() => { try { return statSync(mdLtPath).mtimeMs; } catch { return 0; } })();
+
+if (!force && mdLtExists >= mdModified) {
+  console.log('✅ about_me.lt.md is up to date, skipping translation.');
+} else {
+  console.log('Translating about_me.md → about_me.lt.md...');
+  
+  const mdResponse = await client.messages.create({
+    model: 'claude-opus-4-5',
+    max_tokens: 8096,
+    messages: [{
+      role: 'user',
+      content: `Translate this markdown file from English to Lithuanian.
+Rules:
+- Keep all markdown formatting exactly the same
+- Keep technical terms, product names, URLs, and code untranslated
+- Return ONLY the translated markdown, no explanation
+
+${mdContent}`,
+    }],
+  });
+
+  writeFileSync(mdLtPath, mdResponse.content[0].text.trim(), 'utf-8');
+  console.log('✅ about_me.lt.md written successfully!');
+}
+
 const mdResponse = await client.messages.create({
   model: 'claude-opus-4-5',
   max_tokens: 8096,

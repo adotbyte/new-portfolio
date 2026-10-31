@@ -50,16 +50,16 @@ jobs:
           path: |
             ${{ github.workspace }}/.next/cache
         # When dependencies or source files change, a new key is generated.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
         # If the source files have changed but the dependencies have not, an attempt is made to restore from an older cache entry.
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-
       
       - name: Build and Restart
         run: |
           git pull origin main
 
-          docker compose build --no-cache \
+          docker compose build \
             --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             --build-arg ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
 

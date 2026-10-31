@@ -2,7 +2,7 @@ import ReactMarkdown from 'react-markdown';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { getTranslations, getLocale } from 'next-intl/server';
-import TerminalWidget from './TerminalWidget'; // <--- Teisingas importas
+import TerminalWidget from './TerminalWidget';
 
 export default async function AboutMe() {
   const t = await getTranslations('about');

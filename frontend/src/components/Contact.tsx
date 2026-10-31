@@ -42,7 +42,7 @@ const Contact = () => {
   };
 
   return (
-    <section className="min-h-[80vh] flex items-center justify-center px-6 bg-white dark:bg-gray-950">
+    <section id="contact" className="min-h-[80vh] flex items-center justify-center px-6 bg-white dark:bg-gray-950">
       <form onSubmit={handleSubmit} className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 space-y-6">
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('title')}</h2>

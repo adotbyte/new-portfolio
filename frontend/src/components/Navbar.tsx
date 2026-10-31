@@ -27,21 +27,48 @@ const Navbar = () => {
     router.replace(pathname, { locale });
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['about', 'portfolio', 'homelab', 'contact'];
-      const scrollY = window.scrollY + 100;
-      for (const id of sections) {
-        const el = document.getElementById(id);
-        if (el && scrollY >= el.offsetTop && scrollY < el.offsetTop + el.offsetHeight) {
-          setActiveSection(id);
-          break;
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+useEffect(() => {
+  const sections = ['about', 'portfolio', 'homelab', 'contact'];
+
+const handleScroll = () => {
+  const navHeight = 64;
+  const offset = navHeight + 16; // 84px
+
+  // Special case: bottom of the page
+  const isAtBottom =
+    window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
+
+  if (isAtBottom) {
+    setActiveSection('contact');
+    return;
+  }
+
+  // We find the section that is closest to the top (but not below the offset)
+  let currentSection = 'about';
+  let closestDistance = Infinity;
+
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+
+    const rect = el.getBoundingClientRect();
+    // Distance from the top of the section to the offset line
+    const distance = Math.abs(rect.top - offset);
+
+    // The section closest to the offset line becomes active.
+    if (rect.top <= offset + 10 && distance < closestDistance) {
+      closestDistance = distance;
+      currentSection = id;
+    }
+  }
+
+  setActiveSection(currentSection);
+};
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll(); // launch immediately
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
 
 const toggleDark = () => {
   setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -79,7 +106,7 @@ const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm overflow-hidden">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
 

@@ -96,7 +96,7 @@ export default function HomeLab() {
           ))}
         </div>
 
-        {/* --- SKELETON EFEKTAS PRASIDEDA ČIA --- */}
+        {/* --- SKELETON effect start here --- */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[200px]">
           {loading ? (
             Array.from({ length: 6 }).map((_, i) => (
@@ -132,7 +132,7 @@ export default function HomeLab() {
             ))
           )}
         </div>
-        {/* --- SKELETON EFEKTAS PASIBAIGIA ČIA --- */}
+        {/* --- SKELETON effect end here --- */}
 
         <div className="mt-12 bg-gray-100 dark:bg-slate-900 rounded-2xl p-6 font-mono text-sm border border-gray-200 dark:border-gray-700">
           <div className="flex gap-1.5 mb-4">

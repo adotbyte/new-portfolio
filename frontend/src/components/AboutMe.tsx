@@ -68,7 +68,7 @@ export default async function AboutMe() {
                 </span>
               </div>
               
-              {/* --- ĮTERPIAME TERMINALĄ --- */}
+              {/* --- Insert terminal --- */}
               <TerminalWidget />
               
             </div>

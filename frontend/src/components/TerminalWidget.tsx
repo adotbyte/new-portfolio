@@ -1,8 +1,10 @@
-'use client'; // <--- SVARBU: tai turi būti pati pirmoji eilutė
+'use client'; 
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function TerminalWidget() {
+  const t = useTranslations('TerminalWidget');
   const [liveStats, setLiveStats] = useState<any>(null);
 
   useEffect(() => {
@@ -26,17 +28,19 @@ export default function TerminalWidget() {
         <span className="text-gray-400 dark:text-gray-500">$</span>{' '}
         <span className="text-blue-600 dark:text-blue-400">docker ps -q | wc -l</span>
       </p>
-      <p className="text-green-600 dark:text-green-400">
-        {liveStats?.dockerCount !== undefined ? liveStats.dockerCount : '...'}
-      </p>
+<p className="text-green-600 dark:text-green-400">
+  {liveStats?.dockerCount !== undefined 
+    ? `${liveStats.dockerCount} ${t('dockerContainers')}` 
+    : '...'}
+</p>
 
       <p className="mt-1">
         <span className="text-gray-400 dark:text-gray-500">$</span>{' '}
         <span className="text-blue-600 dark:text-blue-400">uptime</span>
       </p>
-      <p className="text-gray-600 dark:text-gray-300">
-        up {liveStats?.uptimeDays !== undefined ? `${liveStats.uptimeDays} days` : '...'}
-      </p>
+<p className="text-gray-600 dark:text-gray-300">
+  {t('uptime', { days: liveStats?.uptimeDays !== undefined ? liveStats.uptimeDays : '...' })}
+</p>
     </div>
   );
 }

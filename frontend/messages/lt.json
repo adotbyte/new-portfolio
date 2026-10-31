@@ -9,6 +9,8 @@
     "technicalStack": "Techninė krūva",
     "status": "Būsena",
     "online": "PRISIJUNGĘS",
+    "dockerContainers": "veikiantys konteineriai",
+    "uptime": "veikia jau {days} d.",
     "categories": {
       "infrastructure": "Infrastruktūra",
       "backend": "Backend",
@@ -76,14 +78,13 @@
     "dockerServices": "Docker paslaugos",
     "filterAll": "Visos",
     "terminal": {
-      "dockerCmd": "docker ps",
-      "dockerArg": "--format \"table\"",
+      "dockerCmd": "docker ps --format \"table\"",
       "dockerResult": "veikiantys konteineriai",
       "uptimeCmd": "uptime",
-      "uptimeResult": "veikia 247 dienas, vidutinė apkrova: 0.42, 0.38, 0.35",
+      "uptimeResult": "veikia {days} dienas, vidutinė apkrova: {load}",
       "freeCmd": "free -h",
       "freeResult": "Atmintis:",
-      "freeTotal": "iš viso, 8.2G naudojama, 7.8G laisva"
+      "freeTotal": "{total} iš viso, {used} naudojama, {free} laisva"
     },
     "services": {
       "adguardhome": "DNS lygio reklamų ir sekiklių blokavimas",

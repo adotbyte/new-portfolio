@@ -425,7 +425,7 @@ export async function POST(req: NextRequest) {
 
     // ── Agentic loop ──────────────────────────────────────────────────────────
     let response = await anthropic.messages.create({
-      model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
+      model: process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5',
       max_tokens: 1024,
       system: systemPrompt,
       tools,
@@ -446,7 +446,7 @@ export async function POST(req: NextRequest) {
       messages.push({ role: 'assistant', content: response.content });
       messages.push({ role: 'user', content: toolResults });
       response = await anthropic.messages.create({
-        model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
+        model: process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5',
         max_tokens: 1024,
         system: systemPrompt,
         tools,

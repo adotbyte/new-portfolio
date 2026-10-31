@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '../../../../node_modules/.prisma/client-homelab';
+import { PrismaClient } from '../../../generated/prisma-homelab';
 import { PrismaPg } from '@prisma/adapter-pg';
 import fs from 'node:fs';
 

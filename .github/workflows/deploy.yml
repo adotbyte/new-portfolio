@@ -52,8 +52,8 @@ jobs:
         # When dependencies or source files change, a new key is generated.
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
         # If the source files have changed but the dependencies have not, an attempt is made to restore from an older cache entry.
-        restore-keys: |
-          ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       
       - name: Build and Restart
         run: |

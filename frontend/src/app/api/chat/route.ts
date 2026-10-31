@@ -123,6 +123,11 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#039;');
 }
 
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
 async function sendContactEmail(
   visitorName: string,
   visitorEmail: string,
@@ -260,6 +265,9 @@ async function executeTool(name: string, input: Record<string, string>): Promise
     case 'get_github_repos':
       return getGithubRepos();
     case 'send_contact_email':
+      if (!isValidEmail(input.visitor_email)) {
+        return '❌ Neteisingas el. pašto formatas. Prašome įvesti tikrą el. pašto adresą.';
+      }
       // Papildoma apsauga: jei žinutė per ilga, grąžiname klaidą
       if (input.message.length > 1000) {
         return '❌ Message too long.';
@@ -323,6 +331,8 @@ Before calling send_contact_email, you MUST have all three:
 3. Their message (ask if not given)
 
 Collect them conversationally — don't present a form-like list of questions all at once.
+
+IMPORTANT: If the visitor provides an email address that looks fake or invalid (e.g., "example.com", "test@test", "ne-email"), ask them to provide a real email address. Do not proceed with a fake email.
 
 ## What you know about Audrius
 ${aboutMe}

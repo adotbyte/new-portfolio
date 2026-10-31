@@ -371,6 +371,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
                     backgroundColor: m.role === 'user' ? '#2563eb' : theme.msgAi,
                     color: m.role === 'user' ? 'white' : theme.text,
                     border: m.role === 'user' ? 'none' : `1px solid ${theme.msgAiBorder}`,
+                    wordBreak: 'break-word',
                   }}
                 >
                   {m.role === 'ai' && i === messages.length - 1 && m.isNew ? (
@@ -383,7 +384,9 @@ export default function Chatbot({ nonce }: ChatbotProps) {
                       }}
                     />
                   ) : (
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                    <div className="break-words">
+                      <ReactMarkdown>{m.content}</ReactMarkdown>
+                    </div>
                   )}
                   {m.role === 'ai' && (
                     <button

@@ -10,7 +10,7 @@ export default async function AboutMe() {
 
   let filePath = join(process.cwd(), 'public', `about_me.${locale}.md`);
   try {
-    readFileSync(filePath); 
+    readFileSync(filePath);
   } catch {
     filePath = join(process.cwd(), 'public', 'about_me.md');
   }
@@ -24,35 +24,46 @@ export default async function AboutMe() {
 
   const skillCategories = [
     { name: t('categories.infrastructure'), items: ['Linux', 'Docker', 'Nginx'] },
-    { name: t('categories.backend'),        items: ['Django', 'Postgres'] },
-    { name: t('categories.frontend'),       items: ['Next.js', 'React', 'Tailwind', 'JavaScript (ES6+)', 'HTML5/CSS3'] },
+    { name: t('categories.backend'), items: ['Django', 'Postgres'] },
+    {
+      name: t('categories.frontend'),
+      items: ['Next.js', 'React', 'Tailwind', 'JavaScript (ES6+)', 'HTML5/CSS3'],
+    },
   ];
 
   return (
-    <section id="about" className="w-full relative bg-white dark:bg-gray-950 py-auto overflow-x-hidden">
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-8">
+    <section
+      id="about"
+      className="py-auto relative w-full overflow-x-hidden bg-white dark:bg-gray-950"
+    >
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-8">
         <div className="mb-12 flex items-center gap-6">
-          <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight"></h2>
+          <h2 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white"></h2>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-16 items-start w-full max-w-full">
-          <div className="lg:col-span-8 w-full min-w-0">
-            <article className="prose prose-sm md:prose-base max-w-none break-words overflow-hidden dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h1:text-3xl prose-h1:mb-4 prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-p:leading-relaxed prose-hr:my-6">
+        <div className="grid w-full max-w-full grid-cols-1 items-start gap-8 lg:grid-cols-12 xl:gap-16">
+          <div className="w-full min-w-0 lg:col-span-8">
+            <article className="prose prose-sm max-w-none overflow-hidden break-words dark:prose-invert md:prose-base prose-headings:font-bold prose-headings:tracking-tight prose-h1:mb-4 prose-h1:text-3xl prose-h2:mb-3 prose-h2:mt-6 prose-h2:text-xl prose-p:leading-relaxed prose-hr:my-6">
               <ReactMarkdown>{content}</ReactMarkdown>
             </article>
           </div>
-          <aside className="lg:col-span-4 sticky top-28 w-full">
-            <div className="bg-slate-50 dark:bg-gray-800 p-7 rounded-[2rem] border border-slate-100 dark:border-gray-700 shadow-sm">
-              <h3 className="text-[11px] font-black text-blue-700 dark:text-blue-400 uppercase tracking-[0.2em] mb-6">
+          <aside className="sticky top-28 w-full lg:col-span-4">
+            <div className="rounded-[2rem] border border-slate-100 bg-slate-50 p-7 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400">
                 {t('technicalStack')}
               </h3>
               <div className="space-y-6">
                 {skillCategories.map((cat) => (
                   <div key={cat.name}>
-                    <p className="text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-3 tracking-wider">{cat.name}</p>
+                    <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                      {cat.name}
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {cat.items.map((skill) => (
-                        <span key={skill} className="px-3 py-1 bg-white dark:bg-gray-700 border border-slate-200 dark:border-gray-600 text-slate-800 dark:text-slate-200 text-[11px] font-semibold rounded-lg shadow-sm whitespace-nowrap">
+                        <span
+                          key={skill}
+                          className="whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-800 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-slate-200"
+                        >
                           {skill}
                         </span>
                       ))}
@@ -60,17 +71,18 @@ export default async function AboutMe() {
                   </div>
                 ))}
               </div>
-              <div className="pt-6 mt-8 border-t border-slate-200 dark:border-gray-700 flex items-center justify-between text-[11px]">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold">{t('status')}:</span>
-                <span className="text-green-700 dark:text-green-400 font-bold flex items-center">
-                  <span className="w-2.5 h-2.5 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+              <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-6 text-[11px] dark:border-gray-700">
+                <span className="font-semibold text-gray-700 dark:text-gray-300">
+                  {t('status')}:
+                </span>
+                <span className="flex items-center font-bold text-green-700 dark:text-green-400">
+                  <span className="mr-2 h-2.5 w-2.5 animate-pulse rounded-full bg-green-500"></span>
                   {t('online')}
                 </span>
               </div>
-              
+
               {/* --- Insert terminal --- */}
               <TerminalWidget />
-              
             </div>
           </aside>
         </div>

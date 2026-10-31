@@ -81,9 +81,7 @@ async function getGithubRepos(): Promise<string> {
         headers: {
           Accept: 'application/vnd.github+json',
           'User-Agent': 'adotbyte-portfolio',
-          ...(process.env.GH_TOKEN
-            ? { Authorization: `Bearer ${process.env.GH_TOKEN}` }
-            : {}),
+          ...(process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {}),
         },
       }
     );
@@ -130,10 +128,10 @@ async function sendContactEmail(
 ): Promise<string> {
   try {
     if (visitorName.length > 100) {
-    return "❌ Name is too long. Please keep it under 100 characters.";
+      return '❌ Name is too long. Please keep it under 100 characters.';
     }
     if (message.length > 1000) {
-    return "❌ Message is too long. Please keep it under 1000 characters.";
+      return '❌ Message is too long. Please keep it under 1000 characters.';
     }
     const safeName = escapeHtml(visitorName);
     const safeEmail = escapeHtml(visitorEmail);
@@ -215,7 +213,7 @@ Rules:
     if (!block) return [];
 
     let cleaned = block.text.replace(/```json|```/g, '').trim();
-    
+
     const start = cleaned.indexOf('[');
     const end = cleaned.lastIndexOf(']');
     if (start !== -1 && end !== -1) {
@@ -255,19 +253,12 @@ function getAvailability(): string {
 
 // ─── Tool Router ─────────────────────────────────────────────────────────────
 
-async function executeTool(
-  name: string,
-  input: Record<string, string>
-): Promise<string> {
+async function executeTool(name: string, input: Record<string, string>): Promise<string> {
   switch (name) {
     case 'get_github_repos':
       return getGithubRepos();
     case 'send_contact_email':
-      return sendContactEmail(
-        input.visitor_name,
-        input.visitor_email,
-        input.message
-      );
+      return sendContactEmail(input.visitor_name, input.visitor_email, input.message);
     case 'get_availability':
       return getAvailability();
     default:
@@ -290,9 +281,10 @@ function buildSystemPrompt(locale: string = 'en'): string {
     }
   })();
 
-  const languageInstruction = locale === 'lt'
-    ? 'IMPORTANT: Always respond in Lithuanian (Lietuvių kalba), regardless of what language the visitor writes in.'
-    : 'Respond in the same language the visitor uses.';
+  const languageInstruction =
+    locale === 'lt'
+      ? 'IMPORTANT: Always respond in Lithuanian (Lietuvių kalba), regardless of what language the visitor writes in.'
+      : 'Respond in the same language the visitor uses.';
 
   return `You are AdotByte AI — a smart, friendly assistant on Audrius Morkūnas's personal portfolio website.
 
@@ -428,9 +420,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const textBlock = response.content.find(
-    (b): b is Anthropic.TextBlock => b.type === 'text'
-  );
+  const textBlock = response.content.find((b): b is Anthropic.TextBlock => b.type === 'text');
   const content = textBlock?.text ?? "Sorry, I couldn't generate a response.";
 
   // Save AI response to DB

@@ -11,26 +11,26 @@ A modern, self-hosted portfolio website featuring an **AI Agent** powered by **A
 
 ## 🛡️ Infrastructure & Security
 
-* **Cloudflare Tunnel:** Hosted behind a secure tunnel (`cloudflared`), keeping the server invisible to the public internet with **zero open inbound ports**.
-* **Zero Trust Perimeter:** Outbound-only connectivity ensures high security.
-* **WAF & DDoS Protection:** Leverages Cloudflare's global network to mitigate common web attacks.
-* **Cloudflare Turnstile:** Bot protection on the contact form.
+- **Cloudflare Tunnel:** Hosted behind a secure tunnel (`cloudflared`), keeping the server invisible to the public internet with **zero open inbound ports**.
+- **Zero Trust Perimeter:** Outbound-only connectivity ensures high security.
+- **WAF & DDoS Protection:** Leverages Cloudflare's global network to mitigate common web attacks.
+- **Cloudflare Turnstile:** Bot protection on the contact form.
 
 ## 🏗️ Technical Stack
 
-* **Frontend:** Next.js 16, React, Tailwind CSS
-* **AI Engine:** Anthropic Claude agent with tool use — fetches live GitHub repos, sends contact emails, checks availability
-* **Email:** Resend
-* **DevOps:** Docker, Docker Compose, GitHub Actions (self-hosted runner on Raspberry Pi 5)
-* **Network:** Cloudflare Zero Trust, Tunneling
+- **Frontend:** Next.js 16, React, Tailwind CSS
+- **AI Engine:** Anthropic Claude agent with tool use — fetches live GitHub repos, sends contact emails, checks availability
+- **Email:** Resend
+- **DevOps:** Docker, Docker Compose, GitHub Actions (self-hosted runner on Raspberry Pi 5)
+- **Network:** Cloudflare Zero Trust, Tunneling
 
 ## 🤖 AI Agent Capabilities
 
 The chatbot is a true **agentic system** — not just a Q&A bot:
 
-* **🐙 Live GitHub repos** — fetches latest projects dynamically via GitHub API
-* **📧 Contact collection** — gathers visitor name, email, and message, then sends directly to Zoho inbox
-* **✅ Availability status** — answers whether Audrius is open to new opportunities
+- **🐙 Live GitHub repos** — fetches latest projects dynamically via GitHub API
+- **📧 Contact collection** — gathers visitor name, email, and message, then sends directly to Zoho inbox
+- **✅ Availability status** — answers whether Audrius is open to new opportunities
 
 ## 🖥️ Hardware
 
@@ -39,12 +39,14 @@ Running on a **Raspberry Pi 5 (16GB RAM)** with **2× 2TB NVMe SSD** storage, se
 ## ⚙️ Quick Start
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/adotbyte/new-portfolio.git
 cd new-portfolio
 ```
 
 ### 2. Create `.env` file
+
 ```bash
 ANTHROPIC_API_KEY=your_key
 TURNSTILE_SECRET_KEY=your_key
@@ -57,11 +59,13 @@ GH_TOKEN=your_github_token
 ```
 
 ### 3. Run with Docker Compose
+
 ```bash
 docker compose up --build
 ```
 
 ### 4. Access the Application
+
 ```
 http://localhost:8080
 ```

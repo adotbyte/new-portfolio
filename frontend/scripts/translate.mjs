@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 try {
   const envPath = join(__dirname, '..', '.env.local');
   const env = readFileSync(envPath, 'utf-8');
-  env.split('\n').forEach(line => {
+  env.split('\n').forEach((line) => {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#')) return;
     const [key, ...vals] = trimmed.split('=');
@@ -23,7 +23,13 @@ const enPath = join(__dirname, '../messages/en.json');
 const ltPath = join(__dirname, '../messages/lt.json');
 
 const enModified = statSync(enPath).mtimeMs;
-const ltExists = (() => { try { return statSync(ltPath).mtimeMs; } catch { return 0; } })();
+const ltExists = (() => {
+  try {
+    return statSync(ltPath).mtimeMs;
+  } catch {
+    return 0;
+  }
+})();
 
 if (!force && ltExists >= enModified) {
   console.log('✅ lt.json is up to date, skipping translation.');
@@ -87,7 +93,8 @@ async function translateSection(sectionName, sectionObj) {
     tools: [
       {
         name: 'submit_translation',
-        description: 'Submit the Lithuanian translation matching the exact structure of the source JSON.',
+        description:
+          'Submit the Lithuanian translation matching the exact structure of the source JSON.',
         input_schema: schema,
       },
     ],
@@ -108,10 +115,14 @@ ${sectionJson}`,
   });
 
   if (response.stop_reason !== 'tool_use') {
-    throw new Error(`Unexpected stop_reason "${response.stop_reason}" for section "${sectionName}"`);
+    throw new Error(
+      `Unexpected stop_reason "${response.stop_reason}" for section "${sectionName}"`
+    );
   }
 
-  const toolUseBlock = response.content.find((b) => b.type === 'tool_use' && b.name === 'submit_translation');
+  const toolUseBlock = response.content.find(
+    (b) => b.type === 'tool_use' && b.name === 'submit_translation'
+  );
   if (!toolUseBlock) {
     throw new Error(`No submit_translation tool call returned for section "${sectionName}"`);
   }
@@ -145,10 +156,14 @@ for (const [sectionName, sectionObj] of Object.entries(parsedEn)) {
         break;
       }
       lastError = `missing keys: ${missing.join(', ')}`;
-      console.warn(`⚠️  "${sectionName}" attempt ${attempt}/${MAX_ATTEMPTS} incomplete (${lastError}), retrying...`);
+      console.warn(
+        `⚠️  "${sectionName}" attempt ${attempt}/${MAX_ATTEMPTS} incomplete (${lastError}), retrying...`
+      );
     } catch (err) {
       lastError = err.message;
-      console.warn(`⚠️  "${sectionName}" attempt ${attempt}/${MAX_ATTEMPTS} failed (${lastError}), retrying...`);
+      console.warn(
+        `⚠️  "${sectionName}" attempt ${attempt}/${MAX_ATTEMPTS} failed (${lastError}), retrying...`
+      );
     }
   }
 
@@ -162,7 +177,9 @@ for (const [sectionName, sectionObj] of Object.entries(parsedEn)) {
 
 if (failedSections.length > 0) {
   console.error('❌ Translation incomplete after retries for the following sections:');
-  failedSections.forEach(({ sectionName, lastError }) => console.error(`   - ${sectionName}: ${lastError}`));
+  failedSections.forEach(({ sectionName, lastError }) =>
+    console.error(`   - ${sectionName}: ${lastError}`)
+  );
   console.error('Refusing to write lt.json. Fix manually or re-run.');
   process.exit(1);
 }
@@ -190,26 +207,34 @@ const mdContent = readFileSync(mdPath, 'utf-8');
 console.log('Translating about_me.md → about_me.lt.md...');
 
 const mdModified = statSync(mdPath).mtimeMs;
-const mdLtExists = (() => { try { return statSync(mdLtPath).mtimeMs; } catch { return 0; } })();
+const mdLtExists = (() => {
+  try {
+    return statSync(mdLtPath).mtimeMs;
+  } catch {
+    return 0;
+  }
+})();
 
 if (!force && mdLtExists >= mdModified) {
   console.log('✅ about_me.lt.md is up to date, skipping translation.');
 } else {
   console.log('Translating about_me.md → about_me.lt.md...');
-  
+
   const mdResponse = await client.messages.create({
     model: 'claude-opus-4-5',
     max_tokens: 8096,
-    messages: [{
-      role: 'user',
-      content: `Translate this markdown file from English to Lithuanian.
+    messages: [
+      {
+        role: 'user',
+        content: `Translate this markdown file from English to Lithuanian.
 Rules:
 - Keep all markdown formatting exactly the same
 - Keep technical terms, product names, URLs, and code untranslated
 - Return ONLY the translated markdown, no explanation
 
 ${mdContent}`,
-    }],
+      },
+    ],
   });
 
   writeFileSync(mdLtPath, mdResponse.content[0].text.trim(), 'utf-8');
@@ -219,16 +244,18 @@ ${mdContent}`,
 const mdResponse = await client.messages.create({
   model: 'claude-opus-4-5',
   max_tokens: 8096,
-  messages: [{
-    role: 'user',
-    content: `Translate this markdown file from English to Lithuanian.
+  messages: [
+    {
+      role: 'user',
+      content: `Translate this markdown file from English to Lithuanian.
 Rules:
 - Keep all markdown formatting exactly the same
 - Keep technical terms, product names, URLs, and code untranslated
 - Return ONLY the translated markdown, no explanation
 
 ${mdContent}`,
-  }],
+    },
+  ],
 });
 
 writeFileSync(mdLtPath, mdResponse.content[0].text.trim(), 'utf-8');

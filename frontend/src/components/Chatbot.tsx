@@ -1,6 +1,15 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, ChevronDown, ChevronUp, Check, X, Download, Copy } from 'lucide-react';
+import {
+  Send,
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
+  Check,
+  X,
+  Download,
+  Copy,
+} from 'lucide-react';
 import TypewriterMarkdown from './TypewriterMarkdown';
 import ReactMarkdown from 'react-markdown';
 import { useTranslations, useLocale } from 'next-intl';
@@ -20,11 +29,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     content: t('defaultMessage'),
   };
 
-  const suggestions = [
-    t('suggestion1'),
-    t('suggestion2'),
-    t('suggestion3')
-  ];
+  const suggestions = [t('suggestion1'), t('suggestion2'), t('suggestion3')];
 
   const [messages, setMessages] = useState<Message[]>([DEFAULT_MESSAGE]);
   const [lastSaved, setLastSaved] = useState('');
@@ -42,9 +47,9 @@ export default function Chatbot({ nonce }: ChatbotProps) {
   const [hints, setHints] = useState<string[]>([]);
 
   function handleSuggestionClick(text: string) {
-  setInput(text);
-  sendMessage(text); // reuse your existing send function
-}
+    setInput(text);
+    sendMessage(text); // reuse your existing send function
+  }
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 500);
@@ -88,7 +93,10 @@ export default function Chatbot({ nonce }: ChatbotProps) {
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => { setIsClosing(false); setIsOpen(false); }, 350);
+    setTimeout(() => {
+      setIsClosing(false);
+      setIsOpen(false);
+    }, 350);
   };
 
   const handleCopy = (text: string, index: number) => {
@@ -109,7 +117,10 @@ export default function Chatbot({ nonce }: ChatbotProps) {
         const cleanContent = m.content.replace(/<[^>]*>?/gm, '');
         const rolePrefix = m.role === 'user' ? 'YOU: ' : 'ADOTBYTE: ';
         const splitText = doc.splitTextToSize(`${rolePrefix}${cleanContent}`, 180);
-        if (yPos + splitText.length * 7 > 280) { doc.addPage(); yPos = 20; }
+        if (yPos + splitText.length * 7 > 280) {
+          doc.addPage();
+          yPos = 20;
+        }
         doc.setFontSize(10);
         doc.text(splitText, 10, yPos);
         yPos += splitText.length * 7 + 10;
@@ -159,14 +170,23 @@ export default function Chatbot({ nonce }: ChatbotProps) {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{
-            width: '65px', height: '65px', borderRadius: '20px', border: 'none',
+            width: '65px',
+            height: '65px',
+            borderRadius: '20px',
+            border: 'none',
             background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
-            color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: isHovered ? '0 15px 35px rgba(37,99,235,0.6)' : '0 10px 25px rgba(147,197,253,0.5)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: isHovered
+              ? '0 15px 35px rgba(37,99,235,0.6)'
+              : '0 10px 25px rgba(147,197,253,0.5)',
             cursor: 'pointer',
             transform: isHovered ? 'scale(1.12)' : 'scale(1)',
             transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease',
-          }}>
+          }}
+        >
           <MessageCircle size={isHovered ? 26 : 30} style={{ transition: 'all 0.2s ease' }} />
         </button>
       </div>
@@ -174,23 +194,30 @@ export default function Chatbot({ nonce }: ChatbotProps) {
   }
 
   return (
-    <div style={{
-      position: 'fixed', zIndex: 100000,
-      bottom: isMobile ? '10px' : '30px',
-      right: isMobile ? '10px' : '30px',
-      maxWidth: 'calc(100vw - 40px)',
-      width: isMobile ? 'calc(100% - 20px)' : '380px',
-      height: isCollapsed ? '52px' : isMobile ? '75vh' : '600px',
-      backgroundColor: theme.bg, borderRadius: '20px', display: 'flex', flexDirection: 'column',
-      boxShadow: '0 20px 50px rgba(0,0,0,0.25)', overflow: 'hidden',
-      border: `1px solid ${theme.inputBorder}`,
-      transition: 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxSizing: 'border-box',
-      animation: isClosing
-        ? 'chatClose 0.35s cubic-bezier(0.36, 0, 0.66, -0.56) forwards'
-        : 'chatOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-      transformOrigin: 'bottom right',
-    }}>
+    <div
+      style={{
+        position: 'fixed',
+        zIndex: 100000,
+        bottom: isMobile ? '10px' : '30px',
+        right: isMobile ? '10px' : '30px',
+        maxWidth: 'calc(100vw - 40px)',
+        width: isMobile ? 'calc(100% - 20px)' : '380px',
+        height: isCollapsed ? '52px' : isMobile ? '75vh' : '600px',
+        backgroundColor: theme.bg,
+        borderRadius: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: '0 20px 50px rgba(0,0,0,0.25)',
+        overflow: 'hidden',
+        border: `1px solid ${theme.inputBorder}`,
+        transition: 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxSizing: 'border-box',
+        animation: isClosing
+          ? 'chatClose 0.35s cubic-bezier(0.36, 0, 0.66, -0.56) forwards'
+          : 'chatOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        transformOrigin: 'bottom right',
+      }}
+    >
       <style>{`
         .hide-scroll::-webkit-scrollbar { display: none; }
         @keyframes chatOpen {
@@ -204,31 +231,94 @@ export default function Chatbot({ nonce }: ChatbotProps) {
       `}</style>
 
       {/* Header */}
-      <div style={{
-        background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
-        padding: '12px 16px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', color: 'white', cursor: 'pointer', minHeight: '52px',
-      }} onClick={() => setIsCollapsed(!isCollapsed)}>
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
+          padding: '12px 16px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          color: 'white',
+          cursor: 'pointer',
+          minHeight: '52px',
+        }}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <MessageCircle size={20} />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span style={{ fontWeight: 'bold', fontSize: '14px' }}>{t('title')}</span>
-            {lastSaved && !isCollapsed && <span style={{ fontSize: '9px', opacity: 0.8 }}>{lastSaved}</span>}
+            {lastSaved && !isCollapsed && (
+              <span style={{ fontSize: '9px', opacity: 0.8 }}>{lastSaved}</span>
+            )}
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {!isCollapsed && (
             <>
-              <button onClick={(e) => { e.stopPropagation(); downloadTranscript(); }} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', opacity: 0.8 }}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadTranscript();
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  opacity: 0.8,
+                }}
+              >
                 <Download size={16} />
               </button>
               {showConfirm ? (
-                <div style={{ display: 'flex', gap: '6px', background: 'rgba(255,255,255,0.15)', padding: '2px 6px', borderRadius: '6px' }} onClick={(e) => e.stopPropagation()}>
-                  <button onClick={clearChat} style={{ background: 'none', border: 'none', color: '#fca5a5', cursor: 'pointer' }}><Check size={16} /></button>
-                  <button onClick={() => setShowConfirm(false)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}><X size={16} /></button>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '6px',
+                    background: 'rgba(255,255,255,0.15)',
+                    padding: '2px 6px',
+                    borderRadius: '6px',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={clearChat}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#fca5a5',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Check size={16} />
+                  </button>
+                  <button
+                    onClick={() => setShowConfirm(false)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'white',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <X size={16} />
+                  </button>
                 </div>
               ) : (
-                <button onClick={(e) => { e.stopPropagation(); setShowConfirm(true); }} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', opacity: 0.7 }}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowConfirm(true);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'white',
+                    cursor: 'pointer',
+                    opacity: 0.7,
+                  }}
+                >
                   <X size={16} style={{ transform: 'rotate(45deg)' }} />
                 </button>
               )}
@@ -237,7 +327,13 @@ export default function Chatbot({ nonce }: ChatbotProps) {
           <button style={{ background: 'none', border: 'none', color: 'white' }}>
             {isCollapsed ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
-          <button onClick={(e) => { e.stopPropagation(); handleClose(); }} style={{ background: 'none', border: 'none', color: 'white' }}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClose();
+            }}
+            style={{ background: 'none', border: 'none', color: 'white' }}
+          >
             <X size={18} />
           </button>
         </div>
@@ -245,24 +341,64 @@ export default function Chatbot({ nonce }: ChatbotProps) {
 
       {!isCollapsed && (
         <>
-          <div className="hide-scroll" style={{ flex: 1, overflowY: 'auto', padding: '15px', backgroundColor: isDark ? '#0d1117' : '#f8fafc', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div
+            className="hide-scroll"
+            style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '15px',
+              backgroundColor: isDark ? '#0d1117' : '#f8fafc',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
             {messages.map((m, i) => (
-              <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '85%', marginBottom: m.role === 'ai' ? '12px' : '0' }}>
-                <div style={{
-                  padding: '10px 14px', borderRadius: '14px', fontSize: '14px', position: 'relative',
-                  backgroundColor: m.role === 'user' ? '#2563eb' : theme.msgAi,
-                  color: m.role === 'user' ? 'white' : theme.text,
-                  border: m.role === 'user' ? 'none' : `1px solid ${theme.msgAiBorder}`,
-                }}>
+              <div
+                key={i}
+                style={{
+                  alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
+                  maxWidth: '85%',
+                  marginBottom: m.role === 'ai' ? '12px' : '0',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: '14px',
+                    fontSize: '14px',
+                    position: 'relative',
+                    backgroundColor: m.role === 'user' ? '#2563eb' : theme.msgAi,
+                    color: m.role === 'user' ? 'white' : theme.text,
+                    border: m.role === 'user' ? 'none' : `1px solid ${theme.msgAiBorder}`,
+                  }}
+                >
                   {m.role === 'ai' && i === messages.length - 1 && m.isNew ? (
-                    <TypewriterMarkdown content={m.content} onComplete={() => {
-                      setMessages((prev) => prev.map((msg, idx) => idx === i ? { ...msg, isNew: false } : msg));
-                    }} />
+                    <TypewriterMarkdown
+                      content={m.content}
+                      onComplete={() => {
+                        setMessages((prev) =>
+                          prev.map((msg, idx) => (idx === i ? { ...msg, isNew: false } : msg))
+                        );
+                      }}
+                    />
                   ) : (
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   )}
                   {m.role === 'ai' && (
-                    <button onClick={() => handleCopy(m.content, i)} style={{ position: 'absolute', bottom: '-20px', right: '5px', background: 'none', border: 'none', cursor: 'pointer', color: theme.text, opacity: 0.5 }}>
+                    <button
+                      onClick={() => handleCopy(m.content, i)}
+                      style={{
+                        position: 'absolute',
+                        bottom: '-20px',
+                        right: '5px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: theme.text,
+                        opacity: 0.5,
+                      }}
+                    >
                       {copiedIndex === i ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
                     </button>
                   )}
@@ -284,9 +420,13 @@ export default function Chatbot({ nonce }: ChatbotProps) {
                   key={q}
                   onClick={() => handleSuggestionClick(q)}
                   style={{
-                    fontSize: '12px', padding: '6px 10px', borderRadius: '999px',
-                    border: `1px solid ${theme.inputBorder}`, background: theme.inputBg,
-                    color: theme.text, cursor: 'pointer',
+                    fontSize: '12px',
+                    padding: '6px 10px',
+                    borderRadius: '999px',
+                    border: `1px solid ${theme.inputBorder}`,
+                    background: theme.inputBg,
+                    color: theme.text,
+                    cursor: 'pointer',
                   }}
                 >
                   {q}
@@ -302,9 +442,13 @@ export default function Chatbot({ nonce }: ChatbotProps) {
                   key={h}
                   onClick={() => handleSuggestionClick(h)}
                   style={{
-                    fontSize: '12px', padding: '6px 10px', borderRadius: '999px',
-                    border: `1px solid ${theme.inputBorder}`, background: theme.inputBg,
-                    color: theme.text, cursor: 'pointer',
+                    fontSize: '12px',
+                    padding: '6px 10px',
+                    borderRadius: '999px',
+                    border: `1px solid ${theme.inputBorder}`,
+                    background: theme.inputBg,
+                    color: theme.text,
+                    cursor: 'pointer',
                   }}
                 >
                   {h}
@@ -314,14 +458,40 @@ export default function Chatbot({ nonce }: ChatbotProps) {
           )}
 
           <div style={{ padding: '12px', borderTop: `1px solid ${theme.inputBorder}` }}>
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} style={{ display: 'flex', position: 'relative' }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendMessage();
+              }}
+              style={{ display: 'flex', position: 'relative' }}
+            >
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t('placeholder')}
-                style={{ width: '100%', padding: '10px', paddingRight: '48px', borderRadius: '10px', border: `1px solid ${theme.inputBorder}`, backgroundColor: theme.inputBg, color: theme.text }}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  paddingRight: '48px',
+                  borderRadius: '10px',
+                  border: `1px solid ${theme.inputBorder}`,
+                  backgroundColor: theme.inputBg,
+                  color: theme.text,
+                }}
               />
-              <button type="submit" style={{ position: 'absolute', right: '6px', top: '6px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', padding: '10px' }}>
+              <button
+                type="submit"
+                style={{
+                  position: 'absolute',
+                  right: '6px',
+                  top: '6px',
+                  background: '#2563eb',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '10px',
+                }}
+              >
                 <Send size={14} />
               </button>
             </form>

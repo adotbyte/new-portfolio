@@ -17,7 +17,7 @@ export default function middleware(request: NextRequest) {
   // 2. Handle Markdown Content Negotiation
   if (acceptHeader.includes('text/markdown')) {
     const url = request.nextUrl.clone();
-    
+
     // Set path to the markdown exporter API and pass requested path in query
     url.pathname = '/api/markdown-exporter';
     url.searchParams.set('path', pathname);
@@ -47,7 +47,9 @@ export default function middleware(request: NextRequest) {
     connect-src 'self' https://challenges.cloudflare.com;
     worker-src 'self' blob:;
     upgrade-insecure-requests;
-  `.replace(/\s{2,}/g, ' ').trim();
+  `
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 
   // 5. Forward Nonce & CSP to incoming request headers for Server Components
   const requestHeaders = new Headers(request.headers);
@@ -67,7 +69,10 @@ export default function middleware(request: NextRequest) {
   // 7. Explicitly set response headers
   response.headers.set('Content-Security-Policy', cspHeader);
   response.headers.set('x-nonce', nonce);
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=()');
+  response.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), browsing-topics=()'
+  );
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-Frame-Options', 'DENY');

@@ -10,11 +10,11 @@ import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from 'next-themes';
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -44,21 +44,18 @@ export default async function LocaleLayout({
       </head>
       <body className="bg-white dark:bg-gray-950">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <ThemeSync />
-        <NextIntlClientProvider messages={messages}>
-          <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950 overflow-x-hidden">
-            <Navbar />
-            <main className="flex-grow w-full pt-16">
-              {children}
-            </main>
-            <Footer />
-            <Chatbot />
-            <BackToTop />
-          </div>
-        </NextIntlClientProvider>
+          <ThemeSync />
+          <NextIntlClientProvider messages={messages}>
+            <div className="flex min-h-screen flex-col overflow-x-hidden bg-white dark:bg-gray-950">
+              <Navbar />
+              <main className="w-full flex-grow pt-16">{children}</main>
+              <Footer />
+              <Chatbot />
+              <BackToTop />
+            </div>
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-

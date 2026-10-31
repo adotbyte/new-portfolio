@@ -7,28 +7,31 @@ const Privacy = () => {
   const t = useTranslations('privacy');
 
   return (
-    <section className="min-h-screen bg-white dark:bg-gray-950 w-full flex flex-col justify-center py-20">
-      <div className="w-full max-w-4xl mx-auto px-8">
-
+    <section className="flex min-h-screen w-full flex-col justify-center bg-white py-20 dark:bg-gray-950">
+      <div className="mx-auto w-full max-w-4xl px-8">
         <div className="mb-12 flex items-center gap-6">
-          <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('title')}</h1>
+          <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white">
+            {t('title')}
+          </h1>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
-          <span className="text-xs font-mono text-gray-400 dark:text-gray-500">{t('version')}</span>
+          <span className="font-mono text-xs text-gray-400 dark:text-gray-500">{t('version')}</span>
         </div>
 
-        <article className="prose prose-slate prose-sm md:prose-base max-w-none dark:prose-invert
-          prose-h3:text-blue-600 dark:prose-h3:text-blue-400 prose-h3:font-bold prose-h3:mt-8
-          prose-strong:text-gray-900 dark:prose-strong:text-white
-          prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-p:leading-relaxed">
-
-          <p className="text-sm italic text-gray-400 dark:text-gray-500 mb-8">{t('lastUpdated')}</p>
+        <article className="prose prose-sm prose-slate max-w-none dark:prose-invert md:prose-base prose-h3:mt-8 prose-h3:font-bold prose-h3:text-blue-600 prose-p:leading-relaxed prose-p:text-gray-600 prose-strong:text-gray-900 dark:prose-h3:text-blue-400 dark:prose-p:text-gray-300 dark:prose-strong:text-white">
+          <p className="mb-8 text-sm italic text-gray-400 dark:text-gray-500">{t('lastUpdated')}</p>
 
           <h3>{t('section1Title')}</h3>
           <p>{t('section1Intro')}</p>
           <ul>
-            <li><strong>{t('chatHistoryLabel')}</strong> {t('chatHistoryText')}</li>
-            <li><strong>{t('preferencesLabel')}</strong> {t('preferencesText')}</li>
-            <li><strong>{t('visitorIdLabel')}</strong> {t('visitorIdText')}</li>
+            <li>
+              <strong>{t('chatHistoryLabel')}</strong> {t('chatHistoryText')}
+            </li>
+            <li>
+              <strong>{t('preferencesLabel')}</strong> {t('preferencesText')}
+            </li>
+            <li>
+              <strong>{t('visitorIdLabel')}</strong> {t('visitorIdText')}
+            </li>
           </ul>
 
           <h3>{t('section2Title')}</h3>
@@ -39,7 +42,7 @@ const Privacy = () => {
 
           <h3>{t('section4Title')}</h3>
           <p>{t('section4Text')}</p>
-          <p className="bg-slate-50 dark:bg-gray-800 p-4 rounded-xl border border-slate-100 dark:border-gray-700">
+          <p className="rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
             <strong>{t('section4LegalBasis')}</strong> {t('section4LegalText')}
           </p>
 
@@ -47,10 +50,10 @@ const Privacy = () => {
           <p>{t('section5Text')}</p>
         </article>
 
-        <div className="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800">
+        <div className="mt-12 border-t border-gray-100 pt-8 dark:border-gray-800">
           <button
             onClick={() => router.back()}
-            className="text-blue-600 dark:text-blue-400 font-bold text-sm hover:underline cursor-pointer flex items-center"
+            className="flex cursor-pointer items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-400"
           >
             {t('back')}
           </button>

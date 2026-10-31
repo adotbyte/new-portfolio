@@ -16,7 +16,9 @@ export async function GET() {
     // 2. Docker skaičius
     let dockerCount = 0;
     try {
-      const dockerRes = await fetch('http://socket-proxy:2375/containers/json?all=false', { cache: 'no-store' });
+      const dockerRes = await fetch('http://socket-proxy:2375/containers/json?all=false', {
+        cache: 'no-store',
+      });
       if (dockerRes.ok) {
         const containers = await dockerRes.json();
         dockerCount = containers.length;
@@ -26,9 +28,11 @@ export async function GET() {
     }
 
     // 3. Atmintis, Uptime ir Load iš /proc
-    let memTotal = "16G", memUsed = "8.2G", memFree = "7.8G";
+    let memTotal = '16G',
+      memUsed = '8.2G',
+      memFree = '7.8G';
     let uptimeDays = 247;
-    let load = "0.00, 0.00, 0.00";
+    let load = '0.00, 0.00, 0.00';
 
     try {
       const memInfo = fs.readFileSync('/host/proc/meminfo', 'utf8');
@@ -52,7 +56,6 @@ export async function GET() {
       const loadInfo = fs.readFileSync('/host/proc/loadavg', 'utf8');
       const loadParts = loadInfo.split(' ');
       load = `${loadParts[0]}, ${loadParts[1]}, ${loadParts[2]}`;
-
     } catch (e) {
       console.error('Failed to read /proc failų:', e);
     }

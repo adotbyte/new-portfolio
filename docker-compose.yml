@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
     networks:
       - internal_net
 
@@ -23,7 +23,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - CONTAINERS=1 # Leidžiame tik skaityti konteinerių sąrašą
-      - POST=0       # Draudžiame bet kokius keitimus
+      - POST=0 # Draudžiame bet kokius keitimus
     networks:
       - internal_net
     # Jokių ports: čia nereikia, nes jis pasiekiamas tik vidiniame tinkle
@@ -48,9 +48,9 @@ services:
       socket-proxy:
         condition: service_started
     ports:
-      - "8080:3000"
+      - '8080:3000'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:3000/en"]
+      test: ['CMD', 'curl', '-f', 'http://127.0.0.1:3000/en']
       interval: 30s
       timeout: 10s
       retries: 5

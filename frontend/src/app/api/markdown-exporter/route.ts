@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     status: 200,
     headers: {
       'Content-Type': 'text/markdown; charset=utf-8',
-      'Vary': 'Accept',
+      Vary: 'Accept',
     },
   });
 }

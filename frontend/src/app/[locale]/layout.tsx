@@ -34,7 +34,6 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
-        <ThemeScript nonce={nonce} />
         <meta property="fb:app_id" content="914320204924075" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
@@ -43,7 +42,7 @@ export default async function LocaleLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className="bg-white dark:bg-gray-950">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
           <ThemeSync />
           <NextIntlClientProvider messages={messages}>
             <div className="flex min-h-screen flex-col overflow-x-hidden bg-white dark:bg-gray-950">

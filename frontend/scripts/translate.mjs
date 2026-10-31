@@ -209,17 +209,22 @@ const mdLtPath = join(__dirname, '..', 'public', 'about_me.lt.md');
 try {
   const mdContent = readFileSync(mdPath, 'utf-8');
 
-  // Jei force, verčiame visada. Jei ne, tikriname, ar lt failas egzistuoja.
-  let mdLtExists = false;
-  try {
-    readFileSync(mdLtPath, 'utf-8');
-    mdLtExists = true;
-  } catch {}
+  // Tikriname abiejų failų modifikavimo laikus (mtime)
+  const mdModified = statSync(mdPath).mtimeMs;
+  let mdLtModified = 0;
 
-  if (!force && mdLtExists) {
-    console.log('✅ about_me.lt.md exists, skipping translation.');
+  try {
+    mdLtModified = statSync(mdLtPath).mtimeMs;
+  } catch {
+    // Jei failo nėra, mdLtModified lieka 0, todėl jis bus verčiamas
+  }
+
+  // Jei force, verčiame visada. Jei ne, tikriname datas.
+  if (!force && mdLtModified >= mdModified) {
+    console.log('✅ about_me.lt.md is up to date, skipping translation.');
   } else {
     console.log('Translating about_me.md → about_me.lt.md...');
+
     const mdResponse = await client.messages.create({
       model: 'claude-opus-4-5',
       max_tokens: 8096,
@@ -236,6 +241,7 @@ ${mdContent}`,
         },
       ],
     });
+
     writeFileSync(mdLtPath, mdResponse.content[0].text.trim(), 'utf-8');
     console.log('✅ about_me.lt.md written successfully!');
   }

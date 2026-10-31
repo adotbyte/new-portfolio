@@ -28,60 +28,44 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    // 1. Išjungiame naršyklės automatinį slinkties atkūrimą
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
-
     const sections = ['about', 'portfolio', 'homelab', 'contact'];
-    let rafId: number;
 
     const handleScroll = () => {
-      // Jei jau vykdomas rėmelis, atšaukiame jį
-      if (rafId) cancelAnimationFrame(rafId);
+      const navHeight = 64;
+      const offset = navHeight + 16;
 
-      rafId = requestAnimationFrame(() => {
-        const navHeight = 64;
-        const offset = navHeight + 16;
-
-        // Patikriname "Contact" sekciją
-        const contactEl = document.getElementById('contact');
-        if (contactEl) {
-          const rect = contactEl.getBoundingClientRect();
-          if (rect.top <= window.innerHeight * 0.5) {
-            setActiveSection((prev) => (prev === 'contact' ? prev : 'contact'));
-            return;
-          }
+      // Patikriname "Contact" sekciją
+      const contactEl = document.getElementById('contact');
+      if (contactEl) {
+        const rect = contactEl.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.5) {
+          setActiveSection('contact');
+          return;
         }
+      }
 
-        let currentSection = 'about';
-        let closestDistance = Infinity;
+      let currentSection = 'about';
+      let closestDistance = Infinity;
 
-        for (const id of sections) {
-          const el = document.getElementById(id);
-          if (!el) continue;
-          const rect = el.getBoundingClientRect();
-          const distance = Math.abs(rect.top - offset);
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        const distance = Math.abs(rect.top - offset);
 
-          if (rect.top <= offset + 10 && distance < closestDistance) {
-            closestDistance = distance;
-            currentSection = id;
-          }
+        if (rect.top <= offset + 10 && distance < closestDistance) {
+          closestDistance = distance;
+          currentSection = id;
         }
-
-        // Atnaujiname būseną TIK jei ji pasikeitė (išvengiame nereikalingų perpiešimų)
-        setActiveSection((prev) => (prev === currentSection ? prev : currentSection));
-      });
+      }
+      setActiveSection(currentSection);
     };
 
-    // Paleidžiame iš karto, bet per rAF
+    // Paleidžiame iš karto
     handleScroll();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleDark = () => {
@@ -103,7 +87,6 @@ const Navbar = () => {
         behavior: 'smooth',
       });
     }
-
     setIsOpen(false);
   };
 
@@ -151,7 +134,6 @@ const Navbar = () => {
             Audrius Morkūnas Portfolio
           </a>
 
-          {/* Desktop nav */}
           <div className="hidden items-center space-x-8 md:flex">
             {navLinks.map((link) => (
               <a
@@ -168,22 +150,17 @@ const Navbar = () => {
               </a>
             ))}
 
-            {/* Language switcher */}
             <div className="flex items-center gap-1 text-sm font-semibold">
               <button
                 onClick={() => switchLocale('en')}
-                className={`rounded px-2 py-1 transition-colors ${
-                  currentLocale === 'en' ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'
-                }`}
+                className={`rounded px-2 py-1 transition-colors ${currentLocale === 'en' ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'}`}
               >
                 EN
               </button>
               <span className="text-gray-300 dark:text-gray-600">|</span>
               <button
                 onClick={() => switchLocale('lt')}
-                className={`rounded px-2 py-1 transition-colors ${
-                  currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'
-                }`}
+                className={`rounded px-2 py-1 transition-colors ${currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'}`}
               >
                 LT
               </button>
@@ -199,24 +176,18 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Mobile controls */}
           <div className="flex items-center gap-2 md:hidden">
-            {/* Mobile language switcher */}
             <div className="flex items-center gap-1 text-xs font-semibold">
               <button
                 onClick={() => switchLocale('en')}
-                className={`rounded px-1.5 py-1 ${
-                  currentLocale === 'en' ? 'text-blue-600' : 'text-gray-400'
-                }`}
+                className={`rounded px-1.5 py-1 ${currentLocale === 'en' ? 'text-blue-600' : 'text-gray-400'}`}
               >
                 EN
               </button>
               <span className="text-gray-300">|</span>
               <button
                 onClick={() => switchLocale('lt')}
-                className={`rounded px-1.5 py-1 ${
-                  currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-400'
-                }`}
+                className={`rounded px-1.5 py-1 ${currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-400'}`}
               >
                 LT
               </button>
@@ -258,7 +229,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <div
         className={`${isOpen ? 'block' : 'hidden'} border-t border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-900 md:hidden`}
       >

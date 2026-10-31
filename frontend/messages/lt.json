@@ -63,7 +63,10 @@
       "portfolioStatus": "Veikia",
       "homelabName": "Savarankiškai talpinama namų laboratorija",
       "homelabDesc": "Gamybinio lygio namų serveris, kuriame veikia 20 Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir daugiau — visa tai apsaugota už Cloudflare Zero Trust.",
-      "homelabStatus": "Veikia"
+      "homelabStatus": "Veikia",
+      "knowledgeBaseName": "Dirbtinio intelekto valdoma žinių bazė",
+      "knowledgeBaseDesc": "Pilno kurso asmeninė žinių valdymo sistema su daugiaformatė DI analize (PDF/vaizdai), versijų istorija ir RAG paieška. Pilnai savarankiškai talpinama ir apsaugota per Cloudflare Zero Trust.",
+      "knowledgeBaseStatus": "Veikia"
     }
   },
   "homeLab": {

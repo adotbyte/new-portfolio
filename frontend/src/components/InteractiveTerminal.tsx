@@ -97,15 +97,16 @@ async function handleCommand(term: any, cmd: string) {
 
   switch (command) {
     case 'help':
-      term.write('Available commands:\r\n');
-      term.write('  about      - Learn about me\r\n');
-      term.write('  skills     - List my technical skills\r\n');
-      term.write('  projects   - Show my featured projects\r\n');
-      term.write('  contact    - How to get in touch\r\n');
-      term.write('  docker ps  - List running containers\r\n');
-      term.write('  uptime     - Show system uptime\r\n');
-      term.write('  free -h    - Show memory usage\r\n');
-      term.write('  clear      - Clear the terminal\r\n');
+    case 'pagalba':
+      term.write('Available commands / Galimos komandos:\r\n');
+      term.write('  about / apie      - Learn about me / Sužinokite apie mane\r\n');
+      term.write('  skills            - List my technical skills / Mano technologijos\r\n');
+      term.write('  projects          - Show my featured projects / Projektai\r\n');
+      term.write('  contact           - How to get in touch / Kontaktai\r\n');
+      term.write('  docker ps         - List running containers / Veikiantys konteineriai\r\n');
+      term.write('  uptime            - Show system uptime / Veikimo laikas\r\n');
+      term.write('  free -h           - Show memory usage / Atminties naudojimas\r\n');
+      term.write('  clear             - Clear the terminal / Išvalyti terminalą\r\n');
       break;
 
     case 'docker ps':
@@ -165,8 +166,11 @@ async function handleCommand(term: any, cmd: string) {
       break;
 
     case 'about':
+    case 'apie':
       term.write("Hi! I'm Audrius Morkūnas, a self-taught infrastructure enthusiast.\r\n");
-      term.write('I build stable, secure systems from the server-side down.\r\n');
+      term.write('I build stable, secure systems from the server-side down.\r\n\r\n');
+      term.write('Sveiki! Aš esu Audrius Morkūnas, savamokslis infrastruktūros entuziastas.\r\n');
+      term.write('Kuriu stabilias, saugias sistemas nuo serverio pusės žemyn.\r\n');
       break;
 
     case 'skills':

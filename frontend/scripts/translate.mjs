@@ -90,7 +90,7 @@ async function translateSection(sectionName, sectionObj) {
   const sectionJson = JSON.stringify(sectionObj);
 
   const response = await client.messages.create({
-    model: 'claude-haiku-4-5',
+    model: 'claude-sonnet-4-5',
     max_tokens: 4096,
     tools: [
       {
@@ -226,7 +226,7 @@ try {
     console.log('Translating about_me.md → about_me.lt.md...');
 
     const mdResponse = await client.messages.create({
-      model: 'claude-haiku-4-5',
+      model: 'claude-sonnet-4-5',
       max_tokens: 8096,
       messages: [
         {

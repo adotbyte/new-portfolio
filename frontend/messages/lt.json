@@ -8,7 +8,7 @@
   "about": {
     "technicalStack": "Techninė sąranga",
     "status": "Būsena",
-    "online": "PRISIJUNGĘS",
+    "online": "AKTYVUS",
     "dockerContainers": "",
     "uptime": "aktyvus {days} dienų, vidutinė apkrova: {load}",
     "categories": {
@@ -19,11 +19,11 @@
   },
   "skills": {
     "title": "Techninės Kompetencijos",
-    "description": "Technologiją vertinu iš",
+    "description": "Prie technologijų prieinu nuo Serverio pusės žemyn",
     "descriptionHighlight": "Serverio pusės žemyn",
-    "descriptionRest": ". Turėdamas gilias žinias apie kompiuterinę aparatūrą, OS architektūrą ir tinklų pagrindus, kuriu žiniatinklio programas, kurios yra ne tik kodas — jos yra stabilios, optimizuotos sistemos.",
-    "deepTechLabel": "🛠️ Gilios Technologijos Žinios:",
-    "deepTechText": "Nuo kompiuterių sudarymo ir aparatūros trikdžių šalinimo iki sudėtingų interneto protokolų — suprenu fizines ir logines žiniatinklio sluoksnius.",
+    "descriptionRest": ". Turėdamas gilias žinias apie kompiuterio aparatūrą, OS architektūrą ir tinklų pagrindus, kuriu žiniatinklio programas, kurios yra ne tik kodas — jos yra stabilios, optimizuotos sistemo.",
+    "deepTechLabel": "🛠️ Gilios Techninės Žinios:",
+    "deepTechText": "Nuo kompiuterių surinkimo ir aparatūros gedimų šalinimo iki sudėtingų interneto protokolų — suprantu fizinius ir loginius žiniatinklio sluoksnius.",
     "projectsTitle": "Projektai",
     "built": "sukurta",
     "categories": {
@@ -51,22 +51,22 @@
       "hardening": "Serverio Sutvirtinimas",
       "docker": "Docker",
       "git": "Git/GitHub",
-      "nextjs": "Next.js (Pilnojo steko)",
-      "react": "React (Klientinė dalis)",
+      "nextjs": "Next.js (Full-stack)",
+      "react": "React (Frontend)",
       "tailwind": "Tailwind CSS",
       "javascript": "JavaScript (ES6+)",
       "html/css3": "HTML5/CSS3"
     },
     "projects": {
       "portfolioName": "Dirbtinio Intelekto Portfolio",
-      "portfolioDesc": "Savivaldžiai saugoma CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta iš nulio ir veikianti mojiame Raspberry Pi 5 per Cloudflare Tunnels.",
-      "portfolioStatus": "Gyvai",
-      "homelabName": "Savivaldžiai Saugoma Namų Laboratorija",
-      "homelabDesc": "Gamybinės klasės namų serveris, veikiantis 20 Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir dar daugiau — visa apsaugota Cloudflare Zero Trust.",
+      "portfolioDesc": "Savarankiškai prieglobstinama CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta iš nulio ir veikianti mano Raspberry Pi 5 per Cloudflare Tunnels.",
+      "portfolioStatus": "Veikia",
+      "homelabName": "Savarankiškai Talpinama Namų Laboratorija",
+      "homelabDesc": "Produkcinio lygio klasės namų serveris, veikiantis 20+ Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir dar daugiau — viskas apsaugota Cloudflare Zero Trust.",
       "homelabStatus": "Veikia",
       "knowledgeBaseName": "Dirbtinio Intelekto Žinių Bazė",
-      "knowledgeBaseDesc": "Pilno steko asmeninė žinių valdymo sistema su daugiamodu AI analize (PDF/Nuotraukos), versijų istorija ir RAG paieška. Visiškai savivaldžiai saugoma ir apsaugota per Cloudflare Zero Trust.",
-      "knowledgeBaseStatus": "Gyvai"
+      "knowledgeBaseDesc": "Pilno steko asmeninė žinių valdymo sistema su daugiamode AI analize (PDF/Nuotraukos), versijų istorija ir RAG paieška. Visiškai savarankiškai prieglobstinama ir apsaugota per Cloudflare Zero Trust.",
+      "knowledgeBaseStatus": "Veikia"
     }
   },
   "homeLab": {
@@ -91,18 +91,18 @@
       "freeTotal": "{total} iš viso, {used} panaudota, {free} laisva"
     },
     "services": {
-      "adguardhome": "Tinklą užimančios reklamos ir stebėjimo blokavimas visame mano name.",
+      "adguardhome": "Tinklą užimančios reklamos ir stebėjimo blokavimas visame mano tinkle.",
       "alloy": "Siunčia metrikus iš mano Pi į Grafana Cloud stebėsenai.",
       "cadvisor": "Stebi kiekvieno veikiančio konteinerio CPU ir atminties naudojimą.",
-      "cfBeacon": "Palaikauja mano Cloudflare Zero Trust tunelį gyvu ir saugiu.",
+      "cfBeacon": "Palaiko mano Cloudflare Zero Trust tunelį gyvu ir saugiu.",
       "chromadb": "Vektorinė duomenų bazė, suteikianti atminties galią mano AI agentui.",
-      "cloudflared": "Atidarinėja mano homelabą į internetą nepakėlęs nė vieno prievado.",
-      "directusApp": "Bevaldžiai CMS turiniui valdyti visose mano projektuose.",
+      "cloudflared": "Atidaro mano homelabą į internetą neatidaręs nė vieno prievado.",
+      "directusApp": "Headless CMS turiniui valdyti visose mano projektuose.",
       "directusCache": "Redis talpykla, kuri palaikausia CMS greitą ir atsakingą.",
       "directusDb": "PostgreSQL duomenų bazė, sauganti visą mano struktūrinį turinį.",
       "dockhand": "Lengvasis Docker konteinerių valdymo UI naudojimui iš bet kurio vietos.",
       "hbbr": "RustDesk relay serveris tolimam prieigai prie mano įrenginių.",
-      "hbbs": "RustDesk signalinės žinutės serveris saugiai P2P jungčiai.",
+      "hbbs": "RustDesk signalizacijos žinutės serveris saugiai P2P jungčiai.",
       "portfolioDb": "PostgreSQL duomenų bazė, sauganti mano portfolio ir AI pokalbių žurnalus.",
       "resumeWebsite": "Šis portfolio – sukurtas, prieglobstinis ir teikiamas iš šio Pi.",
       "rustdeskBridge": "Sujungia mano nuotolines darbalaukio sesijas tarp tinklų.",
@@ -141,17 +141,17 @@
     "chatHistoryLabel": "Pokalbio istorija:",
     "chatHistoryText": "Saugoma serveryje duomenų bazėje, susieta su anonimine slapuku. Jei išvalote pokalbį naudodami mygtuką pokalbio lange, jūsų istorija yra visam laikui ištrinta.",
     "preferencesLabel": "Pageidavimai:",
-    "preferencesText": "Saugome mažą slapuką, kad prisimintume jūsų Tamsi/Šviesiai režimo pasirinkimą.",
+    "preferencesText": "Saugome mažą slapuką, kad prisimintume jūsų Tamsi/Šviesiai nustatymo pasirinkimą.",
     "visitorIdLabel": "Lankytojo ID:",
     "visitorIdText": "Anoniminis slapukas naudojamas jūsų pokalbio istorijai susieti su jūsų naršykle. Jame nėra jokios asmeninės informacijos.",
     "section2Title": "2. Trečiosios šalys",
-    "section2Text": "Mes naudojame Anthropic Claude AI, norint maitinti pokalbį. Bet kurie užklausos, kurias siunčiate, yra apdorojamos Anthropic. Mes nesiųsime jūsų asmeninės tapatybės joms.",
+    "section2Text": "Mes naudojame Anthropic Claude AI, norint užtikrinti pokalbį. Bet kurie užklausos, kurias siunčiate, yra apdorojamos Anthropic. Mes nesiųsime jūsų asmeninės tapatybės jiems.",
     "section3Title": "3. Jūsų teisės",
     "section3Text": "Kaip Europos Sąjungos gyventojas, turite teisę prieiti prie duomenų arba juos panaikinti. Galite panaikinti pokalbio istoriją bet kuriuo metu, spustelėdami nuvalymą pokalbio lange. Tai iš esmės panaikina jūsų duomenis iš mūsų serverių.",
     "section4Title": "4. Serverio žurnalai ir SEO",
     "section4Text": "Siekiant užtikrinti šio tinklalapio saugumą ir našumą, mūsų serveris automatiškai įrašo standartinę techninę informaciją, kai aplankote. Tai apima jūsų IP adresą, naršyklės tipą ir jūsų pasiektas straipsnius.",
     "section4LegalBasis": "Teisinė pagrindas:",
-    "section4LegalText": "Mes apdorojame šiuos duomenis remiantis mūsų teisėtu interesu (GDPR 6(1)(f) straipsnis), siekdami palaikyti tinklalapio saugumą, neleisti sukčiavimui ir suteikti paieškos varikliams galimybę subylinėti bei tiksliai indeksuoti svetainę.",
+    "section4LegalText": "Mes apdorojame šiuos duomenis remiantis mūsų teisėtu interesu (GDPR 6(1)(f) straipsnis), siekdami palaikyti tinklalapio saugumą, neleisti sukčiavimui ir suteikti paieškos varikliams galimybę naršyti bei tiksliai indeksuoti svetainę.",
     "section5Title": "5. Duomenų saugojimas",
     "section5Text": "Serverio žurnalai paprastai saugomi 30 dienų, tada automatiškai panaikinami. Jūsų pokalbio istorija saugoma mūsų serveryje, kol pasirinksite ją išvalyti naudodami pokalbio langą. Jūsų temos pageidavimai lieka jūsų įrenginyje, kol neišvalote naršyklės slapukų.",
     "back": "← Grįžti į portfelį"
@@ -179,7 +179,7 @@
   },
   "chatbot": {
     "title": "AdotByte AI",
-    "defaultMessage": "Sveikas! Aš esu Audriauso AI Agentas. Prisiminsiu mūsų pokalbį net jei iš naujo įkelsite puslapį!",
+    "defaultMessage": "Sveikas! Aš esu Audriaus AI Agentas. Prisiminsiu mūsų pokalbį net jei iš naujo įkelsite puslapį!",
     "placeholder": "Parašykite žinutę...",
     "typing": "Rašomas...",
     "restored": "Atkurta iš serverio",
@@ -188,6 +188,6 @@
     "downloadLabel": "Audrius_Resume_Chat",
     "suggestion1": "Kaip programavimo kalbos padeda jūsų darbui?",
     "suggestion2": "Kokia yra jūsų technologinė sistema?",
-    "suggestion3": "Ar jūs turite galimybę dirbti su pasikviestiniais darbais?"
+    "suggestion3": "Ar jūs turite galimybę dirbti su užsakomais darbais?"
   }
 }

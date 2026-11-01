@@ -200,7 +200,7 @@ async function handleCommand(term: any, cmd: string) {
         const res = await fetch('/api/system/uptime');
         const data = await res.json();
         if (data.days !== undefined) {
-          term.write(` up ${data.days} days, ${data.hours} hours, load average: ${data.load}\r\n`);
+          term.write(` up ${data.days}d ${data.hours}h, load: ${data.load}\r\n`);
         } else {
           term.write('Error fetching uptime.\r\n');
         }
@@ -216,10 +216,20 @@ async function handleCommand(term: any, cmd: string) {
         const res = await fetch('/api/system/free');
         const data = await res.json();
         if (data.total !== undefined) {
-          term.write('               total        used        free\r\n');
-          term.write(
-            `Mem:            ${data.total.toFixed(1)}Gi       ${data.used.toFixed(1)}Gi       ${data.free.toFixed(1)}Gi\r\n`
-          );
+          const isMobile = window.innerWidth < 768;
+
+          if (isMobile) {
+            // Trumpesnis formatas telefonui
+            term.write(`Total: ${data.total.toFixed(1)}Gi\r\n`);
+            term.write(`Used:  ${data.used.toFixed(1)}Gi\r\n`);
+            term.write(`Free:  ${data.free.toFixed(1)}Gi\r\n`);
+          } else {
+            // Pilnas formatas kompiuteriui
+            term.write('               total        used        free\r\n');
+            term.write(
+              `Mem:            ${data.total.toFixed(1)}Gi       ${data.used.toFixed(1)}Gi       ${data.free.toFixed(1)}Gi\r\n`
+            );
+          }
         } else {
           term.write('Error fetching memory.\r\n');
         }

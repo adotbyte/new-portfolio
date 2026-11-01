@@ -46,7 +46,7 @@ jobs:
           echo "PROMETHEUS_URL=$RS_PROMETHEUS_URL" >> .env
 
           cp .env frontend/.env
-          
+
           echo "✅ .env created successfully"
 
       - name: Install dependencies
@@ -95,13 +95,12 @@ jobs:
 
       - name: Run Migrations
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: postgresql://portfolio:${{ secrets.DB_PASSWORD }}@db:5432/portfolio
         run: |
           sleep 10
           cd ${{ github.workspace }}/frontend
           npm ci --omit=dev
-          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
-          /usr/bin/npx --prefix frontend prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
+          npx prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
           echo "✅ Migrations applied"
 
       - name: Verify Deployment

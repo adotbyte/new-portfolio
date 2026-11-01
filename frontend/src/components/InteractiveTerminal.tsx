@@ -100,7 +100,7 @@ export default function InteractiveTerminal() {
 
   return (
     <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-[#0d1117]">
-      <div ref={terminalRef} className="h-[500px] w-full p-4" />
+      <div ref={terminalRef} className="h-[500px] w-full touch-pan-y p-4" />
     </div>
   );
 }
@@ -128,12 +128,25 @@ async function handleCommand(term: any, cmd: string) {
         const res = await fetch('/api/system/docker-ps');
         const data = await res.json();
         if (data.containers?.length) {
-          term.write('CONTAINER ID   IMAGE                          STATUS          NAMES\r\n');
-          data.containers.forEach((c: any) => {
-            term.write(
-              `${c.name.padEnd(15)} ${c.image.padEnd(30)} ${c.status.padEnd(15)} ${c.name}\r\n`
-            );
-          });
+          const isMobile = window.innerWidth < 768;
+
+          if (isMobile) {
+            // Sutrumpintas variantas telefonui
+            term.write('NAME'.padEnd(18) + 'IMAGE'.padEnd(22) + 'STATUS\r\n');
+            data.containers.forEach((c: any) => {
+              const name = c.name.length > 16 ? c.name.slice(0, 13) + '...' : c.name;
+              const image = c.image.length > 20 ? c.image.slice(0, 17) + '...' : c.image;
+              term.write(`${name.padEnd(18)} ${image.padEnd(22)} ${c.status}\r\n`);
+            });
+          } else {
+            // Pilnas variantas kompiuteriui
+            term.write('CONTAINER ID   IMAGE                          STATUS          NAMES\r\n');
+            data.containers.forEach((c: any) => {
+              term.write(
+                `${c.name.padEnd(15)} ${c.image.padEnd(30)} ${c.status.padEnd(15)} ${c.name}\r\n`
+              );
+            });
+          }
         } else {
           term.write('No containers running.\r\n');
         }

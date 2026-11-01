@@ -6,7 +6,7 @@ Mano aistra — savarankiškas prieglobstis, dirbtinio intelekto integravimas ir
 
 ## 🏠 Mano Home Lab
 
-Šiuo metu tvarkau savarankiškai prieglobstinamą aplinką, kuri veikia naudojant...:
+Šiuo metu tvarkau savarankiškai prieglobstinamą aplinką, kurią sudaro:
 
 - **Kompiuteriniai resursai:** Raspberry Pi 5 (16GB) & OpenMediaVault (OMV)
 - **Kontainerizacija:** Docker & Docker Compose

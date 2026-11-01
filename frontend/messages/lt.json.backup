@@ -6,9 +6,9 @@
     "contact": "Kontaktai"
   },
   "about": {
-    "technicalStack": "Techninė sąranga",
+    "technicalStack": "Technologijų rinkinys",
     "status": "Būsena",
-    "online": "AKTYVUS",
+    "online": "Prisijungęs",
     "dockerContainers": "",
     "uptime": "aktyvus {days} dienų, vidutinė apkrova: {load}",
     "categories": {
@@ -60,13 +60,13 @@
     "projects": {
       "portfolioName": "Dirbtinio Intelekto Portfolio",
       "portfolioDesc": "Savarankiškai prieglobstinama CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta iš nulio ir veikianti mano Raspberry Pi 5 per Cloudflare Tunnels.",
-      "portfolioStatus": "Veikia",
+      "portfolioStatus": "Prisijungęs",
       "homelabName": "Savarankiškai Talpinama Namų Laboratorija",
       "homelabDesc": "Produkcinio lygio klasės namų serveris, veikiantis 20+ Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir dar daugiau — viskas apsaugota Cloudflare Zero Trust.",
-      "homelabStatus": "Veikia",
+      "homelabStatus": "Prisijungęs",
       "knowledgeBaseName": "Dirbtinio Intelekto Žinių Bazė",
       "knowledgeBaseDesc": "Pilno steko asmeninė žinių valdymo sistema su daugiamode AI analize (PDF/Nuotraukos), versijų istorija ir RAG paieška. Visiškai savarankiškai prieglobstinama ir apsaugota per Cloudflare Zero Trust.",
-      "knowledgeBaseStatus": "Veikia"
+      "knowledgeBaseStatus": "Prisijungęs"
     }
   },
   "homeLab": {

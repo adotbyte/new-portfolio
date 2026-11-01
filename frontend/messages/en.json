@@ -62,7 +62,7 @@
       "portfolioDesc": "A self-hosted resume website with an integrated AI chatbot that answers questions about my experience. Built from scratch and running on my Raspberry Pi 5 via Cloudflare Tunnels.",
       "portfolioStatus": "Live",
       "homelabName": "Self-Hosted Home Lab",
-      "homelabDesc": "A production-grade home server running 20 Docker containers including AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN and more — all secured behind Cloudflare Zero Trust.",
+      "homelabDesc": "A production-grade home server running 20+ Docker containers including AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN and more — all secured behind Cloudflare Zero Trust.",
       "homelabStatus": "Running",
       "knowledgeBaseName": "AI-Powered Knowledge Base",
       "knowledgeBaseDesc": "A full-stack personal knowledge management system with multi-modal AI analysis (PDF/Images), version history, and RAG search. Fully self-hosted and secured via Cloudflare Zero Trust.",

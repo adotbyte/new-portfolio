@@ -28,17 +28,15 @@ A modern, self-hosted portfolio website featuring an **AI Agent** powered by **A
 
 ## 📊 Real-time Monitoring Integration
 
-This portfolio integrates a **self-hosted Grafana instance**, embedded directly into the page via a secure `iframe`. The monitoring stack is fully self-hosted and runs alongside the portfolio on the Raspberry Pi 5.
+This portfolio features a **native, self-hosted monitoring dashboard** built directly into the page using **Recharts** and **Next.js API routes**. It fetches live metrics from **Prometheus** (running on the Raspberry Pi 5) and displays them without the need for heavy `iframe` embeds.
 
 - **Metrics Collection:** `docker-exporter` collects container-level CPU and memory usage (bypassing `cadvisor` ARM64 limitations).
-- **Aggregation & Routing:** `Grafana Alloy` scrapes metrics and forwards them to both local Prometheus and Grafana Cloud.
-- **Storage & Visualization:** `Prometheus` stores time-series data; `Grafana` visualizes it in a live, auto-refreshing dashboard.
-- **Security:** The entire stack is secured behind Cloudflare Zero Trust, with anonymous read-only access for the public dashboard.
+- **Aggregation & Routing:** `Grafana Alloy` scrapes metrics and forwards them to a local **Prometheus** instance.
+- **Frontend Visualization:** A custom Next.js API route (`/api/prometheus`) queries Prometheus, and the data is rendered as an interactive, theme-aware line chart using `Recharts`.
 
 **Live Metrics Displayed:**
-- Real-time CPU and RAM usage of all Docker containers.
-- Chatbot activity (messages sent/received).
-- Website uptime (via Blackbox Exporter).
+- Real-time **CPU usage** (%) across all Docker containers.
+- Real-time **RAM usage** (MB) across all Docker containers.
 
 ## 🤖 AI Agent Capabilities
 

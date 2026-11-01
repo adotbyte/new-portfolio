@@ -4,6 +4,7 @@
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude_AI-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
 
 ## 🚀 AI-Powered Portfolio — Next.js
 
@@ -23,6 +24,21 @@ A modern, self-hosted portfolio website featuring an **AI Agent** powered by **A
 - **Email:** Resend
 - **DevOps:** Docker, Docker Compose, GitHub Actions (self-hosted runner on Raspberry Pi 5)
 - **Network:** Cloudflare Zero Trust, Tunneling
+- **Monitoring:** Grafana, Prometheus, Alloy
+
+## 📊 Real-time Monitoring Integration
+
+This portfolio integrates a **self-hosted Grafana instance**, embedded directly into the page via a secure `iframe`. The monitoring stack is fully self-hosted and runs alongside the portfolio on the Raspberry Pi 5.
+
+- **Metrics Collection:** `docker-exporter` collects container-level CPU and memory usage (bypassing `cadvisor` ARM64 limitations).
+- **Aggregation & Routing:** `Grafana Alloy` scrapes metrics and forwards them to both local Prometheus and Grafana Cloud.
+- **Storage & Visualization:** `Prometheus` stores time-series data; `Grafana` visualizes it in a live, auto-refreshing dashboard.
+- **Security:** The entire stack is secured behind Cloudflare Zero Trust, with anonymous read-only access for the public dashboard.
+
+**Live Metrics Displayed:**
+- Real-time CPU and RAM usage of all Docker containers.
+- Chatbot activity (messages sent/received).
+- Website uptime (via Blackbox Exporter).
 
 ## 🤖 AI Agent Capabilities
 

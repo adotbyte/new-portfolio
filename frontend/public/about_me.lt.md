@@ -13,7 +13,7 @@ Mano aistra — savarankiškas prieglobstis, dirbtinio intelekto integravimas ir
 - **Tinklas:** Cloudflare Zero Trust Tunnels & Reverse Proxies
   - **Reverse Proxies:** Efektyvus srauto maršrutizavimas ir SSL valdymas visoms savarankiškai prieglobstinamoms aplikacijoms.
 
-## 🚀 Pranešta Projektas
+## 🚀 Išskirtinis projektas
 
 **[AI-Powered Interactive Resume](https://morkunas.info/)**
 _Tai ne tik statinis portfelis. Tai pilno steko Next.js aplikacija, konteinerizuota ir savarankiškai prieglobstinama Raspberry Pi 5. Integruotas AI agentas naudoja Claude API su įrankių naudojimo galimybėmis, kad gautų tiesioginius GitHub duomenis ir saugiai siųstų el. laiškus per Resend. Ši sistema apsaugota Cloudflare Zero Trust, Turnstile ir pritaikyta XSS-saugia backend logika._

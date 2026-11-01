@@ -100,9 +100,43 @@ export default function InteractiveTerminal() {
 
   return (
     <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-[#0d1117]">
-      <div ref={terminalRef} className="h-[500px] w-full touch-pan-y p-4" />
+      <div ref={terminalRef} className="h-[500px] w-full touch-pan-y p-4 pb-8 md:pb-4" />
     </div>
   );
+}
+
+function writeResponsive(term: any, text: string, maxWidthMobile = 40, maxWidthDesktop = 80) {
+  const isMobile = window.innerWidth < 768;
+  const maxWidth = isMobile ? maxWidthMobile : maxWidthDesktop;
+
+  // Suskaidome tekstą į žodžius
+  const words = text.split(' ');
+  let line = '';
+
+  for (const word of words) {
+    // Jei žodis pats ilgesnis už maxWidth, jį sutrumpiname
+    if (word.length > maxWidth) {
+      if (line) {
+        term.write(line + '\r\n');
+        line = '';
+      }
+      term.write(word.slice(0, maxWidth - 3) + '...\r\n');
+      continue;
+    }
+
+    // Jei žodis netelpa į eilutę, išvedame esamą eilutę ir pradedame naują
+    if ((line + ' ' + word).length > maxWidth) {
+      term.write(line + '\r\n');
+      line = word;
+    } else {
+      line = line ? line + ' ' + word : word;
+    }
+  }
+
+  // Išvedame paskutinę eilutę
+  if (line) {
+    term.write(line + '\r\n');
+  }
 }
 
 async function handleCommand(term: any, cmd: string) {
@@ -111,15 +145,19 @@ async function handleCommand(term: any, cmd: string) {
   switch (command) {
     case 'help':
     case 'pagalba':
-      term.write('Available commands / Galimos komandos:\r\n');
-      term.write('  about / apie      - Learn about me / Sužinokite apie mane\r\n');
-      term.write('  skills            - List my technical skills / Mano technologijos\r\n');
-      term.write('  projects          - Show my featured projects / Projektai\r\n');
-      term.write('  contact           - How to get in touch / Kontaktai\r\n');
-      term.write('  docker ps         - List running containers / Veikiantys konteineriai\r\n');
-      term.write('  uptime            - Show system uptime / Veikimo laikas\r\n');
-      term.write('  free -h           - Show memory usage / Atminties naudojimas\r\n');
-      term.write('  clear             - Clear the terminal / Išvalyti terminalą\r\n');
+      writeResponsive(term, 'Available commands / Galimos komandos:', 40, 80);
+      writeResponsive(term, '  about / apie      - Learn about me / Sužinokite apie mane');
+      writeResponsive(term, '  skills            - List my technical skills / Mano technologijos');
+      writeResponsive(term, '  projects          - Show my featured projects / Projektai');
+      writeResponsive(term, '  contact           - How to get in touch / Kontaktai');
+      writeResponsive(
+        term,
+        '  docker ps         - List running containers / Veikiantys konteineriai'
+      );
+      writeResponsive(term, '  uptime            - Show system uptime / Veikimo laikas');
+      writeResponsive(term, '  free -h           - Show memory usage / Atminties naudojimas');
+      writeResponsive(term, '  clear             - Clear the terminal / Išvalyti terminalą');
+      term.scrollToBottom();
       break;
 
     case 'docker ps':
@@ -193,31 +231,39 @@ async function handleCommand(term: any, cmd: string) {
 
     case 'about':
     case 'apie':
-      term.write("Hi! I'm Audrius Morkūnas, a self-taught infrastructure enthusiast.\r\n");
-      term.write('I build stable, secure systems from the server-side down.\r\n\r\n');
-      term.write('Sveiki! Aš esu Audrius Morkūnas, savamokslis infrastruktūros entuziastas.\r\n');
-      term.write('Kuriu stabilias, saugias sistemas nuo serverio pusės žemyn.\r\n');
+      writeResponsive(term, "Hi! I'm Audrius Morkūnas, a self-taught infrastructure enthusiast.");
+      writeResponsive(term, 'I build stable, secure systems from the server-side down.');
+      writeResponsive(term, '');
+      writeResponsive(
+        term,
+        'Sveiki! Aš esu Audrius Morkūnas, savamokslis infrastruktūros entuziastas.'
+      );
+      writeResponsive(term, 'Kuriu stabilias, saugias sistemas nuo serverio pusės žemyn.');
+      term.scrollToBottom();
       break;
 
     case 'skills':
-      term.write('My tech stack:\r\n');
-      term.write('  - Infrastructure: Linux, Docker, Nginx\r\n');
-      term.write('  - Backend: Django, Python, PostgreSQL\r\n');
-      term.write('  - Frontend: Next.js, React, Tailwind CSS\r\n');
+      writeResponsive(term, 'My tech stack:');
+      writeResponsive(term, '  - Infrastructure: Linux, Docker, Nginx');
+      writeResponsive(term, '  - Backend: Django, Python, PostgreSQL');
+      writeResponsive(term, '  - Frontend: Next.js, React, Tailwind CSS');
+      term.scrollToBottom();
       break;
 
     case 'projects':
-      term.write('Featured projects:\r\n');
-      term.write('  1. AI-Powered Portfolio (this site!)\r\n');
-      term.write('  2. Self-Hosted Home Lab (Raspberry Pi 5)\r\n');
-      term.write('  3. AI-Powered Knowledge Base\r\n');
+      writeResponsive(term, 'Featured projects:');
+      writeResponsive(term, '  1. AI-Powered Portfolio (this site!)');
+      writeResponsive(term, '  2. Self-Hosted Home Lab (Raspberry Pi 5)');
+      writeResponsive(term, '  3. AI-Powered Knowledge Base');
+      term.scrollToBottom();
       break;
 
     case 'contact':
-      term.write('You can reach me via:\r\n');
-      term.write('  - Email: audrius@morkunas.info\r\n');
-      term.write('  - LinkedIn: linkedin.com/in/audrius-morkunas-939a2581\r\n');
-      term.write('  - GitHub: github.com/adotbyte\r\n');
+      writeResponsive(term, 'You can reach me via:');
+      writeResponsive(term, '  - Email: audrius@morkunas.info');
+      writeResponsive(term, '  - LinkedIn: linkedin.com/in/audrius-morkunas-939a2581');
+      writeResponsive(term, '  - GitHub: github.com/adotbyte');
+      term.scrollToBottom();
       break;
 
     case 'clear':

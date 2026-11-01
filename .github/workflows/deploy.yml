@@ -95,7 +95,7 @@ jobs:
 
       - name: Run Migrations
         env:
-          DATABASE_URL: postgresql://portfolio:${{ secrets.DB_PASSWORD }}@db:5432/portfolio
+          DATABASE_URL: postgresql://portfolio:${{ secrets.DB_PASSWORD }}@localhost:5432/portfolio
         run: |
           sleep 10
           cd ${{ github.workspace }}/frontend

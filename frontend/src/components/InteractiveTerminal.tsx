@@ -1,5 +1,5 @@
 'use client';
-import 'xterm/css/xterm.css';
+import '@xterm/xterm/css/xterm.css';
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 
@@ -24,7 +24,7 @@ export default function InteractiveTerminal() {
       const container = terminalRef.current;
       if (!container) return;
 
-      const { Terminal } = await import('xterm');
+      const { Terminal } = await import('@xterm/xterm');
       const { FitAddon } = await import('@xterm/addon-fit'); // <-- Importuojame FitAddon
 
       term = new Terminal({

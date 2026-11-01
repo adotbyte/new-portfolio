@@ -5,6 +5,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { randomUUID } from 'crypto';
+import { chatMessagesTotal, emailsSentTotal } from '@/lib/metrics';
 
 // Force route to be strictly dynamic at runtime
 export const dynamic = 'force-dynamic';
@@ -178,6 +179,7 @@ async function sendContactEmail(
     if (error) {
       throw new Error(error.message);
     }
+    emailsSentTotal.inc();
 
     return `✅ Message sent successfully! Audrius will receive an email and can reply directly to ${safeEmail}.`;
   } catch (err: unknown) {
@@ -422,6 +424,7 @@ export async function POST(req: NextRequest) {
     await prisma.message.create({
       data: { userId, role: 'user', content: message.trim() },
     });
+    chatMessagesTotal.labels('user').inc();
 
     // Build Anthropic messages from DB history + new message
     const messages: Anthropic.MessageParam[] = [
@@ -474,6 +477,7 @@ export async function POST(req: NextRequest) {
     await prisma.message.create({
       data: { userId, role: 'ai', content },
     });
+    chatMessagesTotal.labels('ai').inc();
 
     // Generate contextual follow-up hints (best-effort, non-blocking on failure)
     const hints = await generateHints(message.trim(), content, locale);

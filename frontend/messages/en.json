@@ -90,10 +90,6 @@
       "freeResult": "Mem:",
       "freeTotal": "{total} total, {used} used, {free} free"
     },
-    "liveStats": {
-      "title": "Live from the Home Lab",
-      "subtitle": "Real-time metrics from my Raspberry Pi 5 and the services running on it."
-    },
     "services": {
       "adguardhome": "Network-wide ad & tracker blocking for my entire home.",
       "alloy": "Ships metrics from my Pi to Grafana Cloud for monitoring.",
@@ -116,6 +112,10 @@
       "webtop": "A full Linux desktop running in the browser. My cloud PC.",
       "wireguard": "VPN server for secure, encrypted access to my home network."
     }
+  },
+  "liveStats": {
+    "title": "Live from the Home Lab",
+    "subtitle": "Real-time metrics from my Raspberry Pi 5 and the services running on it."
   },
   "contact": {
     "title": "Get in Touch",

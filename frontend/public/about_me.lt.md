@@ -1,22 +1,22 @@
-# Sveiki, aš Audrius 👋
+# Sveikas, aš Audrius 👋
 
-"Aš esu savarankiškai išmokęs infrastruktūros entuziastas, kuris prie technologijų prieina iš serverio pusės. Turėdamas gilų pagrindą kompiuterių techninėje įrangoje, Linux administravime ir tinklų valdyme, aš ne tik rašau kodą – aš kuriu stabilias, saugias sistemas, kuriose jis veikia.
+"Aš savamokslis infrastruktūros entuziastas, kuris technologiją suvokiu iš serverio pusės žemyn. Turėdamas gilias žinias kompiuterinės aparatinės įrangos, Linux administravimo ir tinklo srityse, ne tik rašau kodą—kuriu stabilias, saugias sistemas, kuriose jis veikia.
 
-Mano aistra yra savarankiškas prieglobos, AI integracija ir supratimas, kaip internetas veikia nuo pagrindų. Nesvarbu, ar tai būtų Cloudflare Zero Trust konfigūravimas, Docker konteinerių valdymas, ar AI agentų kūrimas – man patinka spręsti sudėtingas problemas praktiniais, tiesioginiais sprendimais."
+Mano aistra—tai savivaldus serveris, dirbtinio intelekto integravimas ir interneto veikimo supratimas nuo pat pagrindo. Nesvarbu, ar konfigūruoju Cloudflare Zero Trust, tvarkaraštinę Docker konteinerius, ar kuriu dirbtinio intelekto agentus, mėgstu spręsti sudėtingas problemas praktiškais, praktiniais sprendimais."
 
-## 🏠 Mano namų laboratorija
+## 🏠 Mano Home Lab
 
-Šiuo metu valdau savarankiškai prieglobos aplinką, kurią sudaro:
+Šiuo metu tvarkau savivaldų aplinką, kuri veikia naudojant:
 
 - **Skaičiavimas:** Raspberry Pi 5 (16GB) & OpenMediaVault (OMV)
-- **Konteinerizacija:** Docker & Docker Compose
+- **Kontainerizacija:** Docker & Docker Compose
 - **Tinklas:** Cloudflare Zero Trust Tunnels & Reverse Proxies
-  - **Reverse Proxies:** Efektyvus srauto nukreipimas ir SSL valdymas visoms prieglobos aplikacijoms
+  - **Reverse Proxies:** Efektyvus eismo маршrutavimas ir SSL valdymas visoms savivaldžioms aplikacijoms
 
-## 🚀 Išskirtinis projektas
+## 🚀 Pranešta Projektas
 
 **[AI-Powered Interactive Resume](https://morkunas.info/)**
-_Tai ne tik statinis portfolio. Tai pilna Next.js aplikacija, konteinerizuota ir savarankiškai prieglobos Raspberry Pi 5. Integruotas AI agentas naudoja Claude API su įrankių naudojimo galimybėmis, kad gautų tiesioginius GitHub duomenis ir saugiai siųstų el. laiškus per Resend. Jis apsaugotas Cloudflare Zero Trust, Turnstile ir pritaikyta XSS-saugia backend logika._
+_Tai ne tik statinis portfelis. Tai pilno steko Next.js aplikacija, kontainerizuota ir savivaldžiai talpinama Raspberry Pi 5. Integruotas AI agentas naudoja Claude API su įrankių naudojimo galimybėmis, kad gautų tiesioginį GitHub duomenis ir saugiai siųstų el. laiškus per Resend. Ši sistema apsaugota Cloudflare Zero Trust, Turnstile ir pasirinktine XSS-saugia backend logika._
 
 ---
 
@@ -24,4 +24,4 @@ _Tai ne tik statinis portfolio. Tai pilna Next.js aplikacija, konteinerizuota ir
 
 ---
 
-> **Pastaba:** Šis portfolio yra **gyvas dokumentas**. Aš esu įsipareigojęs nuolatiniam tobulėjimui ir reguliariai atnaujinu šią erdvę naujausiais pasiekimais, techniniais etapais ir naujomis žiniomis, kurias įgyju kasdienėje praktikoje.
+> **Pastaba:** Šis portfelis yra **nuolatinis dokumentas**. Aš įsipareigojęs nuolatiniam tobulėjimui ir reguliariai atnaujinu šią erdvę su savo naujausiais pasiekimais, techniniais etapais ir naujomis žiniomis, kurias įgiju per savo kasdienę praktiką.

@@ -28,6 +28,7 @@ jobs:
           RS_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           RS_HOMELAB_DATABASE_URL: ${{ secrets.HOMELAB_DATABASE_URL }}
           RS_ANTHROPIC_MODEL: ${{ secrets.ANTHROPIC_MODEL }}
+          RS_PROMETHEUS_URL: ${{ secrets.PROMETHEUS_URL }}
         run: |
           cd ${{ github.workspace }}
           echo "GEMINI_API_KEY=$RS_GEMINI_KEY" > .env
@@ -42,6 +43,7 @@ jobs:
           echo "HOMELAB_DATABASE_URL=\"$RS_HOMELAB_DATABASE_URL\"" >> .env
           echo "DB_PASSWORD=$RS_DB_PASSWORD" >> .env
           echo "ANTHROPIC_MODEL=$RS_ANTHROPIC_MODEL" >> .env
+          echo "PROMETHEUS_URL=$RS_PROMETHEUS_URL" >> .env
           echo "✅ .env created successfully"
 
       - name: Cache Next.js build

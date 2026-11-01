@@ -1,5 +1,5 @@
 // src/lib/metrics.ts
-import { Registry, Counter, Gauge } from 'prom-client';
+import { Registry, Counter, Gauge } from '@prometheus-io/client';
 
 // Sukuriame globalų registrą
 export const register = new Registry();

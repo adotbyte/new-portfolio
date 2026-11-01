@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import InteractiveTerminal from './InteractiveTerminal';
 
 const categoryColors: Record<string, string> = {
   Network: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
@@ -162,8 +163,8 @@ export default function HomeLab() {
               ))}
         </div>
         {/* --- SKELETON effect end here --- */}
-
-        <div className="mt-12 rounded-2xl border border-gray-200 bg-gray-100 p-6 font-mono text-sm dark:border-gray-700 dark:bg-slate-900">
+        <InteractiveTerminal />
+        {/*<div className="mt-12 rounded-2xl border border-gray-200 bg-gray-100 p-6 font-mono text-sm dark:border-gray-700 dark:bg-slate-900">
           <div className="mb-4 flex gap-1.5">
             <div className="h-3 w-3 rounded-full bg-red-500/60"></div>
             <div className="h-3 w-3 rounded-full bg-yellow-500/60"></div>
@@ -203,7 +204,7 @@ export default function HomeLab() {
 
             <p className="animate-pulse text-blue-600 dark:text-blue-400">█</p>
           </div>
-        </div>
+        </div>*/}
       </div>
     </section>
   );

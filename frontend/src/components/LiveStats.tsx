@@ -66,7 +66,7 @@ export default function LiveStats() {
   if (!mounted) return null;
 
   const isDark = resolvedTheme === 'dark';
-  const strokeColor = isDark ? '#60a5fa' : '#2563eb';
+  const strokeColor = isDark ? '#60a5fa' : '#1e40af';
   const gridColor = isDark ? '#374151' : '#e5e7eb';
 
   return (

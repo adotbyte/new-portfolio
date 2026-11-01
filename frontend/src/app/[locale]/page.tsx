@@ -3,6 +3,7 @@ import Skills from '@/components/Skills';
 import HomeLab from '@/components/HomeLab';
 import Contact from '@/components/Contact';
 import LiveStats from '@/components/LiveStats';
+import DotGrid from '@/components/DotGrid';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -82,6 +83,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <>
+      <DotGrid />
       {/* JSON-LD code for Google */}
       <script
         type="application/ld+json"

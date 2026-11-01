@@ -38,6 +38,23 @@ This portfolio features a **native, self-hosted monitoring dashboard** built dir
 - Real-time **CPU usage** (%) across all Docker containers.
 - Real-time **RAM usage** (MB) across all Docker containers.
 
+## 💻 Interactive Terminal (The "Wow" Factor) 🚀
+
+This portfolio includes a **fully interactive, in-browser terminal** built with `xterm.js`. It’s not just a static visual — visitors can type commands and get **real, live data** from the Raspberry Pi 5.
+
+**What it does:**
+- **Real System Commands:** Type `docker ps`, `uptime`, or `free -h` to see live data from the server.
+- **Portfolio Navigation:** Type `about`, `skills`, `projects`, or `contact` to explore the portfolio in a unique, command-line way.
+- **Theme-Aware:** The terminal automatically switches between light and dark themes.
+- **Zero Backend Risk:** All commands are handled safely via Next.js API routes.
+
+**Why it’s impressive:**
+- It demonstrates deep understanding of **system-level metrics**, **API design**, and **frontend interactivity**.
+- It’s a **conversation starter** — visitors love typing commands and seeing the server respond.
+- It’s **fully self-hosted**, running on a Raspberry Pi 5 with zero open inbound ports.
+
+> *"This is one of the most creative and technically impressive portfolio features I’ve seen. It shows not just coding skills, but a deep understanding of infrastructure and user experience."*
+
 ## 🤖 AI Agent Capabilities
 
 The chatbot is a true **agentic system** — not just a Q&A bot:
@@ -70,6 +87,7 @@ RESEND_FROM_EMAIL=your@email.com
 CONTACT_EMAIL=your@email.com
 FB_APP_ID=your_fb_app_id
 GH_TOKEN=your_github_token
+PROMETHEUS_URL=http://your-server-ip:9090
 ```
 
 ### 3. Run with Docker Compose

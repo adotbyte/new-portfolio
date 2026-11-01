@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "translate": "node scripts/translate.mjs",
+    "translate": "node scripts/translate.mjs --force ",
     "dev": "npm run translate && next dev --turbopack",
     "build": "npm run translate && next build",
     "start": "next start"

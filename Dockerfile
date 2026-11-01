@@ -1,5 +1,5 @@
 # --- Build Stage ---
-FROM node:22-slim AS builder
+FROM node:22.22.3-slim AS builder
 WORKDIR /app
 
 # ✅ Suppress npm update notice
@@ -39,16 +39,14 @@ RUN npx prisma generate --schema=prisma-homelab/schema.prisma
 RUN npm run build
 
 # --- Production Stage ---
-FROM node:22-slim AS runner
+FROM node:22.22.3-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y curl openssl && rm -rf /var/lib/apt/lists/*
-
-# ✅ Install curl for health check
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Atnaujiname OS ir įdiegiame reikalingus įrankius vienu sluoksniu
+RUN apt-get update && apt-get upgrade -y && apt-get install -y curl openssl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
 RUN addgroup --system app && adduser --system --group app

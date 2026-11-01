@@ -200,7 +200,7 @@ async function handleCommand(term: any, cmd: string) {
         const res = await fetch('/api/system/uptime');
         const data = await res.json();
         if (data.days !== undefined) {
-          term.write(` up ${data.days} days, ${data.hours} hours\r\n`);
+          term.write(` up ${data.days} days, ${data.hours} hours, load average: ${data.load}\r\n`);
         } else {
           term.write('Error fetching uptime.\r\n');
         }

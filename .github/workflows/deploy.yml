@@ -46,15 +46,6 @@ jobs:
           echo "PROMETHEUS_URL=$RS_PROMETHEUS_URL" >> .env
           echo "✅ .env created successfully"
 
-      - name: Cache Next.js build
-        uses: actions/cache@v4
-        with:
-          path: |
-            frontend/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-
-              
       - name: Install dependencies
         run: cd frontend && npm ci --legacy-peer-deps
 
@@ -89,7 +80,7 @@ jobs:
 
           git pull --rebase origin main
 
-          docker compose build \
+          DOCKER_BUILDKIT=1 docker compose build \
             --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             --build-arg ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
 
@@ -106,6 +97,7 @@ jobs:
           sleep 10
           cd ${{ github.workspace }}/frontend
           npm ci --omit=dev
+          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
           /usr/bin/npx prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
           echo "✅ Migrations applied"
 

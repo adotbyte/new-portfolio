@@ -17,6 +17,7 @@ export default function InteractiveTerminal() {
     if (!mounted) return;
 
     let term: any;
+    let resizeObserver: ResizeObserver | null = null; // <-- Apibrėžiame ČIA, prieš initTerminal
     const isDark = resolvedTheme === 'dark';
 
     const initTerminal = async () => {
@@ -24,6 +25,7 @@ export default function InteractiveTerminal() {
       if (!container) return;
 
       const { Terminal } = await import('xterm');
+      const { FitAddon } = await import('@xterm/addon-fit'); // <-- Importuojame FitAddon
 
       term = new Terminal({
         cursorBlink: true,
@@ -47,7 +49,17 @@ export default function InteractiveTerminal() {
         allowTransparency: false,
       });
 
+      const fitAddon = new FitAddon();
+      term.loadAddon(fitAddon); // <-- Pridedame FitAddon
+
       term.open(container);
+      fitAddon.fit(); // <-- Pritaikome dydį iš karto
+
+      resizeObserver = new ResizeObserver(() => {
+        fitAddon.fit();
+      });
+      resizeObserver.observe(container);
+
       term.clear();
       term.write('\x1b[2J\x1b[H');
       term.write("Welcome to Audrius's Portfolio Terminal\r\n");
@@ -79,6 +91,7 @@ export default function InteractiveTerminal() {
     initTerminal();
 
     return () => {
+      if (resizeObserver) resizeObserver.disconnect();
       if (term) term.dispose();
     };
   }, [mounted, resolvedTheme]); // <-- Priklausomybėse nurodome temą

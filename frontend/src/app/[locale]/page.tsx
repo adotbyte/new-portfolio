@@ -2,6 +2,7 @@ import AboutMe from '@/components/AboutMe';
 import Skills from '@/components/Skills';
 import HomeLab from '@/components/HomeLab';
 import Contact from '@/components/Contact';
+import LiveStats from '@/components/LiveStats';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -95,6 +96,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </section>
       <section id="homelab">
         <HomeLab />
+        {/* Įdedame LiveStats PO HomeLab, kad būtų Namų laboratorijos sekcijoje */}
+        <div className="mx-auto max-w-6xl px-4 pb-12">
+          <LiveStats />
+        </div>
       </section>
       <section id="contact">
         <Contact />

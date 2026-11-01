@@ -90,6 +90,10 @@
       "freeResult": "Mem:",
       "freeTotal": "{total} iš viso, {used} naudojama, {free} laisva"
     },
+    "liveStats": {
+      "title": "📊 Tiesiogiai iš namų laboratorijos",
+      "subtitle": "Realaus laiko duomenys iš mano Raspberry Pi 5 ir joje veikiančių paslaugų."
+    },
     "services": {
       "adguardhome": "Viso tinklo reklamų ir sekiklių blokavimas mano namuose.",
       "alloy": "Siunčia metrikas iš mano Pi į Grafana Cloud stebėjimui.",

@@ -48,7 +48,7 @@ export default function middleware(request: NextRequest) {
     object-src 'none';
     base-uri 'self';
     form-action 'self';
-    frame-src 'self' https://challenges.cloudflare.com;
+    frame-src 'self' https://challenges.cloudflare.com https://grafana.morkunas.info;;
     frame-ancestors 'none';
     connect-src 'self' https://challenges.cloudflare.com;
     worker-src 'self' blob:;
@@ -81,7 +81,7 @@ export default function middleware(request: NextRequest) {
   );
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
   response.headers.set('Vary', 'Accept');
 

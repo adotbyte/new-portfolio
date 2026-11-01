@@ -156,6 +156,8 @@ async function handleCommand(term: any, cmd: string) {
       );
       writeResponsive(term, '  uptime            - Show system uptime / Veikimo laikas');
       writeResponsive(term, '  free -h           - Show memory usage / Atminties naudojimas');
+      writeResponsive(term, '  neofetch          - Display system info / Sistemos informacija\r\n');
+      writeResponsive(term, '  matrix            - Enter the Matrix / Patekti į Matricą\r\n');
       writeResponsive(term, '  clear             - Clear the terminal / Išvalyti terminalą');
       term.scrollToBottom();
       break;
@@ -236,6 +238,80 @@ async function handleCommand(term: any, cmd: string) {
       } catch {
         term.write('Error fetching memory.\r\n');
       }
+      term.scrollToBottom();
+      break;
+
+    case 'neofetch':
+      term.write('Fetching system info...\r\n');
+      try {
+        const isMobile = window.innerWidth < 768;
+
+        // Gauname duomenis lygiagrečiai
+        const [uptimeRes, freeRes] = await Promise.all([
+          fetch('/api/system/uptime'),
+          fetch('/api/system/free'),
+        ]);
+        const uptimeData = await uptimeRes.json();
+        const freeData = await freeRes.json();
+
+        // ASCII logotipas
+        const asciiArt = isMobile
+          ? ['   .-,', '  /   \\', ' |     |', '  \\   /', '   `-`']
+          : ['    .-"-".', '   /     \\', '  |       |', '  |       |', '   \\     /', '    `-.-`'];
+
+        // Informacija
+        const info = [
+          'audrius@raspberrypi',
+          '-------------------',
+          `OS: Raspberry Pi OS (64-bit)`,
+          `Host: Raspberry Pi 5 (16GB)`,
+          `Uptime: ${uptimeData.days || 0} days, ${uptimeData.hours || 0} hours`,
+          `Memory: ${freeData.used?.toFixed(1) || '?'}Gi / ${freeData.total?.toFixed(1) || '?'}Gi`,
+          `Load: ${uptimeData.load || 'N/A'}`,
+        ];
+
+        // Išvedame logotipą ir informaciją greta
+        const maxLines = Math.max(asciiArt.length, info.length);
+        for (let i = 0; i < maxLines; i++) {
+          const artLine = (asciiArt[i] || '').padEnd(isMobile ? 12 : 16);
+          const infoLine = info[i] || '';
+          term.write(`${artLine} ${infoLine}\r\n`);
+        }
+      } catch {
+        term.write('Error fetching system info.\r\n');
+      }
+      term.scrollToBottom();
+      break;
+
+    case 'matrix':
+      term.write('Entering the Matrix...\r\n');
+      await new Promise<void>((resolve) => {
+        const chars =
+          '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const isMobile = window.innerWidth < 768;
+        const width = isMobile ? 40 : 80;
+        const height = isMobile ? 15 : 24;
+        let frames = 0;
+        const maxFrames = 20; // Kiek kartų atsinaujins
+
+        const interval = setInterval(() => {
+          term.write('\x1b[2J\x1b[H'); // Išvalome ekraną
+          for (let y = 0; y < height; y++) {
+            let line = '';
+            for (let x = 0; x < width; x++) {
+              line += Math.random() > 0.85 ? chars[Math.floor(Math.random() * chars.length)] : ' ';
+            }
+            term.write(`\x1b[32m${line}\x1b[0m\r\n`); // Žalia spalva
+          }
+          frames++;
+          if (frames >= maxFrames) {
+            clearInterval(interval);
+            term.write('\x1b[2J\x1b[H'); // Išvalome po pabaigos
+            term.write('Welcome back to reality.\r\n');
+            resolve();
+          }
+        }, 150); // Kas 150ms
+      });
       term.scrollToBottom();
       break;
 

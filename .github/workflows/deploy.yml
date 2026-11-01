@@ -30,7 +30,7 @@ jobs:
           RS_ANTHROPIC_MODEL: ${{ secrets.ANTHROPIC_MODEL }}
           RS_PROMETHEUS_URL: ${{ secrets.PROMETHEUS_URL }}
         run: |
-          cd ${{ github.workspace }}
+          cd ${{ github.workspace }}/frontend
           echo "GEMINI_API_KEY=$RS_GEMINI_KEY" > .env
           echo "TURNSTILE_SECRET_KEY=$RS_TURNSTILE_SECRET_KEY" >> .env
           echo "NEXT_PUBLIC_TURNSTILE_SITE_KEY=$RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY" >> .env
@@ -98,7 +98,7 @@ jobs:
           cd ${{ github.workspace }}/frontend
           npm ci --omit=dev
           export DATABASE_URL="${{ secrets.DATABASE_URL }}"
-          /usr/bin/npx prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
+          /usr/bin/npx --prefix frontend prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
           echo "✅ Migrations applied"
 
       - name: Verify Deployment

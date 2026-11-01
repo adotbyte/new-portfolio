@@ -5,10 +5,16 @@ import { routing } from '@/i18n/routing';
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
+  // 1. Tiesiogiai praleisti /api/metrics (patikimiausias būdas)
   const { pathname } = request.nextUrl;
 
   // 1. Explicitly bypass middleware for API and well-known routes
   if (pathname.startsWith('/.well-known') || pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
+  // 1. Tiesiogiai praleisti /api/metrics (patikimiausias būdas)
+  if (request.nextUrl.pathname === '/api/metrics') {
     return NextResponse.next();
   }
 

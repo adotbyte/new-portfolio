@@ -80,8 +80,32 @@ export default function Chatbot({ nonce }: ChatbotProps) {
   }, []);
 
   useEffect(() => {
-    if (!isCollapsed && isOpen) scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping, isCollapsed, isOpen]);
+    if (!isCollapsed && isOpen) {
+      const chatContainer = document.getElementById('chat-messages');
+      if (!chatContainer) return;
+
+      const lastMessage = messages[messages.length - 1];
+
+      // Nuslenkame į apačią, kai:
+      // 1. Chatbotas atsidaro (isOpen pasikeičia į true)
+      // 2. Įkeliamas senas pokalbis
+      // 3. Vartotojas parašo žinutę
+      // 4. Atsiranda nauja AI žinutė
+      if (
+        isOpen ||
+        (messages.length > 1 &&
+          (lastMessage?.role === 'user' || (lastMessage?.role === 'ai' && lastMessage.isNew)))
+      ) {
+        // Naudojame setTimeout, kad palauktume, kol DOM atsinaujins
+        setTimeout(() => {
+          chatContainer.scrollTo({
+            top: chatContainer.scrollHeight,
+            behavior: 'smooth',
+          });
+        }, 100);
+      }
+    }
+  }, [isOpen, messages.length, isTyping, isCollapsed]);
 
   const theme = {
     bg: isDark ? '#1a1d20' : '#ffffff',
@@ -397,7 +421,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
         <>
           <div
             id="chat-messages"
-            className="hide-scroll"
+            className="chat-scroll"
             style={{
               flex: 1,
               overflowY: 'auto',

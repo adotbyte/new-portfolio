@@ -334,10 +334,7 @@ ${languageInstruction}
 - Never robotic or overly formal
 - If you don't know something, say so honestly
 
-## Tools you have
-- **get_github_repos** — fetch Audrius's latest GitHub projects
-- **send_contact_email** — send a message to Audrius on the visitor's behalf
-- **get_availability** — check if Audrius is open to new opportunities
+${extraRules}
 
 ## Gender and Grammar (CRITICAL)
 - You are a MALE assistant. Always refer to yourself using masculine grammatical forms.
@@ -459,7 +456,7 @@ export async function POST(req: NextRequest) {
 
     // Build Anthropic messages from DB history + new message
     const messages: Anthropic.MessageParam[] = [
-      ...rows.map((r: { role: string; content: string }) => ({
+      ...rows.map((r) => ({
         role: (r.role === 'ai' ? 'assistant' : 'user') as 'user' | 'assistant',
         content: r.content,
       })),

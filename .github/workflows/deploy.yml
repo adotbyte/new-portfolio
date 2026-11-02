@@ -92,7 +92,7 @@ jobs:
             --build-arg ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
 
           # Perkuriame TIK resume_website, o ne visus konteinerius
-          docker compose up -d --force-recreate resume_website
+          docker compose up -d --force-recreate web
 
           docker image prune -f
           echo "✅ Container started"

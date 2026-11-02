@@ -15,6 +15,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Pull latest changes
+        run: |
+          git pull --rebase origin main
+
       # ── 1. IŠVALYMAS (prieš .env kūrimą) ─────────────────────────────────
       - name: Clean workspace
         run: |
@@ -71,7 +75,6 @@ jobs:
       # ── 5. BUILD IR RESTART ──────────────────────────────────────────────
       - name: Build and Restart
         run: |
-          git pull --rebase origin main
 
           DOCKER_BUILDKIT=1 docker compose build \
             --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \

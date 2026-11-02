@@ -101,22 +101,29 @@ const Skills = async () => {
           {skillCategories.map((category, index) => (
             <div
               key={index}
-              className="group rounded-3xl border border-slate-100 bg-slate-50 p-8 transition-all duration-500 hover:-translate-y-2 hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 dark:border-gray-700 dark:bg-gray-800"
+              className="rounded-3xl border border-slate-100 bg-slate-50 p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-200 dark:border-gray-700 dark:bg-gray-800"
             >
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 transition-colors group-hover:text-blue-100 dark:text-blue-400">
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400">
                 {category.subtitle}
               </span>
-              <h3 className="mb-6 mt-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-white dark:text-white">
+              <h3 className="mb-6 mt-2 text-xl font-bold text-gray-900 dark:text-white">
                 {category.title}
               </h3>
               <ul className="space-y-4">
                 {category.skills.map((skill) => (
                   <li
                     key={skill}
-                    className="flex items-center text-sm font-semibold text-gray-700 transition-colors group-hover:text-white dark:text-gray-300"
+                    className="group flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
-                    <div className="mr-3 h-2 w-2 shrink-0 rounded-full bg-blue-600 group-hover:bg-blue-200"></div>
-                    {skill}
+                    {/* 
+            Šviesiame fone: baltas taškas -> hover metu mėlynas 
+            Tamsiame fone: mėlynas taškas -> hover metu baltas 
+          */}
+                    <div className="mr-3 h-2 w-2 shrink-0 rounded-full border border-slate-300 bg-white transition-colors duration-200 group-hover:border-blue-600 group-hover:bg-blue-600 dark:border-blue-600 dark:bg-blue-600 dark:group-hover:border-white dark:group-hover:bg-white"></div>
+
+                    <span className="transition-colors duration-200 group-hover:text-blue-600 dark:group-hover:text-white">
+                      {skill}
+                    </span>
                   </li>
                 ))}
               </ul>

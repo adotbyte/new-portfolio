@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '../../../generated/prisma-homelab';
 import { PrismaPg } from '@prisma/adapter-pg';
 import fs from 'node:fs';
+import { connection } from 'next/server';
 
 const adapter = new PrismaPg({ connectionString: process.env.HOMELAB_DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 export async function GET() {
+  await connection();
   try {
     // 1. DB duomenys
     const devices = await prisma.device.findMany({

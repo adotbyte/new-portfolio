@@ -10,9 +10,6 @@ import { VoyageAIClient } from 'voyageai';
 
 const PROMPT_VERSION = 'v2';
 
-// Force route to be strictly dynamic at runtime
-export const dynamic = 'force-dynamic';
-
 // ─── Clients ────────────────────────────────────────────────────────────────
 import { prisma } from '@/lib/prisma';
 

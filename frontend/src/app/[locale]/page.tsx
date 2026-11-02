@@ -101,7 +101,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       />
 
       <section id="about">
-        <AboutMe />
+        <AboutMe locale={locale} />
       </section>
       <section id="portfolio">
         <Skills />

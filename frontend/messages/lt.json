@@ -69,6 +69,10 @@
       "knowledgeBaseStatus": "Prisijungęs"
     }
   },
+  "certifications": {
+    "title": "Sertifikatai",
+    "verify": "Patvirtinti"
+  },
   "homeLab": {
     "title": "🏠 Namų laboratorija",
     "device": "Įrenginys",

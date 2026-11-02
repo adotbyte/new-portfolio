@@ -69,6 +69,10 @@
       "knowledgeBaseStatus": "Live"
     }
   },
+  "certifications": {
+    "title": "Certifications",
+    "verify": "Verify"
+  },
   "homeLab": {
     "title": "🏠 Home Lab",
     "device": "Device",

@@ -44,7 +44,7 @@ const Privacy = () => {
           <h3>{t('section4Title')}</h3>
           <p>{t('section4Text')}</p>
           <p className="rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-gray-700 dark:bg-gray-800">
-            <strong>{t('section4LegalBasis')}</strong> {t('section4LegalText')}
+            <strong>{t('section5LegalBasis')}</strong> {t('section5LegalText')}
           </p>
 
           <h3>{t('section5Title')}</h3>

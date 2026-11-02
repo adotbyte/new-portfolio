@@ -16,15 +16,44 @@ A modern, self-hosted portfolio website featuring an **AI Agent** powered by **A
 - **Zero Trust Perimeter:** Outbound-only connectivity ensures high security.
 - **WAF & DDoS Protection:** Leverages Cloudflare's global network to mitigate common web attacks.
 - **Cloudflare Turnstile:** Bot protection on the contact form.
+- **Custom Security Rules:** Strict system prompt with guardrails, rate limiting, and XSS-safe backend logic.
 
 ## 🏗️ Technical Stack
 
 - **Frontend:** Next.js 16, React, Tailwind CSS
-- **AI Engine:** Anthropic Claude agent with tool use — fetches live GitHub repos, sends contact emails, checks availability
+- **AI Engine:** Anthropic Claude agent with tool use — fetches live GitHub repos, sends contact emails, checks availability, performs web searches, and remembers visitors.
 - **Email:** Resend
 - **DevOps:** Docker, Docker Compose, GitHub Actions (self-hosted runner on Raspberry Pi 5)
 - **Network:** Cloudflare Zero Trust, Tunneling
 - **Monitoring:** Grafana, Prometheus, Alloy
+- **Database:** PostgreSQL with `pgvector` for RAG and long-term memory
+
+## 🧠 Advanced AI Agent (RAG + Memory + Web Search)
+
+The chatbot is a true **agentic system** — not just a Q&A bot. It combines multiple advanced techniques:
+
+### 📚 Retrieval-Augmented Generation (RAG)
+- Ingests `about_me.md`, project `README.md` files, and GitHub repos into a **`pgvector`** knowledge base.
+- Generates embeddings via **Voyage AI** (`voyage-4-lite`).
+- Retrieves the most relevant context chunks before answering, ensuring accurate and grounded responses.
+
+### 🧠 Long-Term Memory
+- Extracts durable facts about visitors (e.g., interests, constraints) using Claude.
+- Stores them as embeddings in the **`Memory`** table.
+- Recalls relevant facts in future conversations to provide a personalized experience.
+
+### 🌐 Web Search
+- Integrated with Anthropic's **`web_search`** tool (limited to 3 searches per query to control costs).
+- Allows the agent to fetch real-time information about technologies, news, or events.
+
+### 🛠️ Tool Use
+- **`get_github_repos`** — fetches latest GitHub projects dynamically via GitHub API.
+- **`send_contact_email`** — gathers visitor name, email, and message, then sends directly to Zoho inbox.
+- **`get_availability`** — answers whether Audrius is open to new opportunities.
+
+### 💬 PDF Export
+- Visitors can export the entire chat transcript as a **polished PDF**.
+- Includes a custom **Roboto** font for Lithuanian characters, colored role labels, date, and clickable links.
 
 ## 📊 Real-time Monitoring Integration
 
@@ -40,28 +69,20 @@ This portfolio features a **native, self-hosted monitoring dashboard** built dir
 
 ## 💻 Interactive Terminal (The "Wow" Factor) 🚀
 
-This portfolio includes a **fully interactive, in-browser terminal** built with `xterm.js`. It’s not just a static visual — visitors can type commands and get **real, live data** from the Raspberry Pi 5.
+This portfolio includes a **fully interactive, in-browser terminal** built with `@xterm/xterm`. It’s not just a static visual — visitors can type commands and get **real, live data** from the Raspberry Pi 5.
 
 **What it does:**
 - **Real System Commands:** Type `docker ps`, `uptime`, or `free -h` to see live data from the server.
 - **Portfolio Navigation:** Type `about`, `skills`, `projects`, or `contact` to explore the portfolio in a unique, command-line way.
-- **Theme-Aware:** The terminal automatically switches between light and dark themes.
+- **Fun Commands:** Type `neofetch` for a system info summary or `matrix` for a visual effect.
+- **Bilingual:** Supports both English and Lithuanian command aliases (`help` / `pagalba`, `about` / `apie`).
+- **Theme-Aware:** The terminal automatically switches between light and dark themes and is fully responsive on mobile.
 - **Zero Backend Risk:** All commands are handled safely via Next.js API routes.
 
 **Why it’s impressive:**
 - It demonstrates deep understanding of **system-level metrics**, **API design**, and **frontend interactivity**.
 - It’s a **conversation starter** — visitors love typing commands and seeing the server respond.
 - It’s **fully self-hosted**, running on a Raspberry Pi 5 with zero open inbound ports.
-
-> *"This is one of the most creative and technically impressive portfolio features I’ve seen. It shows not just coding skills, but a deep understanding of infrastructure and user experience."*
-
-## 🤖 AI Agent Capabilities
-
-The chatbot is a true **agentic system** — not just a Q&A bot:
-
-- **🐙 Live GitHub repos** — fetches latest projects dynamically via GitHub API
-- **📧 Contact collection** — gathers visitor name, email, and message, then sends directly to Zoho inbox
-- **✅ Availability status** — answers whether Audrius is open to new opportunities
 
 ## 🖥️ Hardware
 

@@ -55,7 +55,7 @@ const Skills = async () => {
     {
       name: t('projects.portfolioName'),
       description: t('projects.portfolioDesc'),
-      stack: ['Next.js', 'React', 'Tailwind', 'Anthropic Claude', 'Docker'],
+      stack: ['Next.js 16', 'React', 'Tailwind', 'Anthropic Claude', 'Docker'],
       link: 'https://morkunas.info',
       github: 'https://github.com/adotbyte',
       icon: '🚀',

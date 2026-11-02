@@ -75,6 +75,11 @@ const tools: Anthropic.Tool[] = [
       "Returns Audrius's current availability status for work or freelance projects. Use when visitors ask if he is available, open to work, or looking for opportunities.",
     input_schema: { type: 'object' as const, properties: {}, required: [] },
   },
+  {
+    type: 'web_search_20250305',
+    name: 'web_search',
+    max_uses: 3, // Apribojame iki 3 paieškų per vieną užklausą (kaina)
+  } as any, // TypeScript gali skųstis dėl tipo, bet veiks
 ];
 
 // ─── Tool Executors ───────────────────────────────────────────────────────────
@@ -262,6 +267,68 @@ function getAvailability(): string {
   }
 }
 
+async function extractAndStoreFacts(userId: string, conversation: string) {
+  try {
+    const anthropic = getAnthropicClient();
+
+    // Paprašome Claude išgauti ilgalaikius faktus
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 200,
+      system: `Extract durable facts about the user from this conversation. A durable fact is a preference, constraint, or personal detail that stays true after the conversation ends. Skip anything temporary. Return ONLY a JSON array of strings. If no facts, return [].
+Example: ["User is interested in Docker", "User is looking for a job"]`,
+      messages: [{ role: 'user', content: conversation }],
+    });
+
+    const textBlock = response.content.find((b): b is Anthropic.TextBlock => b.type === 'text');
+    if (!textBlock) return;
+
+    // Nuvalome Markdown kodo bloko žymes (```json ... ```)
+    let cleaned = textBlock.text.replace(/```json|```/g, '').trim();
+
+    // Ištraukiame tik JSON masyvo dalį (nuo [ iki ])
+    const start = cleaned.indexOf('[');
+    const end = cleaned.lastIndexOf(']');
+    if (start !== -1 && end !== -1) {
+      cleaned = cleaned.substring(start, end + 1);
+    }
+
+    const facts: string[] = JSON.parse(cleaned);
+    if (!facts.length) return;
+
+    const voyage = new VoyageAIClient({ apiKey: process.env.VOYAGE_API_KEY });
+
+    for (const fact of facts) {
+      // Patikriname, ar toks faktas jau neegzistuoja
+      const existing = await prisma.$queryRaw<Array<{ id: number }>>`
+        SELECT id FROM "Memory" 
+        WHERE "userId" = ${userId} AND "fact" = ${fact}
+        LIMIT 1
+      `;
+      if (existing.length > 0) continue;
+
+      // Generuojame embeddingą
+      const embedRes = await voyage.embed({
+        input: [fact],
+        model: 'voyage-4-lite',
+        inputType: 'document',
+      });
+      const embedding = embedRes.data?.[0]?.embedding;
+      if (!embedding) continue;
+
+      const embeddingString = `[${embedding.join(',')}]`;
+
+      await prisma.$executeRaw`
+        INSERT INTO "Memory" ("userId", "fact", "embedding", "updatedAt")
+        VALUES (${userId}, ${fact}, ${embeddingString}::vector, NOW())
+      `;
+      console.log(`🧠 Išsaugotas faktas: ${fact}`);
+    }
+  } catch (err) {
+    console.error('Memory extraction error:', err);
+  }
+}
+
 // ─── Tool Router ─────────────────────────────────────────────────────────────
 
 async function executeTool(name: string, input: Record<string, string>): Promise<string> {
@@ -418,14 +485,15 @@ export async function DELETE(req: NextRequest) {
 // POST — send a message, persist both turns
 export async function POST(req: NextRequest) {
   try {
-    // 1. Rate Limit patikra
+    // ── 1. RATE LIMIT PATIKRA ──────────────────────────────────────────────
     const ip = req.headers.get('x-forwarded-for') || 'unknown';
     const rateLimit = checkRateLimit(ip, 10, 60 * 60 * 1000); // 10 žinučių per valandą
 
     if (!rateLimit.success) {
       return NextResponse.json({ error: 'Per daug užklausų. Bandykite vėliau.' }, { status: 429 });
     }
-    // ── Resolve or generate visitor_id cookie ──────────────────────────────────
+
+    // ── 2. VISITOR ID (SLAPUKAS) ───────────────────────────────────────────
     let userId = req.cookies.get('visitor_id')?.value;
     let isNewVisitor = false;
 
@@ -434,27 +502,27 @@ export async function POST(req: NextRequest) {
       isNewVisitor = true;
     }
 
+    // ── 3. GAUNAME VARTOTOJO ŽINUTĘ ────────────────────────────────────────
     const { message, locale } = await req.json();
     if (!message?.trim()) {
       return NextResponse.json({ error: 'No message' }, { status: 400 });
     }
 
-    // Load full history from DB
+    // ── 4. ĮKELIAME POKALBIO ISTORIJĄ IŠ DB ────────────────────────────────
     const rows = await prisma.message.findMany({
       where: { userId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: 'desc' },
       take: 20, // Kontekstui užtenka 20 pranešimų
     });
-
     rows.reverse(); // Grąžiname chronologinę tvarką
 
-    // Save the incoming user message
+    // ── 5. IŠSAUGOME VARTOTOJO ŽINUTĘ ──────────────────────────────────────
     await prisma.message.create({
       data: { userId, role: 'user', content: message.trim() },
     });
     chatMessagesTotal.labels('user').inc();
 
-    // Build Anthropic messages from DB history + new message
+    // ── 6. SUDAROME ANTHROPIC MESSAGES MASYVĄ ──────────────────────────────
     const messages: Anthropic.MessageParam[] = [
       ...rows.map((r) => ({
         role: (r.role === 'ai' ? 'assistant' : 'user') as 'user' | 'assistant',
@@ -463,29 +531,24 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: message.trim() },
     ];
 
-    // 1. Sukuriame bazinį sistemos promptą
+    // ── 7. SISTEMOS PROMPTAS (BAZINIS) ─────────────────────────────────────
     const systemPrompt = buildSystemPrompt(locale);
-
-    // 2. RAG: ieškome konteksto duomenų bazėje
     let systemPromptWithContext = systemPrompt;
 
+    // ── 8. RAG: KONTEKSTO PAIEŠKA IŠ KNOWLEDGEBASE ─────────────────────────
     try {
       const voyage = new VoyageAIClient({ apiKey: process.env.VOYAGE_API_KEY });
-
-      // Sugeneruojame užklausos embeddingą
       const queryEmbedding = await voyage.embed({
         input: [message],
         model: 'voyage-4-lite',
-        inputType: 'query', // <-- SVARBU: inputType, ne input_type
+        inputType: 'query',
       });
 
       const embedding = queryEmbedding.data?.[0]?.embedding;
 
       if (embedding) {
-        // Suformuojame tinkamą pgvector string'ą
         const embeddingString = `[${embedding.join(',')}]`;
 
-        // Ieškome panašiausių dalių duomenų bazėje
         const relevantChunks = await prisma.$queryRaw<Array<{ content: string; source: string }>>`
           SELECT "content", "source"
           FROM "KnowledgeBase"
@@ -497,24 +560,52 @@ export async function POST(req: NextRequest) {
           const context = relevantChunks
             .map((c) => `[Šaltinis: ${c.source}]\n${c.content}`)
             .join('\n\n---\n\n');
-
           systemPromptWithContext = `${systemPrompt}\n\n## Relevant Context from Knowledge Base\n${context}`;
           console.log(`✅ RAG: rasta ${relevantChunks.length} konteksto dalių`);
         }
       }
     } catch (err) {
       console.error('RAG klaida:', err);
-      // Jei RAG nepavyksta, naudojame bazinį promptą
     }
+
+    // ── 9. ILGALAIKĖ ATMINTIS (MEMORY) ─────────────────────────────────────
+    // Ši dalis ieško faktų apie lankytoją, kad Claude galėtų juos prisiminti.
+    try {
+      const voyage = new VoyageAIClient({ apiKey: process.env.VOYAGE_API_KEY });
+      const queryEmbed = await voyage.embed({
+        input: [message],
+        model: 'voyage-4-lite',
+        inputType: 'query',
+      });
+
+      if (queryEmbed.data?.[0]?.embedding) {
+        const queryString = `[${queryEmbed.data[0].embedding.join(',')}]`;
+
+        const relevantMemories = await prisma.$queryRaw<Array<{ fact: string }>>`
+          SELECT "fact"
+          FROM "Memory"
+          WHERE "userId" = ${userId}
+          ORDER BY "embedding" <=> ${queryString}::vector
+          LIMIT 3
+        `;
+
+        if (relevantMemories.length > 0) {
+          const memoryContext = `\n\n## Ką prisimenu apie šį lankytoją\n${relevantMemories.map((m) => `- ${m.fact}`).join('\n')}`;
+          systemPromptWithContext += memoryContext;
+          console.log(`🧠 Prisiminta ${relevantMemories.length} faktų`);
+        }
+      }
+    } catch (err) {
+      console.error('Memory klaida:', err);
+    }
+
+    // ── 10. ANTHROPIC KLIENTAS IR AGENTIC LOOP ─────────────────────────────
     const anthropic = getAnthropicClient();
 
-    // ── Agentic loop ──────────────────────────────────────────────────────────
     let response = await anthropic.messages.create({
       model: process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5',
       max_tokens: 1024,
-      temperature: 0.3,
       system: systemPromptWithContext,
-      cache_control: { type: 'ephemeral' },
       tools,
       messages,
     });
@@ -541,19 +632,28 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // ── 11. IŠGAUNAME AI ATSAKYMĄ ──────────────────────────────────────────
     const textBlock = response.content.find((b): b is Anthropic.TextBlock => b.type === 'text');
     const content = textBlock?.text ?? "Sorry, I couldn't generate a response.";
 
-    // Save AI response to DB
+    // ── 12. IŠSAUGOME AI ATSAKYMĄ Į DB ─────────────────────────────────────
     await prisma.message.create({
       data: { userId, role: 'ai', content },
     });
     chatMessagesTotal.labels('ai').inc();
 
-    // Generate contextual follow-up hints (best-effort, non-blocking on failure)
+    // ── 13. IŠGAUNAME FAKTUS IR IŠSAUGOME ILGALAIKĘ ATMINTĮ ───────────────
+    // Ši dalis analizuoja pokalbį ir išsaugo ilgalaikius faktus apie lankytoją.
+    const conversationText = `
+User: ${message}
+Assistant: ${content}
+`;
+    extractAndStoreFacts(userId, conversationText).catch(console.error);
+
+    // ── 14. GENERUOJAME UŽUOMINAS (HINTS) ──────────────────────────────────
     const hints = await generateHints(message.trim(), content, locale);
 
-    // ── Build response, set cookie for new visitors ───────────────────────────
+    // ── 15. GRĄŽINAME ATSAKYMĄ IR NUSTATOME SLAPUKĄ ────────────────────────
     const res = NextResponse.json({ content, hints });
 
     if (isNewVisitor) {

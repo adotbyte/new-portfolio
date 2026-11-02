@@ -24,3 +24,12 @@ model KnowledgeBase {
   source    String?
   createdAt DateTime @default(now())
 }
+
+model Memory {
+  id        Int      @id @default(autoincrement())
+  userId    String   // Susiejame su visitor_id
+  fact      String   // Pvz., "Vartotojas domisi Docker"
+  embedding Unsupported("vector(1024)")? // Voyage AI embeddingas
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

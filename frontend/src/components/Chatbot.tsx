@@ -108,24 +108,61 @@ export default function Chatbot({ nonce }: ChatbotProps) {
 
   const downloadTranscript = async () => {
     const { jsPDF } = await import('jspdf');
+
     try {
       const doc = new jsPDF();
+
+      // 1. Įkeliame Roboto šriftą per absoliutų kelią
+      const fontPath = `${window.location.origin}/fonts/Roboto.ttf`;
+      console.log('Kraunamas šriftas iš:', fontPath); // Debug
+
+      const fontResponse = await fetch(fontPath);
+
+      if (!fontResponse.ok) {
+        throw new Error(
+          `Nepavyko įkelti šrifto: ${fontResponse.status} ${fontResponse.statusText}`
+        );
+      }
+
+      const fontBuffer = await fontResponse.arrayBuffer();
+      const fontBase64 = btoa(
+        new Uint8Array(fontBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+
+      doc.addFileToVFS('Roboto.ttf', fontBase64);
+      doc.addFont('Roboto.ttf', 'Roboto', 'normal');
+      doc.setFont('Roboto');
+
+      // 2. Generuojame tekstą
       let yPos = 20;
       doc.setFontSize(16);
       doc.text(`${t('downloadLabel')} Chat Transcript`, 10, yPos);
       yPos += 15;
+
       messages.forEach((m) => {
-        const cleanContent = m.content.replace(/<[^>]*>?/gm, '');
+        const cleanContent = m.content
+          .replace(/\*\*(.*?)\*\*/g, '$1')
+          .replace(/###\s/g, '')
+          .replace(/##\s/g, '')
+          .replace(/#\s/g, '')
+          .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+          .replace(/\|/g, ' ')
+          .replace(/---/g, '')
+          .replace(/[^\x00-\x7FąčęėįšųūžĄČĘĖĮŠŲŪŽ]/g, '');
+
         const rolePrefix = m.role === 'user' ? 'YOU: ' : 'ADOTBYTE: ';
         const splitText = doc.splitTextToSize(`${rolePrefix}${cleanContent}`, 180);
+
         if (yPos + splitText.length * 7 > 280) {
           doc.addPage();
           yPos = 20;
         }
+
         doc.setFontSize(10);
         doc.text(splitText, 10, yPos);
         yPos += splitText.length * 7 + 10;
       });
+
       doc.save(`${t('downloadLabel')}.pdf`);
     } catch (err) {
       console.error('PDF Error:', err);
@@ -343,6 +380,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
       {!isCollapsed && (
         <>
           <div
+            id="chat-messages"
             className="hide-scroll"
             style={{
               flex: 1,

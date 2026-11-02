@@ -9,7 +9,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 const voyage = new VoyageAIClient({ apiKey: process.env.VOYAGE_API_KEY });
 
-async function ingestFile(filePath: string, source: string) {
+async function ingestFile(filePath: string, source: string, link?: string) {
   const content = readFileSync(filePath, 'utf-8');
   const chunks = content.match(/[\s\S]{1,500}/g) || [];
 
@@ -27,9 +27,12 @@ async function ingestFile(filePath: string, source: string) {
 
     const embeddingString = `[${embedding.join(',')}]`;
 
+    // Pridedame nuorodą prie turinio, jei ji nurodyta
+    const contentWithLink = link ? `${chunk}\n\nNuoroda: ${link}` : chunk;
+
     await prisma.$executeRaw`
       INSERT INTO "KnowledgeBase" ("content", "embedding", "source")
-      VALUES (${chunk}, ${embeddingString}::vector, ${source})
+      VALUES (${contentWithLink}, ${embeddingString}::vector, ${source})
     `;
 
     console.log(`✅ Įtraukta iš ${source}: ${chunk.substring(0, 50)}...`);
@@ -97,6 +100,9 @@ async function main() {
   // 3. Įtraukiame kito projekto README.md iš GitHub
   // Pakeiskite 'knowledge-base' į tikrą jūsų repo pavadinimą!
   await ingestGitHubReadme('adotbyte', 'knowledge-base');
+
+  await ingestFile(aboutMePath, 'about_me.md');
+  await ingestFile(readmePath, 'README.md', 'https://github.com/adotbyte/new-portfolio');
 
   console.log('✅ Visi duomenys įtraukti!');
 }

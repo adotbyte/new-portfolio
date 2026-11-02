@@ -8,6 +8,8 @@ import { randomUUID } from 'crypto';
 import { chatMessagesTotal, emailsSentTotal } from '@/lib/metrics';
 import { VoyageAIClient } from 'voyageai';
 
+const PROMPT_VERSION = 'v2';
+
 // Force route to be strictly dynamic at runtime
 export const dynamic = 'force-dynamic';
 
@@ -93,7 +95,6 @@ async function getGithubRepos(): Promise<string> {
     if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
     const repos: GitHubRepo[] = await res.json();
-
     if (!repos.length) return 'No public repositories found.';
 
     const list = repos
@@ -104,10 +105,10 @@ async function getGithubRepos(): Promise<string> {
         });
         const lang = r.language ? ` · ${r.language}` : '';
         const stars = r.stargazers_count > 0 ? ` · ⭐ ${r.stargazers_count}` : '';
-        const desc = r.description ? `\n   ${r.description}` : '';
-        return `• [${r.name}](${r.html_url})${lang}${stars} · updated ${updated}${desc}`;
+        // Grąžiname aiškų formatą su pilnu URL
+        return `- **${r.name}**${lang}${stars} (updated ${updated})\n   Aprašymas: ${r.description || 'Nėra'}\n   Nuoroda: ${r.html_url}`;
       })
-      .join('\n');
+      .join('\n\n');
 
     return `Here are Audrius's latest GitHub repositories:\n\n${list}`;
   } catch (err) {
@@ -298,6 +299,14 @@ function buildSystemPrompt(locale: string = 'en'): string {
     }
   })();
 
+  // Nuskaitome papildomas taisykles iš system.md
+  let extraRules = '';
+  try {
+    extraRules = readFileSync(join(process.cwd(), 'prompts', 'system.md'), 'utf-8');
+  } catch {
+    console.warn('⚠️ prompts/system.md nerastas, naudojamos tik pagrindinės taisyklės.');
+  }
+
   const languageInstruction = 'Always respond in the same language the visitor uses.';
 
   return `You are AdotByte AI — a smart, friendly assistant on Audrius Morkūnas's personal portfolio website.
@@ -365,6 +374,13 @@ ${aboutMe}
 ## RAG Rules
 - When you use information from the "Relevant Context" section, mention the source (e.g., "Pagal mano README.md...").
 - If the context doesn't contain the answer, say so honestly.
+
+## Project Links (IMPORTANT)
+- When you mention a specific project, ALWAYS include a direct link to it.
+- Use the format: "Daugiau apie tai: [nuoroda]"
+- If the project has a live demo, provide that link too.
+- Only use links that are explicitly present in the "What you know about Audrius" section below.
+- If no link is available, do not invent one — just say "Daugiau informacijos galite rasti mano GitHub profilyje: https://github.com/adotbyte".
 
 ## Important
 - Never invent information about Audrius that isn't in the above

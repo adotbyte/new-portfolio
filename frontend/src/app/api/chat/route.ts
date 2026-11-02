@@ -6,6 +6,7 @@ import { join } from 'path';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { randomUUID } from 'crypto';
 import { chatMessagesTotal, emailsSentTotal } from '@/lib/metrics';
+import { VoyageAIClient } from 'voyageai';
 
 // Force route to be strictly dynamic at runtime
 export const dynamic = 'force-dynamic';
@@ -361,6 +362,10 @@ Collect them conversationally — don't present a form-like list of questions al
 ## What you know about Audrius
 ${aboutMe}
 
+## RAG Rules
+- When you use information from the "Relevant Context" section, mention the source (e.g., "Pagal mano README.md...").
+- If the context doesn't contain the answer, say so honestly.
+
 ## Important
 - Never invent information about Audrius that isn't in the above
 - Keep responses concise — visitors read on a portfolio site, not a document
@@ -445,7 +450,49 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: message.trim() },
     ];
 
+    // 1. Sukuriame bazinį sistemos promptą
     const systemPrompt = buildSystemPrompt(locale);
+
+    // 2. RAG: ieškome konteksto duomenų bazėje
+    let systemPromptWithContext = systemPrompt;
+
+    try {
+      const voyage = new VoyageAIClient({ apiKey: process.env.VOYAGE_API_KEY });
+
+      // Sugeneruojame užklausos embeddingą
+      const queryEmbedding = await voyage.embed({
+        input: [message],
+        model: 'voyage-4-lite',
+        inputType: 'query', // <-- SVARBU: inputType, ne input_type
+      });
+
+      const embedding = queryEmbedding.data?.[0]?.embedding;
+
+      if (embedding) {
+        // Suformuojame tinkamą pgvector string'ą
+        const embeddingString = `[${embedding.join(',')}]`;
+
+        // Ieškome panašiausių dalių duomenų bazėje
+        const relevantChunks = await prisma.$queryRaw<Array<{ content: string; source: string }>>`
+          SELECT "content", "source"
+          FROM "KnowledgeBase"
+          ORDER BY "embedding" <=> ${embeddingString}::vector
+          LIMIT 5
+        `;
+
+        if (relevantChunks.length > 0) {
+          const context = relevantChunks
+            .map((c) => `[Šaltinis: ${c.source}]\n${c.content}`)
+            .join('\n\n---\n\n');
+
+          systemPromptWithContext = `${systemPrompt}\n\n## Relevant Context from Knowledge Base\n${context}`;
+          console.log(`✅ RAG: rasta ${relevantChunks.length} konteksto dalių`);
+        }
+      }
+    } catch (err) {
+      console.error('RAG klaida:', err);
+      // Jei RAG nepavyksta, naudojame bazinį promptą
+    }
     const anthropic = getAnthropicClient();
 
     // ── Agentic loop ──────────────────────────────────────────────────────────
@@ -453,7 +500,7 @@ export async function POST(req: NextRequest) {
       model: process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5',
       max_tokens: 1024,
       temperature: 0.3,
-      system: systemPrompt,
+      system: systemPromptWithContext,
       cache_control: { type: 'ephemeral' },
       tools,
       messages,
@@ -475,7 +522,7 @@ export async function POST(req: NextRequest) {
       response = await anthropic.messages.create({
         model: process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5',
         max_tokens: 1024,
-        system: systemPrompt,
+        system: systemPromptWithContext,
         tools,
         messages,
       });

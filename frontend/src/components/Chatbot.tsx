@@ -13,6 +13,7 @@ import {
 import TypewriterMarkdown from './TypewriterMarkdown';
 import ReactMarkdown from 'react-markdown';
 import { useTranslations, useLocale } from 'next-intl';
+import remarkGfm from 'remark-gfm';
 
 type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
 
@@ -385,7 +386,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
                     />
                   ) : (
                     <div className="break-words">
-                      <ReactMarkdown>{m.content}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
                     </div>
                   )}
                   {m.role === 'ai' && (

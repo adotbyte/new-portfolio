@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Props {
   content: string;
@@ -32,7 +33,7 @@ const TypewriterMarkdown = ({ content = '', speed = 15, onComplete }: Props) => 
     return () => clearInterval(typingInterval);
   }, [content, speed, onComplete]);
 
-  return <ReactMarkdown>{displayedContent}</ReactMarkdown>;
+  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayedContent}</ReactMarkdown>;
 };
 
 export default TypewriterMarkdown;

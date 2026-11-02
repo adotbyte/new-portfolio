@@ -16,3 +16,11 @@ model Message {
 
   @@index([userId, createdAt])
 }
+
+model KnowledgeBase {
+  id        Int      @id @default(autoincrement())
+  content   String
+  embedding Unsupported("vector(1024)")? // 1024 dimensijos – Voyage AI numatytasis dydis
+  source    String?
+  createdAt DateTime @default(now())
+}

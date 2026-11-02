@@ -112,42 +112,72 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     try {
       const doc = new jsPDF();
 
-      let yPos = 20;
-      doc.setFontSize(16);
-      doc.text(`${t('downloadLabel')} Chat Transcript`, 10, yPos);
-      yPos += 15;
+      // ── 1. ANTRAŠTĖ SU DATA ──────────────────────────────────────────────
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('lt-LT', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
 
+      doc.setFontSize(18);
+      doc.setTextColor(37, 99, 235); // Mėlyna
+      doc.text(`${t('downloadLabel')}`, 10, 20);
+
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100); // Pilka
+      doc.text(`Data: ${dateStr}`, 10, 27);
+
+      // Linija po antrašte
+      doc.setDrawColor(200, 200, 200);
+      doc.line(10, 32, 200, 32);
+
+      let yPos = 40;
+
+      // ── 2. PRANEŠIMAI ────────────────────────────────────────────────────
       messages.forEach((m) => {
-        // 1. Nuvalome Markdown ir emoji
+        // Nuvalome Markdown ir emoji
         let cleanContent = m.content
-          .replace(/\*\*(.*?)\*\*/g, '$1') // **bold** -> bold
-          .replace(/###\s/g, '') // ### -> (pašaliname)
-          .replace(/##\s/g, '') // ## -> (pašaliname)
-          .replace(/#\s/g, '') // # -> (pašaliname)
-          .replace(/\[(.*?)\]\(.*?\)/g, '$1') // [text](url) -> text
-          .replace(/\|/g, ' ') // | -> tarpas
-          .replace(/---/g, '') // --- -> (pašaliname)
-          .replace(/[^\x00-\x7F]/g, '') // Pašaliname visus ne-ASCII simbolius (emoji ir kt.)
-          .replace(/\n{2,}/g, '\n') // Sumažiname dvigubus naujus kėlinius iki vieno
+          .replace(/\*\*(.*?)\*\*/g, '$1')
+          .replace(/###\s/g, '')
+          .replace(/##\s/g, '')
+          .replace(/#\s/g, '')
+          .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+          .replace(/\|/g, ' ')
+          .replace(/---/g, '')
+          .replace(/[^\x00-\x7F]/g, '')
+          .replace(/\n{2,}/g, '\n')
           .trim();
 
-        // 2. Sujungiame tekstą į vieną bloką
-        const rolePrefix = m.role === 'user' ? 'YOU: ' : 'ADOTBYTE: ';
-        const fullText = `${rolePrefix}${cleanContent}`;
+        const roleLabel = m.role === 'user' ? 'YOU' : 'ADOTBYTE';
+        const roleColor = m.role === 'user' ? [37, 99, 235] : [16, 185, 129]; // Mėlyna / Žalia
 
-        // 3. Suskaidome į eilutes
-        const splitText = doc.splitTextToSize(fullText, 180);
+        // Vardas (spalvotas)
+        doc.setFontSize(11);
+        doc.setTextColor(roleColor[0], roleColor[1], roleColor[2]);
+        doc.text(`${roleLabel}:`, 10, yPos);
+        yPos += 6;
 
-        // 4. Puslapio lūžis
-        if (yPos + splitText.length * 7 > 280) {
+        // Turinys
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50); // Tamsiai pilka
+        const splitText = doc.splitTextToSize(cleanContent, 180);
+
+        // Puslapio lūžis
+        if (yPos + splitText.length * 5 > 280) {
           doc.addPage();
           yPos = 20;
         }
 
-        doc.setFontSize(10);
         doc.text(splitText, 10, yPos);
-        yPos += splitText.length * 7 + 10;
+        yPos += splitText.length * 5 + 10;
       });
+
+      // ── 3. NUORODOS (jei norite, kad būtų spaudžiamos) ───────────────────
+      // Šis pavyzdys prideda nuorodą į jūsų portfelį PDF apačioje
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.textWithLink('morkunas.info', 10, 290, { url: 'https://morkunas.info' });
 
       doc.save(`${t('downloadLabel')}.pdf`);
     } catch (err) {

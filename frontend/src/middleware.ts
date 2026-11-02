@@ -89,7 +89,12 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
+  //matcher: [
+  //  '/((?!api/metrics|api|_next/static|_next/image|robots\\.txt|sitemap\\.xml|auth\\.md|\\.well-known|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest|logo\\.png).|.*\\..*)*)',
+  //],
+
   matcher: [
-    '/((?!api/metrics|api|_next/static|_next/image|robots\\.txt|sitemap\\.xml|auth\\.md|\\.well-known|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest|logo\\.png).*)',
+    // Išimame API, Next.js vidinius failus, Vercel, ir bet kokius failus su plėtiniu (pvz., .ttf, .png, .css)
+    '/((?!api/metrics|api|_next/static|_next/image|robots\\.txt|sitemap\\.xml|auth\\.md|\\.well-known|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest|logo\\.png|.*\\..*).*)',
   ],
 };

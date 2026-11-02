@@ -425,6 +425,8 @@ export default function Chatbot({ nonce }: ChatbotProps) {
             style={{
               flex: 1,
               overflowY: 'auto',
+              overflowX: 'hidden',
+              wordBreak: 'break-word',
               padding: '15px',
               backgroundColor: isDark ? '#0d1117' : '#f8fafc',
               display: 'flex',

@@ -51,6 +51,10 @@ export async function generateMetadata({
       locale: isLt ? 'lt_LT' : 'en_US',
       type: 'website',
     },
+
+    facebook: {
+      appId: process.env.FB_APP_ID || '',
+    },
   };
 }
 

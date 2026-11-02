@@ -5,9 +5,11 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  cacheComponents: true,
+  partialPrefetching: true,
   htmlLimitedBots: /.*/,
   outputFileTracingIncludes: {
-    '/*': ['./src/middleware.ts'],
+    '/*': ['./src/proxy.ts'],
   },
   serverExternalPackages: ['@prisma/client', '@libsql/client'],
 

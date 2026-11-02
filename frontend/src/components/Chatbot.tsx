@@ -14,6 +14,7 @@ import TypewriterMarkdown from './TypewriterMarkdown';
 import ReactMarkdown from 'react-markdown';
 import { useTranslations, useLocale } from 'next-intl';
 import remarkGfm from 'remark-gfm';
+import { registerRobotoFont } from './fonts/roboto';
 
 type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
 
@@ -136,6 +137,10 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     try {
       const doc = new jsPDF();
 
+      // ── 0. ŠRIFTO ĮKĖLIMAS (PRIVALOMA) ───────────────────────────────────
+      // robotoFont turi būti oficialaus fontconverter sugeneruotas .js failas
+      registerRobotoFont(doc);
+
       // ── 1. ANTRAŠTĖ SU DATA ──────────────────────────────────────────────
       const now = new Date();
       const dateStr = now.toLocaleDateString('lt-LT', {
@@ -145,14 +150,13 @@ export default function Chatbot({ nonce }: ChatbotProps) {
       });
 
       doc.setFontSize(18);
-      doc.setTextColor(37, 99, 235); // Mėlyna
+      doc.setTextColor(37, 99, 235);
       doc.text(`${t('downloadLabel')}`, 10, 20);
 
       doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100); // Pilka
+      doc.setTextColor(100, 100, 100);
       doc.text(`Data: ${dateStr}`, 10, 27);
 
-      // Linija po antrašte
       doc.setDrawColor(200, 200, 200);
       doc.line(10, 32, 200, 32);
 
@@ -160,45 +164,56 @@ export default function Chatbot({ nonce }: ChatbotProps) {
 
       // ── 2. PRANEŠIMAI ────────────────────────────────────────────────────
       messages.forEach((m) => {
-        // Nuvalome Markdown ir emoji
+        // ── TEKSTO VALYMAS IR FORMATAVIMAS ──
         let cleanContent = m.content
-          .replace(/\*\*(.*?)\*\*/g, '$1')
-          .replace(/###\s/g, '')
-          .replace(/##\s/g, '')
-          .replace(/#\s/g, '')
+          // Nuvalome Markdown antraštes
+          .replace(/#{1,6}\s/g, '')
+          // Nuvalome nuorodas, paliekame tik tekstą
           .replace(/\[(.*?)\]\(.*?\)/g, '$1')
-          .replace(/\|/g, ' ')
+          // Paverčiame pabraukimus tarpais (kad nesuliptų žodžiai)
+          .replace(/_/g, ' ')
+          // Sąrašų brūkšnelius paverčiame gražiais taškais
+          .replace(/^-\s/gm, '• ')
+          // Lentelių brūkšnelius paverčiame tarpais
+          .replace(/\|/g, '   ')
+          // Pašaliname horizontalias linijas
           .replace(/---/g, '')
-          .replace(/[^\x00-\x7F]/g, '')
+          // Pašaliname emoji ir visus "keistus" simbolius
+          .replace(/[^\p{L}\p{N}\s.,!?;:()\-–—"'\/•\n]/gu, '')
+          // Sutvarkome per didelius tarpus
+          .replace(/ {2,}/g, ' ')
           .replace(/\n{2,}/g, '\n')
           .trim();
 
         const roleLabel = m.role === 'user' ? 'YOU' : 'ADOTBYTE';
-        const roleColor = m.role === 'user' ? [37, 99, 235] : [16, 185, 129]; // Mėlyna / Žalia
+        const roleColor = m.role === 'user' ? [37, 99, 235] : [16, 185, 129];
 
-        // Vardas (spalvotas)
-        doc.setFontSize(11);
+        // ── VARDAS (Spalvotas) ──
+        doc.setFontSize(12); // Šiek tiek padidiname vardą
         doc.setTextColor(roleColor[0], roleColor[1], roleColor[2]);
         doc.text(`${roleLabel}:`, 10, yPos);
-        yPos += 6;
+        yPos += 7; // Šiek tiek daugiau tarpo po vardu
 
-        // Turinys
+        // ── TURINYS ──
         doc.setFontSize(10);
-        doc.setTextColor(50, 50, 50); // Tamsiai pilka
+        doc.setTextColor(50, 50, 50);
+
+        // Suskaidome tekstą pagal puslapio plotį
         const splitText = doc.splitTextToSize(cleanContent, 180);
 
-        // Puslapio lūžis
+        // Puslapio lūžis (jei netelpa)
         if (yPos + splitText.length * 5 > 280) {
           doc.addPage();
           yPos = 20;
         }
 
+        // Atspausdiname tekstą
         doc.text(splitText, 10, yPos);
-        yPos += splitText.length * 5 + 10;
+
+        // Pridedame daugiau erdvės tarp žinučių (buvo +10, dabar +15)
+        yPos += splitText.length * 5 + 15;
       });
 
-      // ── 3. NUORODOS (jei norite, kad būtų spaudžiamos) ───────────────────
-      // Šis pavyzdys prideda nuorodą į jūsų portfelį PDF apačioje
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
       doc.textWithLink('morkunas.info', 10, 290, { url: 'https://morkunas.info' });

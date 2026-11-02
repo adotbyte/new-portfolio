@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { connection } from 'next/server';
 
 export async function GET() {
+  await connection();
   try {
     const PROMETHEUS_URL = process.env.PROMETHEUS_URL;
     if (!PROMETHEUS_URL) throw new Error('PROMETHEUS_URL not set');

@@ -112,47 +112,33 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     try {
       const doc = new jsPDF();
 
-      // 1. Įkeliame Roboto šriftą per absoliutų kelią
-      const fontPath = `${window.location.origin}/fonts/Roboto.ttf`;
-      console.log('Kraunamas šriftas iš:', fontPath); // Debug
-
-      const fontResponse = await fetch(fontPath);
-
-      if (!fontResponse.ok) {
-        throw new Error(
-          `Nepavyko įkelti šrifto: ${fontResponse.status} ${fontResponse.statusText}`
-        );
-      }
-
-      const fontBuffer = await fontResponse.arrayBuffer();
-      const fontBase64 = btoa(
-        new Uint8Array(fontBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-
-      doc.addFileToVFS('Roboto.ttf', fontBase64);
-      doc.addFont('Roboto.ttf', 'Roboto', 'normal');
-      doc.setFont('Roboto');
-
-      // 2. Generuojame tekstą
       let yPos = 20;
       doc.setFontSize(16);
       doc.text(`${t('downloadLabel')} Chat Transcript`, 10, yPos);
       yPos += 15;
 
       messages.forEach((m) => {
-        const cleanContent = m.content
-          .replace(/\*\*(.*?)\*\*/g, '$1')
-          .replace(/###\s/g, '')
-          .replace(/##\s/g, '')
-          .replace(/#\s/g, '')
-          .replace(/\[(.*?)\]\(.*?\)/g, '$1')
-          .replace(/\|/g, ' ')
-          .replace(/---/g, '')
-          .replace(/[^\x00-\x7FąčęėįšųūžĄČĘĖĮŠŲŪŽ]/g, '');
+        // 1. Nuvalome Markdown ir emoji
+        let cleanContent = m.content
+          .replace(/\*\*(.*?)\*\*/g, '$1') // **bold** -> bold
+          .replace(/###\s/g, '') // ### -> (pašaliname)
+          .replace(/##\s/g, '') // ## -> (pašaliname)
+          .replace(/#\s/g, '') // # -> (pašaliname)
+          .replace(/\[(.*?)\]\(.*?\)/g, '$1') // [text](url) -> text
+          .replace(/\|/g, ' ') // | -> tarpas
+          .replace(/---/g, '') // --- -> (pašaliname)
+          .replace(/[^\x00-\x7F]/g, '') // Pašaliname visus ne-ASCII simbolius (emoji ir kt.)
+          .replace(/\n{2,}/g, '\n') // Sumažiname dvigubus naujus kėlinius iki vieno
+          .trim();
 
+        // 2. Sujungiame tekstą į vieną bloką
         const rolePrefix = m.role === 'user' ? 'YOU: ' : 'ADOTBYTE: ';
-        const splitText = doc.splitTextToSize(`${rolePrefix}${cleanContent}`, 180);
+        const fullText = `${rolePrefix}${cleanContent}`;
 
+        // 3. Suskaidome į eilutes
+        const splitText = doc.splitTextToSize(fullText, 180);
+
+        // 4. Puslapio lūžis
         if (yPos + splitText.length * 7 > 280) {
           doc.addPage();
           yPos = 20;

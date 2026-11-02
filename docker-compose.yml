@@ -10,11 +10,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '5432:5432'  # Galite pašalinti, jei nereikia išorinės prieigos
     networks:
       - internal_net
 
-  # --- NAUJAS SAUGUS DOCKER PROXY ---
   socket-proxy:
     image: tecnativa/docker-socket-proxy:v0.5.0
     container_name: socket-proxy
@@ -22,11 +21,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - CONTAINERS=1 # Leidžiame tik skaityti konteinerių sąrašą
-      - POST=0 # Draudžiame bet kokius keitimus
+      - CONTAINERS=1
+      - POST=0
     networks:
       - internal_net
-    # Jokių ports: čia nereikia, nes jis pasiekiamas tik vidiniame tinkle
 
   web:
     build:
@@ -40,6 +38,7 @@ services:
       - .env
     environment:
       - HOMELAB_DATABASE_URL=${HOMELAB_DATABASE_URL}
+      - DOCKER_HOST=tcp://socket-proxy:2375  # <-- Pridėta
     volumes:
       - /proc:/host/proc:ro
     depends_on:

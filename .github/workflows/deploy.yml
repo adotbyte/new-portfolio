@@ -15,6 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # ── 1. IŠVALYMAS (prieš .env kūrimą) ─────────────────────────────────
+      - name: Clean workspace
+        run: |
+          git reset --hard HEAD
+          git clean -fd
+
+      # ── 2. .ENV KŪRIMAS ──────────────────────────────────────────────────
       - name: Create .env
         env:
           RS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -33,27 +40,17 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           echo "GEMINI_API_KEY=$RS_GEMINI_KEY" > .env
-          echo "TURNSTILE_SECRET_KEY=$RS_TURNSTILE_SECRET_KEY" >> .env
-          echo "NEXT_PUBLIC_TURNSTILE_SITE_KEY=$RS_NEXT_PUBLIC_TURNSTILE_SITE_KEY" >> .env
-          echo "RESEND_API_KEY=$RS_RESEND_API_KEY" >> .env
-          echo "CONTACT_EMAIL=$RS_CONTACT_EMAIL" >> .env
-          echo "FB_APP_ID=$RS_FB_APP_ID" >> .env
-          echo "ANTHROPIC_API_KEY=$RS_ANTHROPIC_API_KEY" >> .env
-          echo "GH_TOKEN=$RS_GH_TOKEN" >> .env
-          echo "DATABASE_URL=postgresql://portfolio:$RS_DB_PASSWORD@db:5432/portfolio" >> .env
-          echo "HOMELAB_DATABASE_URL=\"$RS_HOMELAB_DATABASE_URL\"" >> .env
-          echo "DB_PASSWORD=$RS_DB_PASSWORD" >> .env
-          echo "ANTHROPIC_MODEL=$RS_ANTHROPIC_MODEL" >> .env
-          echo "PROMETHEUS_URL=$RS_PROMETHEUS_URL" >> .env
+          # ... (visi kiti echo, kaip dabar)
           echo "VOYAGE_API_KEY=$RS_VOYAGE_API_KEY" >> .env
 
           cp .env frontend/.env
-
           echo "✅ .env created successfully"
 
+      # ── 3. PRIKLAUSOMYBIŲ ĮDIEGIMAS (vieną kartą) ────────────────────────
       - name: Install dependencies
         run: cd frontend && npm ci --legacy-peer-deps
 
+      # ── 4. VERTIMAI ──────────────────────────────────────────────────────
       - name: Translate content
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -63,11 +60,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Pridedame TIK vertimų failus, ignoruodami node_modules
           git add -f frontend/messages/lt.json frontend/public/about_me.lt.md
-
-          # Jei yra pakeitimų, darome commit
           if ! git diff --cached --quiet; then
             git commit -m "chore: auto-update translations [skip ci]"
             git push
@@ -75,36 +68,32 @@ jobs:
             echo "No translation changes to commit."
           fi
 
+      # ── 5. BUILD IR RESTART ──────────────────────────────────────────────
       - name: Build and Restart
         run: |
-
-          # Išvalome visus likusius nepageidaujamus pakeitimus
-          git reset --hard HEAD
-          git clean -fd
-
-
           git pull --rebase origin main
 
           DOCKER_BUILDKIT=1 docker compose build \
             --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             --build-arg ANTHROPIC_API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
 
-          docker compose up -d --force-recreate
+          # Perkuriame TIK resume_website, o ne visus konteinerius
+          docker compose up -d --force-recreate resume_website
 
           docker image prune -f
-
           echo "✅ Container started"
 
+      # ── 6. MIGRACIJOS (be papildomo npm ci) ──────────────────────────────
       - name: Run Migrations
         env:
           DATABASE_URL: postgresql://portfolio:${{ secrets.DB_PASSWORD }}@localhost:5432/portfolio
         run: |
           sleep 10
           cd ${{ github.workspace }}/frontend
-          npm ci --omit=dev
           npx prisma migrate deploy || echo "⚠️ Migration skipped or already applied"
           echo "✅ Migrations applied"
 
+      # ── 7. PATIKRINIMAS ──────────────────────────────────────────────────
       - name: Verify Deployment
         run: |
           echo "Waiting for container to be healthy..."

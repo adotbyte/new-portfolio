@@ -11,20 +11,15 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 # Copy package files first for layer caching
 COPY frontend/package*.json ./
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+    npm ci --prefer-offline --no-audit
 
-# Copy source
+# Copy source (includes scripts/, messages/, public/)
 COPY frontend/ ./
-
-# Copy translation script and messages from root
-COPY frontend/scripts/translate.mjs ./scripts/translate.mjs
-COPY frontend/messages/ ./messages/
-COPY frontend/public/about_me.md ./public/about_me.md
 
 ARG ANTHROPIC_API_KEY
 ENV ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
 
-# Run translation (if API key is present)
+# Run translation
 RUN node scripts/translate.mjs || (echo "TRANSLATION FAILED" && exit 1)
 
 # Build args for public env vars
@@ -34,9 +29,8 @@ ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ARG FB_APP_ID
 ENV FB_APP_ID=$FB_APP_ID
 
-# Build Next.js
-RUN npx prisma generate
-RUN npx prisma generate --schema=prisma-homelab/schema.prisma
+# Build Next.js (Prisma + Next.js)
+RUN npx prisma generate && npx prisma generate --schema=prisma-homelab/schema.prisma
 RUN npm run build
 
 # --- Production Stage ---
@@ -46,18 +40,14 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Atnaujiname OS ir įdiegiame reikalingus įrankius vienu sluoksniu
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl openssl && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
 RUN addgroup --system app && adduser --system --group app
 
-# Copy only what Next.js needs to run
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Set ownership
 RUN chown -R app:app /app
 USER app
 

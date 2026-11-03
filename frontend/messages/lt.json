@@ -2,8 +2,17 @@
   "nav": {
     "about": "Apie",
     "portfolio": "Portfelis",
+    "services": "Paslaugos",
     "homeLab": "Namų laboratorija",
-    "contact": "Kontaktai"
+    "contact": "Kontaktai",
+    "blog": "Tinklaraštis"
+  },
+  "blog": {
+    "title": "Tinklaraštis",
+    "subtitle": "Mano patirtys, sprendimai ir technologijos.",
+    "readMore": "Skaityti daugiau",
+    "back": "← Atgal į tinklaraštį",
+    "noPosts": "Straipsnių kol kas nėra."
   },
   "about": {
     "technicalStack": "Technologijų rinkinys",
@@ -56,18 +65,67 @@
       "tailwind": "Tailwind CSS",
       "javascript": "JavaScript (ES6+)",
       "html/css3": "HTML5/CSS3"
-    },
-    "projects": {
-      "portfolioName": "Dirbtinio Intelekto Portfolio",
-      "portfolioDesc": "Savarankiškai prieglobstinama CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta iš nulio ir veikianti mano Raspberry Pi 5 per Cloudflare Tunnels.",
-      "portfolioStatus": "Prisijungęs",
-      "homelabName": "Savarankiškai Talpinama Namų Laboratorija",
-      "homelabDesc": "Produkcinio lygio klasės namų serveris, veikiantis 20+ Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir dar daugiau — viskas apsaugota Cloudflare Zero Trust.",
-      "homelabStatus": "Prisijungęs",
-      "knowledgeBaseName": "Dirbtinio Intelekto Žinių Bazė",
-      "knowledgeBaseDesc": "Pilno steko asmeninė žinių valdymo sistema su daugiamode AI analize (PDF/Nuotraukos), versijų istorija ir RAG paieška. Visiškai savarankiškai prieglobstinama ir apsaugota per Cloudflare Zero Trust.",
-      "knowledgeBaseStatus": "Prisijungęs"
     }
+  },
+  "services": {
+    "badge": "Paslaugos",
+    "title": "Sustabdžiau savo serverio „skausmus“ – padėsiu ir jums.",
+    "description": "Esu savamokslis infrastruktūros entuziastas. Mano specialybė – stabilūs, saugūs ir automatiškai save prižiūrintys serveriai. Nuo Docker optimizavimo iki Ansible automatizavimo.",
+    "packages": {
+      "rescue": {
+        "title": "Serverio Gelbėjimas",
+        "subtitle": "Vienkartinė paslauga",
+        "price": "150–300 €",
+        "features": [
+          "Docker Compose sutvarkymas",
+          "Automatinių backup'ų įdiegimas",
+          "Cloudflare Zero Trust tunelis",
+          "Pagrindinis monitoringas"
+        ],
+        "button": "Užsakyti"
+      },
+      "infrastructure": {
+        "title": "Infrastruktūra nuo Nulio",
+        "subtitle": "Projektinis darbas",
+        "price": "nuo 500 €",
+        "features": [
+          "Pilnas Linux ir Docker setup",
+          "Duomenų bazės ir Web servisai",
+          "Saugumas (SSH raktai, XSS)",
+          "CI/CD automatizavimas"
+        ],
+        "button": "Susisiekti",
+        "popular": "Populiariausias"
+      },
+      "maintenance": {
+        "title": "Ramybės Prenumerata",
+        "subtitle": "Mėnesinė priežiūra",
+        "price": "50–100 €/mėn.",
+        "features": [
+          "Savaitiniai atnaujinimai",
+          "Logų ir resursų stebėjimas",
+          "Backup'ų priežiūra",
+          "Reagavimas į aliarmus"
+        ],
+        "button": "Pradėti"
+      }
+    },
+    "cta": {
+      "text": "Turite nestandartinį projektą?",
+      "link": "Susisiekime",
+      "suffix": "ir aptarsime detales."
+    }
+  },
+  "projects": {
+    "portfolioName": "Dirbtinio Intelekto Portfolio",
+    "portfolioDesc": "Savarankiškai prieglobstinama CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta iš nulio ir veikianti mano Raspberry Pi 5 per Cloudflare Tunnels.",
+    "portfolioStatus": "Prisijungęs",
+    "homelabName": "Savarankiškai Talpinama Namų Laboratorija",
+    "homelabDesc": "Produkcinio lygio klasės namų serveris, veikiantis 20+ Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir dar daugiau — viskas apsaugota Cloudflare Zero Trust.",
+    "homelabStatus": "Prisijungęs",
+    "knowledgeBaseName": "Dirbtinio Intelekto Žinių Bazė",
+    "knowledgeBaseDesc": "Pilno steko asmeninė žinių valdymo sistema su daugiamode AI analize (PDF/Nuotraukos), versijų istorija ir RAG paieška. Visiškai savarankiškai prieglobstinama ir apsaugota per Cloudflare Zero Trust.",
+    "knowledgeBaseStatus": "Prisijungęs"
   },
   "certifications": {
     "title": "Sertifikatai",

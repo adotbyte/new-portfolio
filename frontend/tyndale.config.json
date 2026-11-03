@@ -1,0 +1,12 @@
+{
+  "defaultLocale": "lt",
+  "locales": ["en"],
+  "docs": {
+    "framework": "starlight",
+    "contentDir": "public/blog"
+  },
+  "pi": {
+    "model": "claude-sonnet-4-20250514",
+    "thinkingLevel": "low"
+  }
+}

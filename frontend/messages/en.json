@@ -2,8 +2,17 @@
   "nav": {
     "about": "About",
     "portfolio": "Portfolio",
+    "services": "Services",
     "homeLab": "Home Lab",
-    "contact": "Contact"
+    "contact": "Contact",
+    "blog": "Blog"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "My experiences, solutions, and technologies.",
+    "readMore": "Read more",
+    "back": "← Back to blog",
+    "noPosts": "No posts yet."
   },
   "about": {
     "technicalStack": "Technical Stack",
@@ -56,18 +65,67 @@
       "tailwind": "Tailwind CSS",
       "javascript": "JavaScript (ES6+)",
       "html/css3": "HTML5/CSS3"
-    },
-    "projects": {
-      "portfolioName": "AI-Powered Portfolio",
-      "portfolioDesc": "A self-hosted resume website with an integrated AI chatbot that answers questions about my experience. Built from scratch and running on my Raspberry Pi 5 via Cloudflare Tunnels.",
-      "portfolioStatus": "Live",
-      "homelabName": "Self-Hosted Home Lab",
-      "homelabDesc": "A production-grade home server running 20+ Docker containers including AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN and more — all secured behind Cloudflare Zero Trust.",
-      "homelabStatus": "Running",
-      "knowledgeBaseName": "AI-Powered Knowledge Base",
-      "knowledgeBaseDesc": "A full-stack personal knowledge management system with multi-modal AI analysis (PDF/Images), version history, and RAG search. Fully self-hosted and secured via Cloudflare Zero Trust.",
-      "knowledgeBaseStatus": "Live"
     }
+  },
+  "services": {
+    "badge": "Services",
+    "title": "I fixed my server's headaches — let me fix yours.",
+    "description": "I'm a self-taught infrastructure enthusiast. My specialty is building stable, secure, and self-maintaining servers. From Docker optimization to Ansible automation.",
+    "packages": {
+      "rescue": {
+        "title": "Server Rescue",
+        "subtitle": "One-time service",
+        "price": "€150–300",
+        "features": [
+          "Docker Compose cleanup",
+          "Automated backup setup",
+          "Cloudflare Zero Trust tunnel",
+          "Basic monitoring"
+        ],
+        "button": "Order Now"
+      },
+      "infrastructure": {
+        "title": "Infrastructure from Scratch",
+        "subtitle": "Project-based work",
+        "price": "from €500",
+        "features": [
+          "Full Linux and Docker setup",
+          "Databases and Web services",
+          "Security (SSH keys, XSS)",
+          "CI/CD automation"
+        ],
+        "button": "Get in Touch",
+        "popular": "Most Popular"
+      },
+      "maintenance": {
+        "title": "Peace of Mind Subscription",
+        "subtitle": "Monthly maintenance",
+        "price": "€50–100/mo.",
+        "features": [
+          "Weekly updates",
+          "Log and resource monitoring",
+          "Backup maintenance",
+          "Alert response"
+        ],
+        "button": "Start Now"
+      }
+    },
+    "cta": {
+      "text": "Have a custom project?",
+      "link": "Let's talk",
+      "suffix": "and discuss the details."
+    }
+  },
+  "projects": {
+    "portfolioName": "AI-Powered Portfolio",
+    "portfolioDesc": "A self-hosted resume website with an integrated AI chatbot that answers questions about my experience. Built from scratch and running on my Raspberry Pi 5 via Cloudflare Tunnels.",
+    "portfolioStatus": "Live",
+    "homelabName": "Self-Hosted Home Lab",
+    "homelabDesc": "A production-grade home server running 20+ Docker containers including AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN and more — all secured behind Cloudflare Zero Trust.",
+    "homelabStatus": "Running",
+    "knowledgeBaseName": "AI-Powered Knowledge Base",
+    "knowledgeBaseDesc": "A full-stack personal knowledge management system with multi-modal AI analysis (PDF/Images), version history, and RAG search. Fully self-hosted and secured via Cloudflare Zero Trust.",
+    "knowledgeBaseStatus": "Live"
   },
   "certifications": {
     "title": "Certifications",

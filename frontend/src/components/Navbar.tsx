@@ -19,6 +19,8 @@ const Navbar = () => {
   const navLinks = [
     { name: t('about'), href: '#about', id: 'about' },
     { name: t('portfolio'), href: '#portfolio', id: 'portfolio' },
+    { name: t('services') || 'Paslaugos', href: '/services', id: 'services' },
+    { name: t('blog') || 'Tinklaraštis', href: '/blog', id: 'blog' },
     { name: t('homeLab'), href: '#homelab', id: 'homelab' },
     { name: t('contact'), href: '#contact', id: 'contact' },
   ];
@@ -28,6 +30,23 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    // 1. Jei esame Paslaugų arba Blog puslapyje, pažymime juos
+    if (pathname === '/services') {
+      setActiveSection('services');
+      return;
+    }
+    if (pathname === '/blog' || pathname.startsWith('/blog/')) {
+      setActiveSection('blog');
+      return;
+    }
+
+    // 2. Jei esame bet kuriame kitame atskirame puslapyje
+    if (pathname !== '/') {
+      setActiveSection('');
+      return;
+    }
+
+    // 3. Jei esame pagrindiniame puslapyje, vykdome įprastą scroll logiką
     const sections = ['about', 'portfolio', 'homelab', 'contact'];
 
     const handleScroll = () => {
@@ -65,8 +84,27 @@ const Navbar = () => {
     handleScroll();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Teisingas cleanup
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]); // Priklausomybėse tik pathname
+
+  useEffect(() => {
+    if (pathname === '/' && window.location.hash) {
+      const id = window.location.hash.replace('#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => {
+          const navHeight = 64;
+          const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: elementPosition - navHeight - 16,
+            behavior: 'smooth',
+          });
+        }, 100);
+      }
+    }
+  }, [pathname]);
 
   const toggleDark = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -74,6 +112,35 @@ const Navbar = () => {
 
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+
+    // 1. Jei tai atskiras puslapis (pvz., /services)
+    if (href.startsWith('/')) {
+      router.push(href);
+      setIsOpen(false);
+      return;
+    }
+
+    // 2. Jei esame ne pagrindiniame puslapyje, o norime eiti į sekciją
+    if (pathname !== '/') {
+      router.push('/'); // Pereiname į pagrindinį puslapį
+      // Palaukiame, kol puslapis užsikraus, ir tada slenkame
+      setTimeout(() => {
+        const id = href.replace('#', '');
+        const el = document.getElementById(id);
+        if (el) {
+          const navHeight = 64;
+          const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: elementPosition - navHeight - 16,
+            behavior: 'smooth',
+          });
+        }
+      }, 100);
+      setIsOpen(false);
+      return;
+    }
+
+    // 3. Jei esame pagrindiniame puslapyje – slenkame be URL pakeitimų
     const id = href.replace('#', '');
     const el = document.getElementById(id);
 
@@ -81,6 +148,9 @@ const Navbar = () => {
       const navHeight = 64;
       const elementPosition = el.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - navHeight - 16;
+
+      // Naudojame history.replaceState, kad nepakeistume URL
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
 
       window.scrollTo({
         top: offsetPosition,

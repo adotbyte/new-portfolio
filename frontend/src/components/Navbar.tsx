@@ -53,7 +53,6 @@ const Navbar = () => {
       const navHeight = 64;
       const offset = navHeight + 16;
 
-      // Patikriname "Contact" sekciją
       const contactEl = document.getElementById('contact');
       if (contactEl) {
         const rect = contactEl.getBoundingClientRect();
@@ -80,15 +79,12 @@ const Navbar = () => {
       setActiveSection(currentSection);
     };
 
-    // Paleidžiame iš karto
     handleScroll();
-
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Teisingas cleanup
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname]); // Priklausomybėse tik pathname
+  }, [pathname]);
 
+  // Šis efektas leidžia nuslinkti į sekciją, kai grįžtama iš kito puslapio (pvz., /#about)
   useEffect(() => {
     if (pathname === '/' && window.location.hash) {
       const id = window.location.hash.replace('#', '');
@@ -101,6 +97,8 @@ const Navbar = () => {
             top: elementPosition - navHeight - 16,
             behavior: 'smooth',
           });
+          // Išvalome hash iš URL, kad nešokinėtų
+          window.history.replaceState(null, '', window.location.pathname);
         }, 100);
       }
     }
@@ -120,28 +118,16 @@ const Navbar = () => {
       return;
     }
 
+    const id = href.replace('#', '');
+
     // 2. Jei esame ne pagrindiniame puslapyje, o norime eiti į sekciją
     if (pathname !== '/') {
-      router.push('/'); // Pereiname į pagrindinį puslapį
-      // Palaukiame, kol puslapis užsikraus, ir tada slenkame
-      setTimeout(() => {
-        const id = href.replace('#', '');
-        const el = document.getElementById(id);
-        if (el) {
-          const navHeight = 64;
-          const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo({
-            top: elementPosition - navHeight - 16,
-            behavior: 'smooth',
-          });
-        }
-      }, 100);
+      router.push(`/#${id}`); // Pereiname į pagrindinį puslapį su hash'u
       setIsOpen(false);
       return;
     }
 
-    // 3. Jei esame pagrindiniame puslapyje – slenkame be URL pakeitimų
-    const id = href.replace('#', '');
+    // 3. Jei esame pagrindiniame puslapyje – slenkame kaip įprastai
     const el = document.getElementById(id);
 
     if (el) {
@@ -149,7 +135,6 @@ const Navbar = () => {
       const elementPosition = el.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - navHeight - 16;
 
-      // Naudojame history.replaceState, kad nepakeistume URL
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
 
       window.scrollTo({

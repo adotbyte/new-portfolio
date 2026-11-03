@@ -1,8 +1,26 @@
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs'; // Pridėjau readFileSync
 import { join } from 'path';
 import { FileText, ArrowRight } from 'lucide-react';
+
+import { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isLt = locale === 'lt';
+
+  return {
+    title: isLt ? 'Tinklaraštis | Audrius Morkūnas' : 'Blog | Audrius Morkūnas',
+    description: isLt
+      ? 'Mano patirtys, sprendimai ir technologijos.'
+      : 'My experiences, solutions, and technologies.',
+  };
+}
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -13,20 +31,34 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
 
   try {
     const files = readdirSync(blogDir);
-    // Ieškome .lt.md arba .en.md failų
+
     posts = files
-      .filter((f) => f.endsWith('.md'))
+      .filter((f) => f.endsWith(`.${locale}.md`)) // Ieškome tik pasirinktos kalbos failų
       .map((f) => {
-        const slug = f.replace(/\.(lt|en)\.md$/, '');
-        // Pavadinimą paimame iš failo pavadinimo ir padarome gražų
-        const title = slug
+        const slug = f.replace(`.${locale}.md`, '');
+
+        let title = slug
           .split('-')
           .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
           .join(' ');
+
+        // BANDOME NUSKAITYTI PAVADINIMĄ IŠ PATIES FAILO
+        try {
+          const fileContent = readFileSync(join(blogDir, f), 'utf-8');
+          const firstLine = fileContent.split('\n')[0];
+
+          // Jei pirma eilutė prasideda #, išimame tą simbolį ir naudojame kaip pavadinimą
+          if (firstLine.startsWith('# ')) {
+            title = firstLine.replace('# ', '').trim();
+          }
+        } catch {
+          // Jei nepavyko perskaityti, paliekame sugeneruotą pavadinimą
+        }
+
         return { slug, title };
       });
 
-    // Pašaliname dublikatus, jei yra ir lt, ir en versijos
+    // Pašaliname dublikatus
     posts = Array.from(new Map(posts.map((p) => [p.slug, p])).values());
   } catch {
     // Jei katalogo nėra

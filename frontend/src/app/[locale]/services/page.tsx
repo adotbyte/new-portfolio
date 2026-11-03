@@ -2,6 +2,24 @@ import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { Server, ShieldCheck, RefreshCw, CheckCircle2, ArrowRight } from 'lucide-react';
 
+import { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isLt = locale === 'lt';
+
+  return {
+    title: isLt ? 'Paslaugos | Audrius Morkūnas' : 'Services | Audrius Morkūnas',
+    description: isLt
+      ? 'Stabilios, saugios ir automatiškai save prižiūrinčios serverių infrastruktūros.'
+      : 'Stable, secure, and self-maintaining server infrastructures.',
+  };
+}
+
 export default async function ServicesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'services' });

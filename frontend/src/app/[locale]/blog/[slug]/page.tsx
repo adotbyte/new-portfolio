@@ -8,6 +8,27 @@ import remarkGfm from 'remark-gfm';
 import { ArrowLeft } from 'lucide-react';
 import CopyButton from '@/components/CopyButton';
 
+import { Metadata } from 'next';
+
+export const instant = false;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const formattedSlug = slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+  return {
+    title: `${formattedSlug} | Audrius Morkūnas`,
+  };
+}
+
 export default function BlogPostPage({
   params,
 }: {

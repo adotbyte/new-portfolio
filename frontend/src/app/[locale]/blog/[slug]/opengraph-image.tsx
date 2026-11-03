@@ -9,7 +9,6 @@ export const contentType = 'image/png';
 export default async function Image({ params }: { params: { slug: string } }) {
   const { slug } = await params;
 
-  // Nuskaitome straipsnio pavadinimą iš .md failo
   let title = slug
     .split('-')
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -30,13 +29,29 @@ export default async function Image({ params }: { params: { slug: string } }) {
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        backgroundColor: '#0f172a', // Tamsiai mėlyna
+        backgroundColor: '#0f172a',
         padding: '80px',
         fontFamily: 'sans-serif',
       }}
     >
-      <div style={{ color: '#3b82f6', fontSize: 32, fontWeight: 'bold', marginBottom: 20 }}>
-        Audrius Morkūnas
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
+        <div
+          style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '20px',
+            backgroundColor: '#2563eb',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+          }}
+        >
+          AM
+        </div>
+        <div style={{ color: '#94a3b8', fontSize: 28, marginLeft: '20px' }}>morkunas.info</div>
       </div>
       <div
         style={{
@@ -49,7 +64,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
       >
         {title}
       </div>
-      <div style={{ color: '#94a3b8', fontSize: 24, marginTop: 40 }}>morkunas.info/blog</div>
+      <div style={{ color: '#3b82f6', fontSize: 24, marginTop: 'auto', fontWeight: 'bold' }}>
+        Audrius Morkūnas | Blog
+      </div>
     </div>,
     { ...size }
   );

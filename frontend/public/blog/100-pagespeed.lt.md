@@ -18,7 +18,7 @@ Optimizavimas buvo daugiapakopis procesas. Štai pagrindiniai žingsniai, kuriuo
 
 1. **Next.js 16 ir React 19 migracija**: Naujausios technologijos automatiškai suteikia geresnį našumą ir mažesnį kodo kiekį.
 2. **Dinaminiai importai ir tingus užkrovimas**: Vietoj to, kad visi komponentai būtų įkeliami iš karto, aš padariau, kad sunkesni elementai (pvz., AI chatbotas ar „Live Stats“) būtų įkeliami tik tada, kai jų tikrai reikia.
-3. **Komponentų optimizavimas**: Naudojau `DeferredSection`, kad komponentai būtų įkeliami tik tada, kai vartotojas nuslenka iki jų.
+3. **Komponentų optimizavimas**: Naudojau **DeferredSection**, kad komponentai būtų įkeliami tik tada, kai vartotojas nuslenka iki jų.
 4. **Spalvų kontrastas ir prieinamumas**: Sutvarkiau spalvas, kad tekstas būtų įskaitomas net ir esant prastam apšvietimui.
 5. **Serverio optimizavimas**: Kadangi svetainė yra savarankiškai prieglobstinama Raspberry Pi 5, aš užtikrinau, kad serveris neturėtų nereikalingų procesų, kurie „valgytų“ resursus.
 

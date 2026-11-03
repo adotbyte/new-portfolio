@@ -14,9 +14,9 @@ Pradėjau nuo bazinio Claude AI modelio, kuris galėjo atsakinėti į klausimus.
 
 Šiandien mano AI agentas yra daug daugiau nei paprastas chatbot'as. Jis turi šiuos įrankius:
 
-- **`get_github_repos`**: AI gali tiesiogiai pasiekti mano GitHub paskyrą ir parodyti naujausius projektus. Lankytojas gali paklausti „Ką Audrius neseniai sukūrė?“, ir AI parodys realius, gyvus duomenis.
-- **`send_contact_email`**: Jei lankytojas nori susisiekti, AI gali perduoti žinutę man tiesiai į el. paštą. Tai reiškia, kad nereikia ieškoti kontaktų formos – viską galima padaryti pokalbio metu.
-- **`get_availability`**: AI gali patikrinti, ar aš šiuo metu esu atviras naujiems projektams ar darbo pasiūlymams.
+- **get_github_repos**: AI gali tiesiogiai pasiekti mano GitHub paskyrą ir parodyti naujausius projektus. Lankytojas gali paklausti „Ką Audrius neseniai sukūrė?“, ir AI parodys realius, gyvus duomenis.
+- **send_contact_email**: Jei lankytojas nori susisiekti, AI gali perduoti žinutę man tiesiai į el. paštą. Tai reiškia, kad nereikia ieškoti kontaktų formos – viską galima padaryti pokalbio metu.
+- **get_availability**: AI gali patikrinti, ar aš šiuo metu esu atviras naujiems projektams ar darbo pasiūlymams.
 
 Be to, kadangi AI atsakinėja į klausimus, jis turi prieigą prie mano „žinių bazės“ – informacijos apie mano patirtį, įgūdžius ir projektus. Tai leidžia jam atsakyti tiksliai ir kontekstualiai.
 
@@ -28,7 +28,7 @@ Kai pradėjau integruoti AI į savo portfelį, supratau vieną svarbų dalyką: 
 
 ## Ką tai reiškia kitiems?
 
-Jei esi IT entuziastas ir dar nesi bandęs AI, labai rekomenduoju pradėti. Nebūtina iš karto kurti sudėtingo agento su `tool-use`. Pradėk nuo paprasto klausimo: „Kaip AI galėtų palengvinti mano kasdienybę?“
+Jei esi IT entuziastas ir dar nesi bandęs AI, labai rekomenduoju pradėti. Nebūtina iš karto kurti sudėtingo agento su **tool-use**. Pradėk nuo paprasto klausimo: „Kaip AI galėtų palengvinti mano kasdienybę?“
 
 Mano atveju atsakymas buvo toks: AI gali padaryti mano portfelį gyvą ir interaktyvų, o ne statišką. Ir tai pavyko.
 

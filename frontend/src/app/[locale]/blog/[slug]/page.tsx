@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 import { ArrowLeft } from 'lucide-react';
 import CopyButton from '@/components/CopyButton';
 import CodePlayground from '@/components/CodePlayground';
+import { connection } from 'next/server';
 
 import { Metadata } from 'next';
 
@@ -59,6 +60,8 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
     content = '# Straipsnis nerastas\nAtsiprašome, šis straipsnis neegzistuoja.';
   }
 
+  await connection();
+
   // JSON-LD struktūriniai duomenys Google paieškai
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -98,20 +101,29 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
                 const match = /language-(\w+)/.exec(className || '');
                 const codeString = String(children).replace(/\n$/, '');
 
-                return match ? (
+                // Patikriname, ar tai eilutės viduje esantis kodas (pvz., `get_github_repos`)
+                // Jis neturi className ir neturi naujos eilutės
+                const isInline = !className && !codeString.includes('\n');
+
+                if (isInline) {
+                  return (
+                    <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+                      {children}
+                    </code>
+                  );
+                }
+
+                // Kitu atveju tai yra kodo blokas su ```
+                return (
                   <div className="my-6 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
                     <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400">
-                      <span className="font-mono font-medium">{match[1]}</span>
+                      <span className="font-mono font-medium">{match?.[1] || 'text'}</span>
                       <CopyButton text={codeString} />
                     </div>
                     <div className="overflow-x-auto whitespace-pre p-6 font-mono text-sm leading-relaxed text-gray-800 dark:text-gray-200">
                       {codeString}
                     </div>
                   </div>
-                ) : (
-                  <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-                    {children}
-                  </code>
                 );
               },
               // Štai šis blokas leidžia atvaizduoti mūsų komponentą

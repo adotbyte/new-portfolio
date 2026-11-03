@@ -2,7 +2,7 @@
 
 Mano pirmasis kompiuteris atsirado namuose 2001 metais, o internetas – 2003-iaisiais. Nuo pat pirmos dienos tas „interneto“ pasaulis mane taip užkabino, kad norėjau suprasti, kaip viskas veikia „po kapotu“. Jau tada, žiūrėdamas į seną stalinį kompiuterį, svajojau jį paversti serveriu. Tiesa, elektros kaina tuo metu atrodė per daug bauginanti, todėl svajonė liko stalčiuje.
 
-Tačiau noras niekur nedingo. Kai tik išgirdau apie *Raspberry Pi*, supratau – štai mano šansas. Tai atrodė kaip tobulas projektas: mažas, tylus, taupus. Vis dėlto, tik 2025 metų vasarį aš galutinai supratau, kad man to tikrai reikia. Ir ne šiaip, o iškart su 16GB RAM versija bei NVMe palaikymu. Taip namuose atsirado „avietė“ su dviem 2TB NVMe diskais.
+Tačiau noras niekur nedingo. Kai tik išgirdau apie **Raspberry Pi**, supratau – štai mano šansas. Tai atrodė kaip tobulas projektas: mažas, tylus, taupus. Vis dėlto, tik 2025 metų vasarį aš galutinai supratau, kad man to tikrai reikia. Ir ne šiaip, o iškart su 16GB RAM versija bei NVMe palaikymu. Taip namuose atsirado „avietė“ su dviem 2TB NVMe diskais.
 
 Prasidėjo mano asmeninė kelionė į **self-hosting** (savarankišką prieglobstį).
 

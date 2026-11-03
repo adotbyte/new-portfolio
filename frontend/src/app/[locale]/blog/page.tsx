@@ -32,34 +32,29 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
   try {
     const files = readdirSync(blogDir);
 
-    posts = files
-      .filter((f) => f.endsWith(`.${locale}.md`)) // Ieškome tik pasirinktos kalbos failų
-      .map((f) => {
-        const slug = f.replace(`.${locale}.md`, '');
+    // Filtruojame TIK pasirinktos kalbos failus
+    const localeFiles = files.filter((f) => f.endsWith(`.${locale}.md`));
 
-        let title = slug
-          .split('-')
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(' ');
+    posts = localeFiles.map((f) => {
+      const slug = f.replace(`.${locale}.md`, '');
+      let title = slug
+        .split('-')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
 
-        // BANDOME NUSKAITYTI PAVADINIMĄ IŠ PATIES FAILO
-        try {
-          const fileContent = readFileSync(join(blogDir, f), 'utf-8');
-          const firstLine = fileContent.split('\n')[0];
+      try {
+        const fileContent = readFileSync(join(blogDir, f), 'utf-8');
+        const firstLine = fileContent.split('\n')[0];
 
-          // Jei pirma eilutė prasideda #, išimame tą simbolį ir naudojame kaip pavadinimą
-          if (firstLine.startsWith('# ')) {
-            title = firstLine.replace('# ', '').trim();
-          }
-        } catch {
-          // Jei nepavyko perskaityti, paliekame sugeneruotą pavadinimą
+        if (firstLine.startsWith('# ')) {
+          title = firstLine.replace('# ', '').trim();
         }
+      } catch {
+        // Ignoruojame klaidas
+      }
 
-        return { slug, title };
-      });
-
-    // Pašaliname dublikatus
-    posts = Array.from(new Map(posts.map((p) => [p.slug, p])).values());
+      return { slug, title };
+    });
   } catch {
     // Jei katalogo nėra
   }
@@ -87,7 +82,6 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
               RSS
             </a>
           </div>
-          <p className="text-lg text-gray-600 dark:text-gray-600">{t('subtitle')}</p>
         </div>
 
         {posts.length === 0 ? (

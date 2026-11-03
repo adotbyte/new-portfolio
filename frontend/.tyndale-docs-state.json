@@ -2,11 +2,11 @@
   "version": 1,
   "entries": {
     "public/blog::en::docker-cache-cleanup.lt.md": "96784e285042aedf326ccc0717c8e657de825ae891939ae77c3dc88dc222498f",
-    "public/blog::en::ansible-backups.lt.md": "f6d62b0fec064d18c2929eb93726dfd67b3fd4e81b0dde718f2709ced27d0213",
-    "public/blog::en::100-pagespeed.lt.md": "a9b8508fa2ecdd97519a39ef0ab489eae79e4c8ec5962701df63d7d69f285afc",
-    "public/blog::en::ai-integration.lt.md": "a3b93a6fcdaac9294d701b15df81573a025050803d41cdfc85f29536231442bc",
-    "public/blog::en::nextjs-16-migration.lt.md": "6169a7700a99d0c36df3f93c8fbd7a2e7db6ee13f87716ece82be5b5180a11c6",
-    "public/blog::en::why-self-hosting.lt.md": "976e1be0337f12a842fb5510d516db5d286318b78fb904f482eaaf45b6d2df7d",
+    "public/blog::en::ansible-backups.lt.md": "816ffb0a36c2a8a7ac905415300b80f4bef3b086fef48664293e89d6e3fa7658",
+    "public/blog::en::100-pagespeed.lt.md": "5acda42917f879df6f79d3a9713055f9d1f543980cb1d1b263e633f988d52c59",
+    "public/blog::en::ai-integration.lt.md": "567b1aac65471e4e54c813be0fdb7189547a75a4fe19568d99655cc83d2fad9d",
+    "public/blog::en::nextjs-16-migration.lt.md": "b171e0cf377857334ddacce8361b4c04ece2c1e3edb568b50e61a1761c26c6e8",
+    "public/blog::en::why-self-hosting.lt.md": "cab99637a67ee20d3835fafdb409df9a81659450aa2418d512ca972ef9035993",
     "public/blog::en::docker-cache-cleanup.en.md": "a0cde57a09d20d0a34f93a936ceb6e8a662171d3fb251dc2cff5914ede0b4bec"
   }
 }

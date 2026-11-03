@@ -8,7 +8,7 @@ Tada sugalvojau pasidomėti, kas yra **Ansible**. Išgirdau šį pavadinimą, be
 
 Dabar mano serveris kiekvieną naktį, kai aš miegui, pats pasidaro backup'ą. Viskas vyksta automatiškai:
 
-1. **Docker konfigūracijų ištraukimas**: Sistema surenka visus `docker-compose.yml` failus, duomenų bazių dump'us ir svarbiausias konfigūracijas.
+1. **Docker konfigūracijų ištraukimas**: Sistema surenka visus **docker-compose.yml** failus, duomenų bazių dump'us ir svarbiausias konfigūracijas.
 2. **Archyvavimas**: Viskas supakuojama į vieną archyvą.
 3. **Siuntimas į cloud**: Archyvas nusiunčiamas į Google Drive ir GitHub (priklausomai nuo to, ką backupiname).
 4. **Pranešimai**: Per **Pushover** gaunu pranešimą į telefoną, ar viskas pavyko, ar reikia ką nors taisyti.
@@ -30,6 +30,6 @@ Be to, dabar kiekvieną rytą tik pasitikrinu telefoną. Jei matau pranešimą �
 
 ## Patarimas kitiems
 
-Jei dar nedarote backup'ų – pradėkite šiandien. Nebūtina iš karto kurti sudėtingos Ansible sistemos. Pradėkite nuo paprasto scripto, kuris nukopijuoja svarbiausius failus į išorinį diską. Tada pridėkite automatinį paleidimą per `cron`. Ir galiausiai – pridėkite pranešimus, kad žinotumėte, jog viskas veikia.
+Jei dar nedarote backup'ų – pradėkite šiandien. Nebūtina iš karto kurti sudėtingos Ansible sistemos. Pradėkite nuo paprasto scripto, kuris nukopijuoja svarbiausius failus į išorinį diską. Tada pridėkite automatinį paleidimą per **cron**. Ir galiausiai – pridėkite pranešimus, kad žinotumėte, jog viskas veikia.
 
 Ansible ir Pushover yra puikūs įrankiai, kurie gali padėti tai padaryti profesionaliai. Ir patikėkite – tas ramybės jausmas, kai žinai, kad tavo duomenys saugūs, yra vertas kiekvienos investuotos valandos.

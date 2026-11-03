@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { readdirSync, readFileSync } from 'fs'; // Pridėjau readFileSync
 import { join } from 'path';
 import { FileText, ArrowRight } from 'lucide-react';
-
+import { Rss } from 'lucide-react';
 import { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -68,9 +68,25 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
     <div className="min-h-screen bg-white py-24 dark:bg-gray-950 sm:py-32">
       <div className="mx-auto max-w-4xl px-6 lg:px-8">
         <div className="mb-16">
-          <h1 className="mb-4 text-4xl font-black tracking-tight text-gray-900 dark:text-white">
-            {t('title')}
-          </h1>
+          <div className="mb-16 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <h1 className="mb-4 text-4xl font-black tracking-tight text-gray-900 dark:text-white">
+                {t('title')}
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400">{t('subtitle')}</p>
+            </div>
+
+            {/* RSS Nuoroda */}
+            <a
+              href="/rss.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-600 transition-colors hover:bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400 dark:hover:bg-orange-900/40"
+            >
+              <Rss className="h-4 w-4" />
+              RSS
+            </a>
+          </div>
           <p className="text-lg text-gray-600 dark:text-gray-600">{t('subtitle')}</p>
         </div>
 

@@ -4,6 +4,7 @@ import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
+import { Monitor, Sun, Moon } from 'lucide-react';
 
 const Navbar = () => {
   const t = useTranslations('nav');
@@ -15,6 +16,7 @@ const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
+  const [mounted, setMounted] = useState(false);
 
   const navLinks = [
     { name: t('about'), href: '#about', id: 'about' },
@@ -28,6 +30,10 @@ const Navbar = () => {
   const switchLocale = (locale: string) => {
     router.replace(pathname, { locale });
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // 1. Jei esame Paslaugų arba Blog puslapyje, pažymime juos
@@ -105,7 +111,9 @@ const Navbar = () => {
   }, [pathname]);
 
   const toggleDark = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    if (theme === 'system') setTheme('light');
+    else if (theme === 'light') setTheme('dark');
+    else setTheme('system');
   };
 
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -223,11 +231,19 @@ const Navbar = () => {
 
             <button
               onClick={toggleDark}
-              aria-label="Toggle dark mode"
+              aria-label="Toggle theme"
               className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             >
-              <SunIcon />
-              <MoonIcon />
+              {!mounted ? (
+                // Kol neįkelta, rodome tuščią vietą (arba paprastą ikoną), kad išvengtume klaidos
+                <div className="h-5 w-5" />
+              ) : (
+                <>
+                  {theme === 'system' && <Monitor className="h-5 w-5" />}
+                  {theme === 'light' && <Sun className="h-5 w-5" />}
+                  {theme === 'dark' && <Moon className="h-5 w-5" />}
+                </>
+              )}
             </button>
           </div>
 
@@ -250,11 +266,19 @@ const Navbar = () => {
 
             <button
               onClick={toggleDark}
-              aria-label="Toggle dark mode"
+              aria-label="Toggle theme"
               className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             >
-              <SunIcon />
-              <MoonIcon />
+              {!mounted ? (
+                // Kol neįkelta, rodome tuščią vietą (arba paprastą ikoną), kad išvengtume klaidos
+                <div className="h-5 w-5" />
+              ) : (
+                <>
+                  {theme === 'system' && <Monitor className="h-5 w-5" />}
+                  {theme === 'light' && <Sun className="h-5 w-5" />}
+                  {theme === 'dark' && <Moon className="h-5 w-5" />}
+                </>
+              )}
             </button>
 
             <button

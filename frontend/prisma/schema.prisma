@@ -20,9 +20,11 @@ model Message {
 model KnowledgeBase {
   id        Int      @id @default(autoincrement())
   content   String
-  embedding Unsupported("vector(1024)")? // 1024 dimensijos – Voyage AI numatytasis dydis
-  source    String?
-  createdAt DateTime @default(now())
+  source    String
+  embedding Unsupported("vector(1024)")?
+  createdAt DateTime @default(now()) // <-- PRIDĖK ŠIĄ EILUTĘ
+  updatedAt DateTime? @updatedAt
+  @@map("KnowledgeBase")
 }
 
 model Memory {

@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft } from 'lucide-react';
 import CopyButton from '@/components/CopyButton';
+import CodePlayground from '@/components/CodePlayground';
 
 import { Metadata } from 'next';
 
@@ -58,8 +59,28 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
     content = '# Straipsnis nerastas\nAtsiprašome, šis straipsnis neegzistuoja.';
   }
 
+  // JSON-LD struktūriniai duomenys Google paieškai
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: content.split('\n')[0].replace('# ', ''), // Pavadinimas iš pirmos eilutės
+    description: content.split('\n')[2]?.substring(0, 160) || 'Straipsnis', // Trumpas aprašymas
+    author: {
+      '@type': 'Person',
+      name: 'Audrius Morkūnas',
+      url: 'https://morkunas.info',
+    },
+    datePublished: new Date().toISOString(),
+    image: `https://morkunas.info/${locale}/blog/${slug}/opengraph-image`, // Nuoroda į mūsų sugeneruotą paveikslėlį
+  };
+
   return (
     <div className="min-h-screen bg-white py-24 text-gray-900 dark:bg-gray-950 dark:text-gray-100 sm:py-32">
+      {/* JSON-LD scriptas */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <Link
           href={`/${locale}/blog`}
@@ -78,14 +99,11 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
                 const codeString = String(children).replace(/\n$/, '');
 
                 return match ? (
-                  // Visiškai naujas kodo bloko dizainas
                   <div className="my-6 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
-                    {/* Viršutinė juosta */}
-                    <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-600">
+                    <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400">
                       <span className="font-mono font-medium">{match[1]}</span>
                       <CopyButton text={codeString} />
                     </div>
-                    {/* Kodas - naudojame div, o ne pre, kad išvengtume Tailwind konfliktų */}
                     <div className="overflow-x-auto whitespace-pre p-6 font-mono text-sm leading-relaxed text-gray-800 dark:text-gray-200">
                       {codeString}
                     </div>
@@ -95,6 +113,17 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
                     {children}
                   </code>
                 );
+              },
+              // Štai šis blokas leidžia atvaizduoti mūsų komponentą
+              p({ children }) {
+                if (
+                  Array.isArray(children) &&
+                  typeof children[0] === 'string' &&
+                  children[0].trim() === '<CodePlayground />'
+                ) {
+                  return <CodePlayground />;
+                }
+                return <p>{children}</p>;
               },
             }}
           >

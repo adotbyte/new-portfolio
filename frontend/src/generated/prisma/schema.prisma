@@ -16,3 +16,22 @@ model Message {
 
   @@index([userId, createdAt])
 }
+
+model KnowledgeBase {
+  id        Int                          @id @default(autoincrement())
+  content   String
+  source    String
+  embedding Unsupported("vector(1024)")?
+  updatedAt DateTime                     @updatedAt
+
+  @@map("KnowledgeBase")
+}
+
+model Memory {
+  id        Int                          @id @default(autoincrement())
+  userId    String // Susiejame su visitor_id
+  fact      String // Pvz., "Vartotojas domisi Docker"
+  embedding Unsupported("vector(1024)")? // Voyage AI embeddingas
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
+}

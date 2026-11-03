@@ -1,10 +1,21 @@
 import AboutMe from '@/components/AboutMe';
 import Skills from '@/components/Skills';
-import HomeLab from '@/components/HomeLab';
 import Contact from '@/components/Contact';
-import LiveStats from '@/components/LiveStats';
 import DotGrid from '@/components/DotGrid';
 import Certifications from '@/components/Certifications';
+import ChatbotWrapper from '@/components/ChatbotWrapper';
+import DeferredSection from '@/components/DeferredSection';
+import dynamic from 'next/dynamic';
+
+// Dinaminiai importai su ssr: false per wrapper
+const HomeLab = dynamic(() => import('@/components/HomeLab'), {
+  loading: () => <div className="h-96 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />,
+});
+
+const LiveStats = dynamic(() => import('@/components/LiveStats'), {
+  loading: () => <div className="h-64 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />,
+});
+
 import type { Metadata } from 'next';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -108,14 +119,19 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <Certifications />
       </section>
       <section id="homelab">
-        <HomeLab />
+        <DeferredSection>
+          <HomeLab />
+        </DeferredSection>
         {/* Įdedame LiveStats PO HomeLab, kad būtų Namų laboratorijos sekcijoje */}
         <div className="mx-auto max-w-6xl px-4 pb-12">
-          <LiveStats />
+          <DeferredSection>
+            <LiveStats />
+          </DeferredSection>
         </div>
       </section>
       <section id="contact">
         <Contact />
+        <ChatbotWrapper />
       </section>
     </>
   );

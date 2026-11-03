@@ -57,13 +57,13 @@ export default async function AboutMe({ locale }: { locale: string }) {
           </div>
           <aside className="sticky top-28 w-full lg:col-span-4">
             <div className="rounded-[2rem] border border-slate-100 bg-slate-50 p-7 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400">
+              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-700">
                 {t('technicalStack')}
               </h3>
               <div className="space-y-6">
                 {skillCategories.map((cat) => (
                   <div key={cat.name}>
-                    <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                    <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-600">
                       {cat.name}
                     </p>
                     <div className="flex flex-wrap gap-2">

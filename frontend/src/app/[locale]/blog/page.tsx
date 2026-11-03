@@ -71,7 +71,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
           <h1 className="mb-4 text-4xl font-black tracking-tight text-gray-900 dark:text-white">
             {t('title')}
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">{t('subtitle')}</p>
+          <p className="text-lg text-gray-600 dark:text-gray-600">{t('subtitle')}</p>
         </div>
 
         {posts.length === 0 ? (
@@ -85,14 +85,14 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
                 className="group flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-6 transition-colors hover:border-blue-500 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-blue-500"
               >
                 <div className="flex items-center gap-4">
-                  <div className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+                  <div className="rounded-xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-900/20 dark:text-blue-700">
                     <FileText className="h-6 w-6" />
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                  <h2 className="text-xl font-bold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-700">
                     {post.title}
                   </h2>
                 </div>
-                <ArrowRight className="h-5 w-5 text-gray-400 transition-colors group-hover:text-blue-600" />
+                <ArrowRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-blue-600" />
               </Link>
             ))}
           </div>

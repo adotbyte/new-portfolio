@@ -68,7 +68,7 @@
     },
     "projects": {
       "portfolioName": "Dirbtinio Intelekto Portfolio",
-      "portfolioDesc": "Savarankiškai prieglobstinama CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta iš nulio ir veikianti mano Raspberry Pi 5 per Cloudflare Tunnels.",
+      "portfolioDesc": "Savarankiškai prieglobstinama CV svetainė su integruotu AI chatbotu, atsakančiu į klausimus apie mano patirtį. Sukurta nuo nulio ir veikianti mano Raspberry Pi 5 per Cloudflare Tunnels.",
       "portfolioStatus": "Prisijungęs",
       "homelabName": "Savarankiškai Talpinama Namų Laboratorija",
       "homelabDesc": "Produkcinio lygio klasės namų serveris, veikiantis 20+ Docker konteinerių, įskaitant AdGuard Home, SearXNG, RustDesk, Directus CMS, Tailscale VPN ir dar daugiau — viskas apsaugota Cloudflare Zero Trust.",

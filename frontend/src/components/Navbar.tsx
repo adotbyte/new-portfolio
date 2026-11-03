@@ -208,14 +208,14 @@ const Navbar = () => {
             <div className="flex items-center gap-1 text-sm font-semibold">
               <button
                 onClick={() => switchLocale('en')}
-                className={`rounded px-2 py-1 transition-colors ${currentLocale === 'en' ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'}`}
+                className={`rounded px-2 py-1 transition-colors ${currentLocale === 'en' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}
               >
                 EN
               </button>
               <span className="text-gray-300 dark:text-gray-600">|</span>
               <button
                 onClick={() => switchLocale('lt')}
-                className={`rounded px-2 py-1 transition-colors ${currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-400 hover:text-blue-600'}`}
+                className={`rounded px-2 py-1 transition-colors ${currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}
               >
                 LT
               </button>
@@ -235,14 +235,14 @@ const Navbar = () => {
             <div className="flex items-center gap-1 text-xs font-semibold">
               <button
                 onClick={() => switchLocale('en')}
-                className={`rounded px-1.5 py-1 ${currentLocale === 'en' ? 'text-blue-600' : 'text-gray-400'}`}
+                className={`rounded px-1.5 py-1 ${currentLocale === 'en' ? 'text-blue-600' : 'text-gray-600'}`}
               >
                 EN
               </button>
               <span className="text-gray-300">|</span>
               <button
                 onClick={() => switchLocale('lt')}
-                className={`rounded px-1.5 py-1 ${currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-400'}`}
+                className={`rounded px-1.5 py-1 ${currentLocale === 'lt' ? 'text-blue-600' : 'text-gray-600'}`}
               >
                 LT
               </button>

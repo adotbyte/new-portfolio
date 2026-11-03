@@ -50,12 +50,12 @@ const Footer = () => {
 
       <footer className="mt-auto w-full border-t border-gray-100 bg-white py-8 dark:border-gray-800 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <p className="text-xs font-medium tracking-wide text-gray-600 dark:text-gray-400">
+          <p className="text-xs font-medium tracking-wide text-gray-600 dark:text-gray-600">
             &copy; {currentYear} |
             <button
               type="button"
               onClick={() => setShowPrivacy(true)}
-              className="ml-2 font-bold text-gray-500 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-blue-600 hover:decoration-blue-200 dark:text-gray-400"
+              className="ml-2 font-bold text-gray-500 underline decoration-gray-200 underline-offset-4 transition-colors hover:text-blue-600 hover:decoration-blue-200 dark:text-gray-600"
             >
               {t('privacyCookies')}
             </button>
@@ -74,12 +74,12 @@ const Footer = () => {
                 <button
                   onClick={() => setShowPrivacy(false)}
                   aria-label="Close"
-                  className="text-2xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+                  className="text-2xl text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-white"
                 >
                   &times;
                 </button>
               </div>
-              <div className="space-y-4 text-left text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <div className="space-y-4 text-left text-sm leading-relaxed text-gray-600 dark:text-gray-600">
                 <p>{t('modalIntro')}</p>
                 <ul className="space-y-2">
                   <li className="flex gap-2">

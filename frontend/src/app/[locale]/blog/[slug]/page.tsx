@@ -63,7 +63,7 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <Link
           href={`/${locale}/blog`}
-          className="mb-10 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400"
+          className="mb-10 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline dark:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('back')}
@@ -81,7 +81,7 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
                   // Visiškai naujas kodo bloko dizainas
                   <div className="my-6 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
                     {/* Viršutinė juosta */}
-                    <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400">
+                    <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-600">
                       <span className="font-mono font-medium">{match[1]}</span>
                       <CopyButton text={codeString} />
                     </div>

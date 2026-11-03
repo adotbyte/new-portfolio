@@ -15,7 +15,7 @@ export default function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+      className="flex items-center gap-1 transition-colors hover:text-blue-600 dark:hover:text-blue-700"
     >
       {copied ? <Check size={14} /> : <Copy size={14} />}
       {copied ? 'Nukopijuota!' : 'Copy'}

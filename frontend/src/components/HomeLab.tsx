@@ -49,7 +49,7 @@ export default function HomeLab() {
             {t('title')}
           </h1>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
-          <span className="whitespace-nowrap font-mono text-xs text-gray-400 dark:text-gray-500">
+          <span className="whitespace-nowrap font-mono text-xs text-gray-600 dark:text-gray-500">
             Raspberry Pi 5
           </span>
         </div>
@@ -70,7 +70,7 @@ export default function HomeLab() {
               className="flex flex-col gap-1 rounded-2xl border border-slate-100 bg-slate-50 p-5 dark:border-gray-700 dark:bg-gray-800"
             >
               <span className="text-2xl">{stat.icon}</span>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-600">
                 {stat.label}
               </span>
               <span className="text-sm font-black text-gray-900 dark:text-white">{stat.value}</span>
@@ -91,7 +91,7 @@ export default function HomeLab() {
           </h2>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
-            <span className="text-xs font-bold text-green-600 dark:text-green-400">
+            <span className="text-xs font-bold text-green-700 dark:text-green-400">
               {t('showingTop', { count: services.length, total: totalContainers })}
             </span>
           </div>
@@ -105,7 +105,7 @@ export default function HomeLab() {
               className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
                 activeCategory === cat
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900'
-                  : 'bg-slate-100 text-gray-600 hover:bg-slate-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                  : 'bg-slate-100 text-gray-600 hover:bg-slate-200 dark:bg-gray-800 dark:text-gray-600 dark:hover:bg-gray-700'
               }`}
             >
               {cat === 'All' ? t('filterAll') : cat}
@@ -156,7 +156,7 @@ export default function HomeLab() {
                     </div>
                     <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-green-500"></span>
                   </div>
-                  <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                  <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-600">
                     Port: {service.port}
                   </p>
                 </div>

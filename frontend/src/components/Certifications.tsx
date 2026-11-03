@@ -39,13 +39,13 @@ const Certifications = async () => {
                     <h3 className="text-lg font-black text-gray-900 dark:text-white">
                       {cert.name}
                     </h3>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-600">
                       {cert.issuer} · {cert.date}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="mt-6 flex items-center gap-2 text-sm font-bold text-blue-600 transition-colors group-hover:text-blue-700 dark:text-blue-400 dark:group-hover:text-blue-300">
+              <div className="mt-6 flex items-center gap-2 text-sm font-bold text-blue-600 transition-colors group-hover:text-blue-700 dark:text-blue-700 dark:group-hover:text-blue-300">
                 <span>{t('verify')}</span>
                 <svg
                   className="h-4 w-4 transition-transform group-hover:translate-x-1"

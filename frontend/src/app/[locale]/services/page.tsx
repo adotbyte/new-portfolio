@@ -27,7 +27,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   const packages = [
     {
       id: 'rescue',
-      icon: <Server className="h-8 w-8 text-blue-600 dark:text-blue-400" />,
+      icon: <Server className="h-8 w-8 text-blue-600 dark:text-blue-700" />,
       ...t.raw('packages.rescue'), // Naudojame vertimus
       accent: 'border-gray-200 dark:border-gray-800',
     },
@@ -41,7 +41,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
     },
     {
       id: 'maintenance',
-      icon: <RefreshCw className="h-8 w-8 text-green-600 dark:text-green-400" />,
+      icon: <RefreshCw className="h-8 w-8 text-green-700 dark:text-green-400" />,
       ...t.raw('packages.maintenance'),
       accent: 'border-gray-200 dark:border-gray-800',
     },
@@ -52,13 +52,13 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Antraštė */}
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-blue-600 dark:text-blue-400">
+          <h2 className="text-base font-semibold leading-7 text-blue-600 dark:text-blue-700">
             {t('badge')}
           </h2>
           <p className="mt-2 text-4xl font-black tracking-tight text-gray-900 dark:text-white sm:text-5xl">
             {t('title')}
           </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
+          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-600">
             {t('description')}
           </p>
         </div>
@@ -80,7 +80,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
 
               <div className="mb-6">{pkg.icon}</div>
               <h3 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white">{pkg.title}</h3>
-              <p className="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <p className="mb-4 text-sm font-medium text-gray-500 dark:text-gray-600">
                 {pkg.subtitle}
               </p>
               <div className="mb-6 text-3xl font-black text-gray-900 dark:text-white">
@@ -116,11 +116,11 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
 
         {/* Papildoma info */}
         <div className="mt-24 text-center">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-600">
             {t('cta.text')}{' '}
             <Link
               href={`/${locale}/Contact`}
-              className="font-semibold text-blue-600 hover:underline dark:text-blue-400"
+              className="font-semibold text-blue-600 hover:underline dark:text-blue-700"
             >
               {t('cta.link')}
             </Link>{' '}

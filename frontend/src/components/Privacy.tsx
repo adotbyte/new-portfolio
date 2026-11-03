@@ -15,11 +15,11 @@ const Privacy = () => {
             {t('title')}
           </h1>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
-          <span className="font-mono text-xs text-gray-400 dark:text-gray-500">{t('version')}</span>
+          <span className="font-mono text-xs text-gray-600 dark:text-gray-500">{t('version')}</span>
         </div>
 
-        <article className="prose prose-sm prose-slate max-w-none dark:prose-invert md:prose-base prose-h3:mt-8 prose-h3:font-bold prose-h3:text-blue-600 prose-p:leading-relaxed prose-p:text-gray-600 prose-strong:text-gray-900 dark:prose-h3:text-blue-400 dark:prose-p:text-gray-300 dark:prose-strong:text-white">
-          <p className="mb-8 text-sm italic text-gray-400 dark:text-gray-500">{t('lastUpdated')}</p>
+        <article className="prose prose-sm prose-slate max-w-none dark:prose-invert md:prose-base prose-h3:mt-8 prose-h3:font-bold prose-h3:text-blue-600 prose-p:leading-relaxed prose-p:text-gray-600 prose-strong:text-gray-900 dark:prose-h3:text-blue-700 dark:prose-p:text-gray-300 dark:prose-strong:text-white">
+          <p className="mb-8 text-sm italic text-gray-600 dark:text-gray-500">{t('lastUpdated')}</p>
 
           <h3>{t('section1Title')}</h3>
           <p>{t('section1Intro')}</p>
@@ -55,7 +55,7 @@ const Privacy = () => {
         <div className="mt-12 border-t border-gray-100 pt-8 dark:border-gray-800">
           <button
             onClick={() => router.back()}
-            className="flex cursor-pointer items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-400"
+            className="flex cursor-pointer items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-700"
           >
             {t('back')}
           </button>

@@ -17,6 +17,7 @@ export default function ChatbotWrapper() {
         className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg transition-transform hover:scale-110"
         aria-label="Open chat"
       >
+        <span className="sr-only">Open chat</span>
         <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"

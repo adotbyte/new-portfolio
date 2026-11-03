@@ -55,7 +55,7 @@ const Skills = async () => {
     {
       name: t('projects.portfolioName'),
       description: t('projects.portfolioDesc'),
-      stack: ['Next.js 16', 'React', 'Tailwind', 'Anthropic Claude', 'Docker'],
+      stack: ['Next.js 16', 'React', 'Tailwind', 'Anthropic Claude', 'Docker', 'Cloudflare'],
       link: 'https://morkunas.info',
       github: 'https://github.com/adotbyte',
       icon: '🚀',
@@ -90,7 +90,7 @@ const Skills = async () => {
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
             {t('description')}{' '}
-            <span className="font-bold text-blue-700 underline decoration-blue-200 underline-offset-4 dark:text-blue-400">
+            <span className="font-bold text-blue-700 underline decoration-blue-200 underline-offset-4 dark:text-blue-700">
               {t('descriptionHighlight')}
             </span>
             {t('descriptionRest')}
@@ -103,7 +103,7 @@ const Skills = async () => {
               key={index}
               className="rounded-3xl border border-slate-100 bg-slate-50 p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-200 dark:border-gray-700 dark:bg-gray-800"
             >
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400">
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700 dark:text-blue-700">
                 {category.subtitle}
               </span>
               <h3 className="mb-6 mt-2 text-xl font-bold text-gray-900 dark:text-white">
@@ -146,7 +146,7 @@ const Skills = async () => {
               {t('projectsTitle')}
             </h2>
             <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
-            <span className="whitespace-nowrap font-mono text-xs text-gray-400 dark:text-gray-500">
+            <span className="whitespace-nowrap font-mono text-xs text-gray-600 dark:text-gray-500">
               {projects.length} {t('built')}
             </span>
           </div>
@@ -165,7 +165,7 @@ const Skills = async () => {
                         <h3 className="text-lg font-black text-gray-900 dark:text-white">
                           {project.name}
                         </h3>
-                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-green-600 dark:text-green-400">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-green-700 dark:text-green-400">
                           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span>
                           {project.status}
                         </span>
@@ -210,7 +210,7 @@ const Skills = async () => {
                       )}
                     </div>
                   </div>
-                  <p className="mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-600">
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2">

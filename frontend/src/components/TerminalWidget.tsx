@@ -30,10 +30,10 @@ export default function TerminalWidget() {
       </div>
 
       <p>
-        <span className="text-gray-400 dark:text-gray-500">$</span>{' '}
-        <span className="text-blue-600 dark:text-blue-400">docker ps -q | wc -l</span>
+        <span className="text-gray-600 dark:text-gray-500">$</span>{' '}
+        <span className="text-blue-600 dark:text-blue-700">docker ps -q | wc -l</span>
       </p>
-      <p className="text-green-600 dark:text-green-400">
+      <p className="text-green-700 dark:text-green-400">
         {isLoading ? (
           <span className="animate-pulse">...</span> // <-- Kol kraunasi, rodoma "..." su animacija
         ) : liveStats?.dockerCount !== undefined ? (
@@ -44,8 +44,8 @@ export default function TerminalWidget() {
       </p>
 
       <p className="mt-1">
-        <span className="text-gray-400 dark:text-gray-500">$</span>{' '}
-        <span className="text-blue-600 dark:text-blue-400">uptime</span>
+        <span className="text-gray-600 dark:text-gray-500">$</span>{' '}
+        <span className="text-blue-600 dark:text-blue-700">uptime</span>
       </p>
       <p className="text-gray-600 dark:text-gray-300">
         {isLoading ? (

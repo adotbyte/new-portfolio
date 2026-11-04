@@ -154,3 +154,32 @@ jobs:
         run: cd frontend && lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Lighthouse Report Summary
+        if: always()
+        run: |
+          echo "### 📊 Lighthouse CI Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          LHR_DIR="frontend/.lighthouseci"
+
+          if [ -d "$LHR_DIR" ]; then
+            for file in "$LHR_DIR"/lhr-*.json; do
+              if [ -f "$file" ]; then
+                url=$(jq -r '.finalUrl' "$file")
+                perf=$(jq -r '.categories.performance.score * 100' "$file")
+                a11y=$(jq -r '.categories.accessibility.score * 100' "$file")
+                bp=$(jq -r '.categories["best-practices"].score * 100' "$file")
+                seo=$(jq -r '.categories.seo.score * 100' "$file")
+                
+                echo "**$url**" >> $GITHUB_STEP_SUMMARY
+                echo "- Performance: $perf" >> $GITHUB_STEP_SUMMARY
+                echo "- Accessibility: $a11y" >> $GITHUB_STEP_SUMMARY
+                echo "- Best Practices: $bp" >> $GITHUB_STEP_SUMMARY
+                echo "- SEO: $seo" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+          else
+            echo "⚠️ Nepavyko rasti Lighthouse rezultatų katalogo." >> $GITHUB_STEP_SUMMARY
+          fi

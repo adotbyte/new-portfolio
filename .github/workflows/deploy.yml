@@ -150,20 +150,29 @@ jobs:
           echo "### 📊 Lighthouse CI Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          MANIFEST=""
-          # Ieškome frontend kataloge
-          if [ -f frontend/.lighthouseci/manifest.json ]; then
-            MANIFEST="frontend/.lighthouseci/manifest.json"
-          elif [ -f .lighthouseci/manifest.json ]; then
-            MANIFEST=".lighthouseci/manifest.json"
+          LHR_DIR="frontend/.lighthouseci"
+          if [ ! -d "$LHR_DIR" ]; then
+            LHR_DIR=".lighthouseci"
           fi
 
-          if [ -n "$MANIFEST" ]; then
-            echo "✅ Radau rezultatus: $MANIFEST" >> $GITHUB_STEP_SUMMARY
-            cat "$MANIFEST" | jq -r '.[] | "**\(.url)**\n- Performance: \(.summary.performance * 100)\n- Accessibility: \(.summary.accessibility * 100)\n- Best Practices: \(.summary.[\"best-practices\"] * 100)\n- SEO: \(.summary.seo * 100)\n"' >> $GITHUB_STEP_SUMMARY
+          if [ -d "$LHR_DIR" ]; then
+            # Randame visus lhr-*.json failus
+            for file in "$LHR_DIR"/lhr-*.json; do
+              if [ -f "$file" ]; then
+                url=$(jq -r '.finalUrl' "$file")
+                perf=$(jq -r '.categories.performance.score * 100' "$file")
+                a11y=$(jq -r '.categories.accessibility.score * 100' "$file")
+                bp=$(jq -r '.categories["best-practices"].score * 100' "$file")
+                seo=$(jq -r '.categories.seo.score * 100' "$file")
+                
+                echo "**$url**" >> $GITHUB_STEP_SUMMARY
+                echo "- Performance: $perf" >> $GITHUB_STEP_SUMMARY
+                echo "- Accessibility: $a11y" >> $GITHUB_STEP_SUMMARY
+                echo "- Best Practices: $bp" >> $GITHUB_STEP_SUMMARY
+                echo "- SEO: $seo" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
           else
-            echo "⚠️ Nepavyko rasti Lighthouse rezultatų failo." >> $GITHUB_STEP_SUMMARY
-            echo "Patikrinkite šiuos katalogus:" >> $GITHUB_STEP_SUMMARY
-            ls -la frontend/.lighthouseci/ 2>/dev/null || echo "Nėra frontend/.lighthouseci/" >> $GITHUB_STEP_SUMMARY
-            ls -la .lighthouseci/ 2>/dev/null || echo "Nėra .lighthouseci/" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ Nepavyko rasti Lighthouse rezultatų katalogo." >> $GITHUB_STEP_SUMMARY
           fi

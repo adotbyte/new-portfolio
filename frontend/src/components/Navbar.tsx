@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
@@ -16,7 +16,6 @@ const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
-  const [mounted, setMounted] = useState(false);
 
   const navLinks = [
     { name: t('about'), href: '#about', id: 'about' },
@@ -28,16 +27,18 @@ const Navbar = () => {
     { name: t('contact'), href: '#contact', id: 'contact' },
   ];
 
+  const [mounted, setMounted] = useState(false);
+  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+  useIsomorphicLayoutEffect(() => {
+    setMounted(true);
+  }, []);
+
   const switchLocale = (locale: string) => {
     router.replace(pathname, { locale });
   };
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    // 1. Jei esame Paslaugų arba Blog puslapyje, pažymime juos
     if (pathname === '/services') {
       setActiveSection('services');
       return;
@@ -46,14 +47,16 @@ const Navbar = () => {
       setActiveSection('blog');
       return;
     }
+    if (pathname === '/case-studies') {
+      setActiveSection('case-studies');
+      return;
+    }
 
-    // 2. Jei esame bet kuriame kitame atskirame puslapyje
     if (pathname !== '/') {
       setActiveSection('');
       return;
     }
 
-    // 3. Jei esame pagrindiniame puslapyje, vykdome įprastą scroll logiką
     const sections = ['about', 'portfolio', 'homelab', 'contact'];
 
     const handleScroll = () => {
@@ -91,7 +94,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
 
-  // Šis efektas leidžia nuslinkti į sekciją, kai grįžtama iš kito puslapio (pvz., /#about)
   useEffect(() => {
     if (pathname === '/' && window.location.hash) {
       const id = window.location.hash.replace('#', '');
@@ -104,7 +106,6 @@ const Navbar = () => {
             top: elementPosition - navHeight - 16,
             behavior: 'smooth',
           });
-          // Išvalome hash iš URL, kad nešokinėtų
           window.history.replaceState(null, '', window.location.pathname);
         }, 100);
       }
@@ -120,7 +121,6 @@ const Navbar = () => {
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
 
-    // 1. Jei tai atskiras puslapis (pvz., /services)
     if (href.startsWith('/')) {
       router.push(href);
       setIsOpen(false);
@@ -129,14 +129,12 @@ const Navbar = () => {
 
     const id = href.replace('#', '');
 
-    // 2. Jei esame ne pagrindiniame puslapyje, o norime eiti į sekciją
     if (pathname !== '/') {
-      router.push(`/#${id}`); // Pereiname į pagrindinį puslapį su hash'u
+      router.push(`/#${id}`);
       setIsOpen(false);
       return;
     }
 
-    // 3. Jei esame pagrindiniame puslapyje – slenkame kaip įprastai
     const el = document.getElementById(id);
 
     if (el) {
@@ -153,38 +151,6 @@ const Navbar = () => {
     }
     setIsOpen(false);
   };
-
-  const MoonIcon = () => (
-    <svg
-      className="block h-5 w-5 dark:hidden"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-      />
-    </svg>
-  );
-
-  const SunIcon = () => (
-    <svg
-      className="hidden h-5 w-5 dark:block"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
-      />
-    </svg>
-  );
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 shadow-sm backdrop-blur-md dark:bg-gray-900/90">
@@ -233,12 +199,11 @@ const Navbar = () => {
             <button
               onClick={toggleDark}
               aria-label="Toggle theme"
-              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-opacity duration-300 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
+                mounted ? 'opacity-100' : 'opacity-0'
+              }`}
             >
-              {!mounted ? (
-                // Kol neįkelta, rodome tuščią vietą (arba paprastą ikoną), kad išvengtume klaidos
-                <div className="h-5 w-5" />
-              ) : (
+              {mounted && (
                 <>
                   {theme === 'system' && <Monitor className="h-5 w-5" />}
                   {theme === 'light' && <Sun className="h-5 w-5" />}
@@ -268,12 +233,11 @@ const Navbar = () => {
             <button
               onClick={toggleDark}
               aria-label="Toggle theme"
-              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-opacity duration-300 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
+                mounted ? 'opacity-100' : 'opacity-0'
+              }`}
             >
-              {!mounted ? (
-                // Kol neįkelta, rodome tuščią vietą (arba paprastą ikoną), kad išvengtume klaidos
-                <div className="h-5 w-5" />
-              ) : (
+              {mounted && (
                 <>
                   {theme === 'system' && <Monitor className="h-5 w-5" />}
                   {theme === 'light' && <Sun className="h-5 w-5" />}

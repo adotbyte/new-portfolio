@@ -6,6 +6,8 @@ import { useRouter, usePathname } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
 import { Monitor, Sun, Moon } from 'lucide-react';
 
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
 const Navbar = () => {
   const t = useTranslations('nav');
   const router = useRouter();
@@ -15,7 +17,27 @@ const Navbar = () => {
 
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('about');
+  const getInitialSection = (path: string) => {
+    if (!path) return 'about';
+    const cleanPath = path.replace(/^\/(lt|en)/, '');
+
+    if (cleanPath === '/services') return 'services';
+    if (cleanPath === '/blog' || cleanPath.startsWith('/blog/')) return 'blog';
+    if (cleanPath === '/case-studies') return 'case-studies';
+    if (cleanPath !== '/') return '';
+    return 'about';
+  };
+
+  const [activeSection, setActiveSection] = useState(() => {
+    // Jei dar neįkelta (serveris), grąžiname tuščią
+    if (typeof window === 'undefined') return '';
+    return getInitialSection(pathname);
+  });
+  const [mounted, setMounted] = useState(false);
+
+  useIsomorphicLayoutEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navLinks = [
     { name: t('about'), href: '#about', id: 'about' },
@@ -27,32 +49,30 @@ const Navbar = () => {
     { name: t('contact'), href: '#contact', id: 'contact' },
   ];
 
-  const [mounted, setMounted] = useState(false);
-  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-
-  useIsomorphicLayoutEffect(() => {
-    setMounted(true);
-  }, []);
-
   const switchLocale = (locale: string) => {
     router.replace(pathname, { locale });
   };
 
   useEffect(() => {
-    if (pathname === '/services') {
+    if (!pathname) return;
+
+    // Nuimame kalbos prefiksą (pvz., /lt/blog -> /blog)
+    const cleanPath = pathname.replace(/^\/(lt|en)/, '');
+
+    if (cleanPath === '/services') {
       setActiveSection('services');
       return;
     }
-    if (pathname === '/blog' || pathname.startsWith('/blog/')) {
+    if (cleanPath === '/blog' || cleanPath.startsWith('/blog/')) {
       setActiveSection('blog');
       return;
     }
-    if (pathname === '/case-studies') {
+    if (cleanPath === '/case-studies') {
       setActiveSection('case-studies');
       return;
     }
 
-    if (pathname !== '/') {
+    if (cleanPath !== '/') {
       setActiveSection('');
       return;
     }
@@ -152,6 +172,13 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+  const ThemeIcon = () => {
+    if (!mounted) return <div className="h-5 w-5" />;
+    if (theme === 'system') return <Monitor className="h-5 w-5" />;
+    if (theme === 'light') return <Sun className="h-5 w-5" />;
+    return <Moon className="h-5 w-5" />;
+  };
+
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 shadow-sm backdrop-blur-md dark:bg-gray-900/90">
       <div className="mx-auto max-w-6xl px-4">
@@ -171,7 +198,7 @@ const Navbar = () => {
                 href={link.href}
                 onClick={(e) => scrollTo(e, link.href)}
                 className={`cursor-pointer font-medium transition-colors ${
-                  activeSection === link.id
+                  mounted && activeSection === link.id
                     ? 'border-b-2 border-blue-600 text-blue-600'
                     : 'text-gray-600 hover:text-blue-600 dark:text-gray-300'
                 }`}
@@ -199,17 +226,11 @@ const Navbar = () => {
             <button
               onClick={toggleDark}
               aria-label="Toggle theme"
-              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-opacity duration-300 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
-                mounted ? 'opacity-100' : 'opacity-0'
+              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-700 ease-out hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
+                mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
               }`}
             >
-              {mounted && (
-                <>
-                  {theme === 'system' && <Monitor className="h-5 w-5" />}
-                  {theme === 'light' && <Sun className="h-5 w-5" />}
-                  {theme === 'dark' && <Moon className="h-5 w-5" />}
-                </>
-              )}
+              <ThemeIcon />
             </button>
           </div>
 
@@ -233,17 +254,11 @@ const Navbar = () => {
             <button
               onClick={toggleDark}
               aria-label="Toggle theme"
-              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-opacity duration-300 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
-                mounted ? 'opacity-100' : 'opacity-0'
+              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-700 ease-out hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
+                mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
               }`}
             >
-              {mounted && (
-                <>
-                  {theme === 'system' && <Monitor className="h-5 w-5" />}
-                  {theme === 'light' && <Sun className="h-5 w-5" />}
-                  {theme === 'dark' && <Moon className="h-5 w-5" />}
-                </>
-              )}
+              <ThemeIcon />
             </button>
 
             <button
@@ -282,10 +297,10 @@ const Navbar = () => {
               key={link.name}
               href={link.href}
               onClick={(e) => scrollTo(e, link.href)}
-              className={`block cursor-pointer rounded-md px-3 py-4 text-lg font-medium ${
-                activeSection === link.id
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-gray-800'
+              className={`cursor-pointer font-medium transition-colors ${
+                mounted && activeSection === link.id
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-blue-600 dark:text-gray-300'
               }`}
             >
               {link.name}

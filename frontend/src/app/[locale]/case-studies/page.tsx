@@ -2,6 +2,24 @@ import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { Briefcase, ArrowRight } from 'lucide-react';
 
+import { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isLt = locale === 'lt';
+
+  return {
+    title: isLt ? 'Atvejų analizės | Audrius Morkūnas' : 'Case Studies | Audrius Morkūnas',
+    description: isLt
+      ? 'Kaip aš sprendžiu realias problemas ir kokią naudą tai duoda.'
+      : 'How I solve real problems and what value it brings.',
+  };
+}
+
 export default async function CaseStudiesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'caseStudies' });

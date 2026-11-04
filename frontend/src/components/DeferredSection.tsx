@@ -14,7 +14,7 @@ export default function DeferredSection({ children }: { children: React.ReactNod
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' } // Įkelia 200px prieš pasiekiant
+      { rootMargin: '200px' }
     );
 
     if (ref.current) observer.observe(ref.current);

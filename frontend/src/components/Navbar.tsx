@@ -1,12 +1,10 @@
 'use client';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
 import { Monitor, Sun, Moon } from 'lucide-react';
-
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 const Navbar = () => {
   const t = useTranslations('nav');
@@ -17,25 +15,11 @@ const Navbar = () => {
 
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const getInitialSection = (path: string) => {
-    if (!path) return 'about';
-    const cleanPath = path.replace(/^\/(lt|en)/, '');
-
-    if (cleanPath === '/services') return 'services';
-    if (cleanPath === '/blog' || cleanPath.startsWith('/blog/')) return 'blog';
-    if (cleanPath === '/case-studies') return 'case-studies';
-    if (cleanPath !== '/') return '';
-    return 'about';
-  };
-
-  const [activeSection, setActiveSection] = useState(() => {
-    // Jei dar neįkelta (serveris), grąžiname tuščią
-    if (typeof window === 'undefined') return '';
-    return getInitialSection(pathname);
-  });
+  const [activeSection, setActiveSection] = useState('about');
   const [mounted, setMounted] = useState(false);
 
-  useIsomorphicLayoutEffect(() => {
+  // Šis triukas leidžia naudoti useLayoutEffect naršyklėje, bet išvengti klaidų serveryje
+  useEffect(() => {
     setMounted(true);
   }, []);
 
@@ -109,16 +93,10 @@ const Navbar = () => {
       setActiveSection(currentSection);
     };
 
-    // SVARBU: Nevykdome scroll logikos iškart po įkėlimo,
-    // kad išvengtume neteisingo "Contact" pažymėjimo.
-    if (!mounted) {
-      return;
-    }
-
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname, mounted]);
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname === '/' && window.location.hash) {
@@ -178,13 +156,6 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
-  const ThemeIcon = () => {
-    if (!mounted) return <div className="h-5 w-5" />;
-    if (theme === 'system') return <Monitor className="h-5 w-5" />;
-    if (theme === 'light') return <Sun className="h-5 w-5" />;
-    return <Moon className="h-5 w-5" />;
-  };
-
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 shadow-sm backdrop-blur-md dark:bg-gray-900/90">
       <div className="mx-auto max-w-6xl px-4">
@@ -204,7 +175,7 @@ const Navbar = () => {
                 href={link.href}
                 onClick={(e) => scrollTo(e, link.href)}
                 className={`cursor-pointer font-medium transition-colors ${
-                  mounted && activeSection === link.id
+                  activeSection === link.id
                     ? 'border-b-2 border-blue-600 text-blue-600'
                     : 'text-gray-600 hover:text-blue-600 dark:text-gray-300'
                 }`}
@@ -236,7 +207,9 @@ const Navbar = () => {
                 mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
               }`}
             >
-              <ThemeIcon />
+              {theme === 'system' && <Monitor className="h-5 w-5" />}
+              {theme === 'light' && <Sun className="h-5 w-5" />}
+              {theme === 'dark' && <Moon className="h-5 w-5" />}
             </button>
           </div>
 
@@ -264,7 +237,9 @@ const Navbar = () => {
                 mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
               }`}
             >
-              <ThemeIcon />
+              {theme === 'system' && <Monitor className="h-5 w-5" />}
+              {theme === 'light' && <Sun className="h-5 w-5" />}
+              {theme === 'dark' && <Moon className="h-5 w-5" />}
             </button>
 
             <button
@@ -303,10 +278,10 @@ const Navbar = () => {
               key={link.name}
               href={link.href}
               onClick={(e) => scrollTo(e, link.href)}
-              className={`cursor-pointer font-medium transition-colors ${
-                mounted && activeSection === link.id
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-blue-600 dark:text-gray-300'
+              className={`block cursor-pointer rounded-md px-3 py-4 text-lg font-medium ${
+                activeSection === link.id
+                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-gray-800'
               }`}
             >
               {link.name}

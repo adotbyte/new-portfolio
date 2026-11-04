@@ -140,10 +140,11 @@ jobs:
 
       # ── 9. LIGHTHOUSE TESTAVIMAS ─────────────────────────────────────────
       - name: Run Lighthouse CI
-        run: npx lhci autorun
+        run: |
+          cd frontend
+          npx lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          LHCI_OUTPUT_DIR: ${{ github.workspace }}/.lighthouseci
 
       # ── 10. LIGHTHOUSE REZULTATŲ SUVESTINĖ ────────────────────────────────
       - name: Lighthouse Report Summary
@@ -152,14 +153,12 @@ jobs:
           echo "### 📊 Lighthouse CI Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Ieškome failo keliose galimose vietose
           MANIFEST=""
-          if [ -f .lighthouseci/manifest.json ]; then
+          # Ieškome frontend kataloge
+          if [ -f frontend/.lighthouseci/manifest.json ]; then
+            MANIFEST="frontend/.lighthouseci/manifest.json"
+          elif [ -f .lighthouseci/manifest.json ]; then
             MANIFEST=".lighthouseci/manifest.json"
-          elif [ -f "${{ github.workspace }}/.lighthouseci/manifest.json" ]; then
-            MANIFEST="${{ github.workspace }}/.lighthouseci/manifest.json"
-          elif [ -f "$HOME/.lighthouseci/manifest.json" ]; then
-            MANIFEST="$HOME/.lighthouseci/manifest.json"
           fi
 
           if [ -n "$MANIFEST" ]; then
@@ -168,6 +167,6 @@ jobs:
           else
             echo "⚠️ Nepavyko rasti Lighthouse rezultatų failo." >> $GITHUB_STEP_SUMMARY
             echo "Patikrinkite šiuos katalogus:" >> $GITHUB_STEP_SUMMARY
+            ls -la frontend/.lighthouseci/ 2>/dev/null || echo "Nėra frontend/.lighthouseci/" >> $GITHUB_STEP_SUMMARY
             ls -la .lighthouseci/ 2>/dev/null || echo "Nėra .lighthouseci/" >> $GITHUB_STEP_SUMMARY
-            ls -la $HOME/.lighthouseci/ 2>/dev/null || echo "Nėra ~/.lighthouseci/" >> $GITHUB_STEP_SUMMARY
           fi

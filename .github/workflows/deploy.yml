@@ -145,6 +145,7 @@ jobs:
           npx lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_OUTPUT_DIR: ${{ github.workspace }}/.lighthouseci
 
       # ── 10. LIGHTHOUSE REZULTATŲ SUVESTINĖ ────────────────────────────────
       - name: Lighthouse Report Summary

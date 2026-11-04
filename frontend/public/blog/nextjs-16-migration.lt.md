@@ -28,6 +28,7 @@ React 19, kuris ateina su Next.js 16, griežčiau tikrina, kurie komponentai gal
 
 Migracijos metu taip pat teko atnaujinti PDF generavimo logiką. **jsPDF** biblioteka ne visada tinkamai palaiko lietuviškus simbolius, todėl teko įkelti specialų **.ttf** šriftą su **latin-ext** poaibiu. Taip pat teko pataisyti **ReactMarkdown** kodo blokų atvaizdavimą, kad jie atrodytų gražiai tiek šviesiame, tiek tamsiame fone.
 
+
 ## Rezultatas
 
 Po kelių valandų darbo ir daugybės bandymų, mano portfelis sėkmingai veikia su Next.js 16. Dabar jis yra saugesnis, greitesnis ir modernesnis. Migracija buvo iššūkis, bet verta kiekvienos pastangos.

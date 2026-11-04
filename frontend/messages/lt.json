@@ -5,7 +5,8 @@
     "services": "Paslaugos",
     "homeLab": "Namų laboratorija",
     "contact": "Kontaktai",
-    "blog": "Tinklaraštis"
+    "blog": "Tinklaraštis",
+    "caseStudies": "Atvejai"
   },
   "blog": {
     "title": "Tinklaraštis",
@@ -13,6 +14,35 @@
     "readMore": "Skaityti daugiau",
     "back": "← Atgal į tinklaraštį",
     "noPosts": "Straipsnių kol kas nėra."
+  },
+  "caseStudies": {
+    "title": "Atvejo analizės",
+    "subtitle": "Kaip aš sprendžiu realias problemas ir kokią naudą tai duoda.",
+    "cta": "Susisiekime dėl jūsų projekto",
+    "problemLabel": "Problema",
+    "solutionLabel": "Sprendimas",
+    "resultLabel": "Rezultatas",
+    "aiChatbot": {
+      "title": "AI agento integracija",
+      "problem": "Portfeliui trūko interaktyvumo. Lankytojai turėjo skaityti ilgą tekstą, kad sužinotų apie mano patirtį.",
+      "solution": "Sukūriau AI agentą su Claude API, kuris gali atsakyti į klausimus, parodyti GitHub projektus ir perduoti žinutes.",
+      "result": "Lankytojai dabar gali užduoti klausimus natūralia kalba ir gauti atsakymus per kelias sekundes.",
+      "problemLabel": "Problema",
+      "solutionLabel": "Sprendimas",
+      "resultLabel": "Rezultatas"
+    },
+    "homelab": {
+      "title": "Serverio automatizavimas",
+      "problem": "Rankinis backup'ų darymas užėmė daug laiko ir dažnai būdavo pamirštamas.",
+      "solution": "Sukūriau automatizuotą sistemą su Ansible, GitHub Actions ir Google Drive, kuri kas naktį daro backup'us.",
+      "result": "Dabar backup'ai daromi automatiškai, o aš gaunu pranešimus į telefoną apie jų būseną."
+    },
+    "performance": {
+      "title": "Našumo optimizavimas",
+      "problem": "Svetainė užtrukdavo ilgai, kol įsikeldavo, ypač mobiliuosiuose įrenginiuose.",
+      "solution": "Optimizavau Next.js komponentus, pridėjau dinaminius importus ir sutvarkiau paveikslėlių įkėlimą.",
+      "result": "Pasiekiau 100 balų Google PageSpeed Insights teste ir 100 balų SEO."
+    }
   },
   "about": {
     "technicalStack": "Technologijų rinkinys",

@@ -23,6 +23,7 @@ const Navbar = () => {
     { name: t('portfolio'), href: '#portfolio', id: 'portfolio' },
     { name: t('services') || 'Paslaugos', href: '/services', id: 'services' },
     { name: t('blog') || 'Tinklaraštis', href: '/blog', id: 'blog' },
+    { name: t('caseStudies') || 'Atvejai', href: '/case-studies', id: 'case-studies' },
     { name: t('homeLab'), href: '#homelab', id: 'homelab' },
     { name: t('contact'), href: '#contact', id: 'contact' },
   ];
@@ -197,7 +198,7 @@ const Navbar = () => {
             Audrius Morkūnas Portfolio
           </a>
 
-          <div className="hidden items-center space-x-8 md:flex">
+          <div className="hidden items-center space-x-6 lg:flex">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -247,7 +248,7 @@ const Navbar = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <div className="flex items-center gap-1 text-xs font-semibold">
               <button
                 onClick={() => switchLocale('en')}
@@ -309,7 +310,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`${isOpen ? 'block' : 'hidden'} border-t border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-900 md:hidden`}
+        className={`${isOpen ? 'block' : 'hidden'} border-t border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-900 lg:hidden`}
       >
         <div className="space-y-1 px-4 pb-6 pt-2 shadow-xl">
           {navLinks.map((link) => (

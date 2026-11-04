@@ -5,7 +5,8 @@
     "services": "Services",
     "homeLab": "Home Lab",
     "contact": "Contact",
-    "blog": "Blog"
+    "blog": "Blog",
+    "caseStudies": "Case Studies"
   },
   "blog": {
     "title": "Blog",
@@ -13,6 +14,35 @@
     "readMore": "Read more",
     "back": "← Back to blog",
     "noPosts": "No posts yet."
+  },
+  "caseStudies": {
+    "title": "Case Studies",
+    "subtitle": "How I solve real problems and what value it brings.",
+    "cta": "Let's discuss your project",
+    "problemLabel": "Problem",
+    "solutionLabel": "Solution",
+    "resultLabel": "Result",
+    "aiChatbot": {
+      "title": "AI Agent Integration",
+      "problem": "The portfolio lacked interactivity. Visitors had to read long text to learn about my experience.",
+      "solution": "I built an AI agent with the Claude API that can answer questions, show GitHub projects, and forward messages.",
+      "result": "Visitors can now ask questions in natural language and get answers in seconds.",
+      "problemLabel": "Problem",
+      "solutionLabel": "Solution",
+      "resultLabel": "Result"
+    },
+    "homelab": {
+      "title": "Server Automation",
+      "problem": "Manual backups took a lot of time and were often forgotten.",
+      "solution": "I built an automated system with Ansible, GitHub Actions, and Google Drive that runs backups every night.",
+      "result": "Backups are now done automatically, and I receive notifications on my phone about their status."
+    },
+    "performance": {
+      "title": "Performance Optimization",
+      "problem": "The website took a long time to load, especially on mobile devices.",
+      "solution": "I optimized Next.js components, added dynamic imports, and fixed image loading.",
+      "result": "I achieved a score of 100 on Google PageSpeed Insights and 100 on SEO."
+    }
   },
   "about": {
     "technicalStack": "Technical Stack",

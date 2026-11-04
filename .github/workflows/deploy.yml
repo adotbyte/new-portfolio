@@ -134,10 +134,6 @@ jobs:
           npx tsx scripts/index-blog.ts
           echo "✅ Tinklaraščio straipsniai sėkmingai indeksuoti!"
 
-      # LIGHTHOUSE
-      - name: Set Lighthouse Output Dir
-        run: echo "LHCI_OUTPUT_DIR=${{ github.workspace }}/.lighthouseci" >> $GITHUB_ENV
-
       # ── 9. LIGHTHOUSE TESTAVIMAS ─────────────────────────────────────────
       - name: Run Lighthouse CI
         run: |

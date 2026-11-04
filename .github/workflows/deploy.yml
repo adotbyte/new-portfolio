@@ -167,10 +167,10 @@ jobs:
             for file in "$LHR_DIR"/lhr-*.json; do
               if [ -f "$file" ]; then
                 url=$(jq -r '.finalUrl' "$file")
-                perf=$(jq -r '.categories.performance.score * 100' "$file")
-                a11y=$(jq -r '.categories.accessibility.score * 100' "$file")
-                bp=$(jq -r '.categories["best-practices"].score * 100' "$file")
-                seo=$(jq -r '.categories.seo.score * 100' "$file")
+                perf=$(jq -r '.categories.performance.score * 100 | round' "$file")
+                a11y=$(jq -r '.categories.accessibility.score * 100 | round' "$file")
+                bp=$(jq -r '.categories["best-practices"].score * 100 | round' "$file")
+                seo=$(jq -r '.categories.seo.score * 100 | round' "$file")
                 
                 echo "**$url**" >> $GITHUB_STEP_SUMMARY
                 echo "- Performance: $perf" >> $GITHUB_STEP_SUMMARY

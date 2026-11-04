@@ -109,10 +109,16 @@ const Navbar = () => {
       setActiveSection(currentSection);
     };
 
+    // SVARBU: Nevykdome scroll logikos iškart po įkėlimo,
+    // kad išvengtume neteisingo "Contact" pažymėjimo.
+    if (!mounted) {
+      return;
+    }
+
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
+  }, [pathname, mounted]);
 
   useEffect(() => {
     if (pathname === '/' && window.location.hash) {

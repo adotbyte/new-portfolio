@@ -134,11 +134,16 @@ jobs:
           npx tsx scripts/index-blog.ts
           echo "✅ Tinklaraščio straipsniai sėkmingai indeksuoti!"
 
+      # LIGHTHOUSE
+      - name: Set Lighthouse Output Dir
+        run: echo "LHCI_OUTPUT_DIR=${{ github.workspace }}/.lighthouseci" >> $GITHUB_ENV
+
       # ── 9. LIGHTHOUSE TESTAVIMAS ─────────────────────────────────────────
       - name: Run Lighthouse CI
         run: npx lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_OUTPUT_DIR: ${{ github.workspace }}/.lighthouseci
 
       # ── 10. LIGHTHOUSE REZULTATŲ SUVESTINĖ ────────────────────────────────
       - name: Lighthouse Report Summary
@@ -147,9 +152,22 @@ jobs:
           echo "### 📊 Lighthouse CI Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
+          # Ieškome failo keliose galimose vietose
+          MANIFEST=""
           if [ -f .lighthouseci/manifest.json ]; then
-            # Ištraukiame rezultatus iš manifest.json naudodami jq
-            cat .lighthouseci/manifest.json | jq -r '.[] | "**\(.url)**\n- Performance: \(.summary.performance * 100)\n- Accessibility: \(.summary.accessibility * 100)\n- Best Practices: \(.summary.[\"best-practices\"] * 100)\n- SEO: \(.summary.seo * 100)\n"' >> $GITHUB_STEP_SUMMARY
+            MANIFEST=".lighthouseci/manifest.json"
+          elif [ -f "${{ github.workspace }}/.lighthouseci/manifest.json" ]; then
+            MANIFEST="${{ github.workspace }}/.lighthouseci/manifest.json"
+          elif [ -f "$HOME/.lighthouseci/manifest.json" ]; then
+            MANIFEST="$HOME/.lighthouseci/manifest.json"
+          fi
+
+          if [ -n "$MANIFEST" ]; then
+            echo "✅ Radau rezultatus: $MANIFEST" >> $GITHUB_STEP_SUMMARY
+            cat "$MANIFEST" | jq -r '.[] | "**\(.url)**\n- Performance: \(.summary.performance * 100)\n- Accessibility: \(.summary.accessibility * 100)\n- Best Practices: \(.summary.[\"best-practices\"] * 100)\n- SEO: \(.summary.seo * 100)\n"' >> $GITHUB_STEP_SUMMARY
           else
             echo "⚠️ Nepavyko rasti Lighthouse rezultatų failo." >> $GITHUB_STEP_SUMMARY
+            echo "Patikrinkite šiuos katalogus:" >> $GITHUB_STEP_SUMMARY
+            ls -la .lighthouseci/ 2>/dev/null || echo "Nėra .lighthouseci/" >> $GITHUB_STEP_SUMMARY
+            ls -la $HOME/.lighthouseci/ 2>/dev/null || echo "Nėra ~/.lighthouseci/" >> $GITHUB_STEP_SUMMARY
           fi

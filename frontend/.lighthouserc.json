@@ -2,7 +2,10 @@
   "ci": {
     "collect": {
       "url": ["https://morkunas.info/", "https://morkunas.info/en"],
-      "numberOfRuns": 1
+      "numberOfRuns": 1,
+      "settings": {
+        "chromePath": "/usr/bin/chromium"
+      }
     },
     "assert": {
       "preset": "lighthouse:recommended",

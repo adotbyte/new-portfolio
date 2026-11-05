@@ -1,7 +1,6 @@
 import '../globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Chatbot from '@/components/Chatbot';
 import BackToTop from '@/components/BackToTop';
 import ThemeScript from '@/components/ThemeScript';
 import ThemeSync from '@/components/ThemeSync';
@@ -67,7 +66,6 @@ export default async function LocaleLayout({
               <Navbar />
               <main className="w-full flex-grow pt-16">{children}</main>
               <Footer />
-              <Chatbot />
               <BackToTop />
             </div>
           </NextIntlClientProvider>

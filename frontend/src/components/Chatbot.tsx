@@ -16,13 +16,13 @@ import { useTranslations, useLocale } from 'next-intl';
 import remarkGfm from 'remark-gfm';
 import { registerRobotoFont } from './fonts/roboto';
 
-type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
-
 interface ChatbotProps {
-  nonce?: string;
+  onClose: () => void;
 }
 
-export default function Chatbot({ nonce }: ChatbotProps) {
+type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };
+
+export default function Chatbot({ onClose }: ChatbotProps) {
   const t = useTranslations('chatbot');
   const locale = useLocale();
 
@@ -35,7 +35,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
 
   const [messages, setMessages] = useState<Message[]>([DEFAULT_MESSAGE]);
   const [lastSaved, setLastSaved] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -121,7 +121,7 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
-      setIsOpen(false);
+      onClose(); // <-- Kviečiame onClose, o ne setIsOpen
     }, 350);
   };
 
@@ -254,37 +254,6 @@ export default function Chatbot({ nonce }: ChatbotProps) {
     setHints([]);
     setShowConfirm(false);
   };
-
-  if (!isOpen) {
-    return (
-      <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 100000 }}>
-        <button
-          onClick={() => setIsOpen(true)}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          style={{
-            width: '65px',
-            height: '65px',
-            borderRadius: '20px',
-            border: 'none',
-            background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
-            color: 'white',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: isHovered
-              ? '0 15px 35px rgba(37,99,235,0.6)'
-              : '0 10px 25px rgba(147,197,253,0.5)',
-            cursor: 'pointer',
-            transform: isHovered ? 'scale(1.12)' : 'scale(1)',
-            transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease',
-          }}
-        >
-          <MessageCircle size={isHovered ? 26 : 30} style={{ transition: 'all 0.2s ease' }} />
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div

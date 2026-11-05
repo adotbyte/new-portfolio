@@ -1,35 +1,60 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { MessageCircle } from 'lucide-react';
 
-// Dinaminis importas be SSR (nes Chatbot naudoja window)
-const Chatbot = dynamic(() => import('./Chatbot'), { ssr: false });
+const Chatbot = dynamic(() => import('./Chatbot'), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 100000,
+        width: '65px',
+        height: '65px',
+        borderRadius: '20px',
+        background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 10px 25px rgba(147,197,253,0.5)',
+      }}
+    >
+      <div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
+    </div>
+  ),
+});
 
 export default function ChatbotWrapper() {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Jei neatsidaręs, rodome tik mygtuką
   if (!isOpen) {
     return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-lg transition-transform hover:scale-110"
-        aria-label="Open chat"
-      >
-        <span className="sr-only">Open chat</span>
-        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-          />
-        </svg>
-      </button>
+      <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 100000 }}>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            width: '65px',
+            height: '65px',
+            borderRadius: '20px',
+            border: 'none',
+            background: 'linear-gradient(135deg, #2563eb 0%, #4338ca 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 10px 25px rgba(147,197,253,0.5)',
+            cursor: 'pointer',
+          }}
+        >
+          <MessageCircle size={30} />
+        </button>
+      </div>
     );
   }
 
-  // Jei atidarytas, įkeliame pilną Chatbot komponentą
-  return <Chatbot />;
+  return <Chatbot onClose={() => setIsOpen(false)} />;
 }

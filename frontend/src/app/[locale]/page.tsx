@@ -3,7 +3,6 @@ import Skills from '@/components/Skills';
 import Contact from '@/components/Contact';
 import DotGrid from '@/components/DotGrid';
 import Certifications from '@/components/Certifications';
-import ChatbotWrapper from '@/components/ChatbotWrapper';
 import DeferredSection from '@/components/DeferredSection';
 import dynamic from 'next/dynamic';
 
@@ -131,7 +130,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </section>
       <section id="contact">
         <Contact />
-        <ChatbotWrapper />
       </section>
     </>
   );

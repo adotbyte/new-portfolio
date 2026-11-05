@@ -37,6 +37,7 @@ export default function ChatbotWrapper({ nonce }: { nonce?: string }) {
       <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 100000 }}>
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Open chat"
           style={{
             width: '65px',
             height: '65px',

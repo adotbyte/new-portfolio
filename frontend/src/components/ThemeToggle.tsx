@@ -1,42 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { Monitor, Sun, Moon } from 'lucide-react';
 
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem('theme') as 'system' | 'light' | 'dark' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      setTheme('system');
-    }
   }, []);
 
   const toggleTheme = () => {
-    let nextTheme: 'system' | 'light' | 'dark';
-    if (theme === 'system') nextTheme = 'light';
-    else if (theme === 'light') nextTheme = 'dark';
-    else nextTheme = 'system';
-
-    setTheme(nextTheme);
-    localStorage.setItem('theme', nextTheme);
-
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-
-    if (nextTheme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(nextTheme);
-    }
+    if (theme === 'system') setTheme('light');
+    else if (theme === 'light') setTheme('dark');
+    else setTheme('system');
   };
 
   if (!mounted) {

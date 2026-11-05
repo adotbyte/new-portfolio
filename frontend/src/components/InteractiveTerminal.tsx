@@ -15,7 +15,7 @@ export default function InteractiveTerminal() {
 
   // 1. Terminalo sukūrimas (tik vieną kartą)
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || !resolvedTheme) return;
 
     let resizeObserver: ResizeObserver | null = null;
 
@@ -23,20 +23,37 @@ export default function InteractiveTerminal() {
       const container = terminalRef.current;
       if (!container) return;
 
+      // NUSTATOME TEMĄ TIESIAI IŠ LOCALSTORAGE ARBA SISTEMOS
+      const savedTheme = localStorage.getItem('theme');
+      let isDark = false;
+
+      if (savedTheme === 'dark') {
+        isDark = true;
+      } else if (savedTheme === 'light') {
+        isDark = false;
+      } else {
+        // Jei 'system' arba nėra išsaugota, tikriname operacinę sistemą
+        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+
       const { Terminal } = await import('@xterm/xterm');
       const { FitAddon } = await import('@xterm/addon-fit');
 
-      // Sukuriame terminalą su pradine tema
       const term = new Terminal({
-        cursorBlink: true,
-        cursorStyle: 'block',
-        scrollback: 1000,
-        theme: {
-          background: '#0d1117',
-          foreground: '#c9d1d9',
-          cursor: '#58a6ff',
-          cursorAccent: '#0d1117',
-        },
+        // ... tavo kiti nustatymai ...
+        theme: isDark
+          ? {
+              background: '#0d1117',
+              foreground: '#c9d1d9',
+              cursor: '#58a6ff',
+              cursorAccent: '#0d1117',
+            }
+          : {
+              background: '#ffffff',
+              foreground: '#1f2937',
+              cursor: '#2563eb',
+              cursorAccent: '#ffffff',
+            },
         fontSize: 14,
         fontFamily: '"Fira Code", "Cascadia Code", "Courier New", monospace',
         allowTransparency: false,

@@ -43,7 +43,7 @@ export default function HomeLab() {
 
   return (
     <section className="w-full overflow-x-hidden bg-white py-12 dark:bg-gray-950">
-      <div className="mx-auto w-full max-w-7xl px-6 md:px-8">
+      <div className="mx-auto min-h-[600px] w-full max-w-7xl px-6 md:px-8">
         <div className="mb-12 flex items-center gap-6">
           <h1 className="whitespace-nowrap text-3xl font-black tracking-tight text-gray-900 dark:text-white">
             {t('title')}

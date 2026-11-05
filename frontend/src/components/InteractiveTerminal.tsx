@@ -5,63 +5,55 @@ import { useTheme } from 'next-themes';
 
 export default function InteractiveTerminal() {
   const terminalRef = useRef<HTMLDivElement>(null);
+  const termInstanceRef = useRef<any>(null); // <-- Išsaugome terminalo instanciją
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Kad išvengtume hidratacijos klaidos, komponentą rodome tik po užkrovimo
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // 1. Terminalo sukūrimas (tik vieną kartą)
   useEffect(() => {
     if (!mounted) return;
 
-    let term: any;
-    let resizeObserver: ResizeObserver | null = null; // <-- Apibrėžiame ČIA, prieš initTerminal
-    const isDark = resolvedTheme === 'dark';
+    let resizeObserver: ResizeObserver | null = null;
 
     const initTerminal = async () => {
       const container = terminalRef.current;
       if (!container) return;
 
       const { Terminal } = await import('@xterm/xterm');
-      const { FitAddon } = await import('@xterm/addon-fit'); // <-- Importuojame FitAddon
+      const { FitAddon } = await import('@xterm/addon-fit');
 
-      term = new Terminal({
+      // Sukuriame terminalą su pradine tema
+      const term = new Terminal({
         cursorBlink: true,
         cursorStyle: 'block',
         scrollback: 1000,
-        theme: isDark
-          ? {
-              background: '#0d1117',
-              foreground: '#c9d1d9',
-              cursor: '#58a6ff',
-              cursorAccent: '#0d1117',
-            }
-          : {
-              background: '#ffffff',
-              foreground: '#1f2937',
-              cursor: '#2563eb',
-              cursorAccent: '#ffffff',
-            },
+        theme: {
+          background: '#0d1117',
+          foreground: '#c9d1d9',
+          cursor: '#58a6ff',
+          cursorAccent: '#0d1117',
+        },
         fontSize: 14,
         fontFamily: '"Fira Code", "Cascadia Code", "Courier New", monospace',
         allowTransparency: false,
       });
 
       const fitAddon = new FitAddon();
-      term.loadAddon(fitAddon); // <-- Pridedame FitAddon
+      term.loadAddon(fitAddon);
 
       term.open(container);
-      fitAddon.fit(); // <-- Pritaikome dydį iš karto
+      fitAddon.fit();
 
       resizeObserver = new ResizeObserver(() => {
         fitAddon.fit();
       });
       resizeObserver.observe(container);
 
-      term.clear();
-      term.write('\x1b[2J\x1b[H');
+      // Pradinis tekstas
       term.write("Welcome to Audrius's Portfolio Terminal\r\n");
       term.write('Type "help" to see available commands.\r\n\r\n');
       term.write('$ ');
@@ -86,21 +78,50 @@ export default function InteractiveTerminal() {
           term.write(data);
         }
       });
+
+      termInstanceRef.current = term; // Išsaugome instanciją
     };
 
     initTerminal();
 
     return () => {
       if (resizeObserver) resizeObserver.disconnect();
-      if (term) term.dispose();
+      if (termInstanceRef.current) {
+        termInstanceRef.current.dispose();
+        termInstanceRef.current = null;
+      }
     };
-  }, [mounted, resolvedTheme]); // <-- Priklausomybėse nurodome temą
+  }, [mounted]); // <-- Priklausomybėse TIK mounted
+
+  // 2. Temos keitimas (be terminalo perkūrimo)
+  useEffect(() => {
+    if (!termInstanceRef.current) return;
+
+    const isDark = resolvedTheme === 'dark';
+
+    termInstanceRef.current.options.theme = isDark
+      ? {
+          background: '#0d1117',
+          foreground: '#c9d1d9',
+          cursor: '#58a6ff',
+          cursorAccent: '#0d1117',
+        }
+      : {
+          background: '#ffffff',
+          foreground: '#1f2937',
+          cursor: '#2563eb',
+          cursorAccent: '#ffffff',
+        };
+  }, [resolvedTheme]);
 
   if (!mounted) return null;
 
   return (
     <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-[#0d1117]">
-      <div ref={terminalRef} className="h-[500px] w-full touch-pan-y p-4 pb-8 md:pb-4" />
+      <div
+        ref={terminalRef}
+        className="h-[500px] w-full max-w-full touch-pan-y overflow-hidden p-4 pb-4 md:pb-4"
+      />
     </div>
   );
 }
@@ -109,12 +130,10 @@ function writeResponsive(term: any, text: string, maxWidthMobile = 40, maxWidthD
   const isMobile = window.innerWidth < 768;
   const maxWidth = isMobile ? maxWidthMobile : maxWidthDesktop;
 
-  // Suskaidome tekstą į žodžius
   const words = text.split(' ');
   let line = '';
 
   for (const word of words) {
-    // Jei žodis pats ilgesnis už maxWidth, jį sutrumpiname
     if (word.length > maxWidth) {
       if (line) {
         term.write(line + '\r\n');
@@ -124,7 +143,6 @@ function writeResponsive(term: any, text: string, maxWidthMobile = 40, maxWidthD
       continue;
     }
 
-    // Jei žodis netelpa į eilutę, išvedame esamą eilutę ir pradedame naują
     if ((line + ' ' + word).length > maxWidth) {
       term.write(line + '\r\n');
       line = word;
@@ -133,7 +151,6 @@ function writeResponsive(term: any, text: string, maxWidthMobile = 40, maxWidthD
     }
   }
 
-  // Išvedame paskutinę eilutę
   if (line) {
     term.write(line + '\r\n');
   }
@@ -171,7 +188,6 @@ async function handleCommand(term: any, cmd: string) {
           const isMobile = window.innerWidth < 768;
 
           if (isMobile) {
-            // Sutrumpintas variantas telefonui
             term.write('NAME'.padEnd(18) + 'IMAGE'.padEnd(22) + 'STATUS\r\n');
             data.containers.forEach((c: any) => {
               const name = c.name.length > 16 ? c.name.slice(0, 13) + '...' : c.name;
@@ -179,7 +195,6 @@ async function handleCommand(term: any, cmd: string) {
               term.write(`${name.padEnd(18)} ${image.padEnd(22)} ${c.status}\r\n`);
             });
           } else {
-            // Pilnas variantas kompiuteriui
             term.write('CONTAINER ID   IMAGE                          STATUS          NAMES\r\n');
             data.containers.forEach((c: any) => {
               term.write(
@@ -221,12 +236,10 @@ async function handleCommand(term: any, cmd: string) {
           const isMobile = window.innerWidth < 768;
 
           if (isMobile) {
-            // Trumpesnis formatas telefonui
             term.write(`Total: ${data.total.toFixed(1)}Gi\r\n`);
             term.write(`Used:  ${data.used.toFixed(1)}Gi\r\n`);
             term.write(`Free:  ${data.free.toFixed(1)}Gi\r\n`);
           } else {
-            // Pilnas formatas kompiuteriui
             term.write('               total        used        free\r\n');
             term.write(
               `Mem:            ${data.total.toFixed(1)}Gi       ${data.used.toFixed(1)}Gi       ${data.free.toFixed(1)}Gi\r\n`
@@ -246,7 +259,6 @@ async function handleCommand(term: any, cmd: string) {
       try {
         const isMobile = window.innerWidth < 768;
 
-        // Gauname duomenis lygiagrečiai
         const [uptimeRes, freeRes] = await Promise.all([
           fetch('/api/system/uptime'),
           fetch('/api/system/free'),
@@ -254,12 +266,10 @@ async function handleCommand(term: any, cmd: string) {
         const uptimeData = await uptimeRes.json();
         const freeData = await freeRes.json();
 
-        // ASCII logotipas
         const asciiArt = isMobile
           ? ['   .-,', '  /   \\', ' |     |', '  \\   /', '   `-`']
           : ['    .-"-".', '   /     \\', '  |       |', '  |       |', '   \\     /', '    `-.-`'];
 
-        // Informacija
         const info = [
           'audrius@raspberrypi',
           '-------------------',
@@ -270,7 +280,6 @@ async function handleCommand(term: any, cmd: string) {
           `Load: ${uptimeData.load || 'N/A'}`,
         ];
 
-        // Išvedame logotipą ir informaciją greta
         const maxLines = Math.max(asciiArt.length, info.length);
         for (let i = 0; i < maxLines; i++) {
           const artLine = (asciiArt[i] || '').padEnd(isMobile ? 12 : 16);
@@ -292,25 +301,25 @@ async function handleCommand(term: any, cmd: string) {
         const width = isMobile ? 40 : 80;
         const height = isMobile ? 15 : 24;
         let frames = 0;
-        const maxFrames = 20; // Kiek kartų atsinaujins
+        const maxFrames = 20;
 
         const interval = setInterval(() => {
-          term.write('\x1b[2J\x1b[H'); // Išvalome ekraną
+          term.write('\x1b[2J\x1b[H');
           for (let y = 0; y < height; y++) {
             let line = '';
             for (let x = 0; x < width; x++) {
               line += Math.random() > 0.85 ? chars[Math.floor(Math.random() * chars.length)] : ' ';
             }
-            term.write(`\x1b[32m${line}\x1b[0m\r\n`); // Žalia spalva
+            term.write(`\x1b[32m${line}\x1b[0m\r\n`);
           }
           frames++;
           if (frames >= maxFrames) {
             clearInterval(interval);
-            term.write('\x1b[2J\x1b[H'); // Išvalome po pabaigos
+            term.write('\x1b[2J\x1b[H');
             term.write('Welcome back to reality.\r\n');
             resolve();
           }
-        }, 150); // Kas 150ms
+        }, 150);
       });
       term.scrollToBottom();
       break;

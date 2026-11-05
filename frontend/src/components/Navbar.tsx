@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
-import { Monitor, Sun, Moon } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const t = useTranslations('nav');
@@ -13,15 +12,8 @@ const Navbar = () => {
   const params = useParams();
   const currentLocale = params.locale as string;
 
-  const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
-  const [mounted, setMounted] = useState(false);
-
-  // Šis triukas leidžia naudoti useLayoutEffect naršyklėje, bet išvengti klaidų serveryje
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const navLinks = [
     { name: t('about'), href: '#about', id: 'about' },
@@ -40,7 +32,6 @@ const Navbar = () => {
   useEffect(() => {
     if (!pathname) return;
 
-    // Nuimame kalbos prefiksą (pvz., /lt/blog -> /blog)
     const cleanPath = pathname.replace(/^\/(lt|en)/, '');
 
     if (cleanPath === '/services') {
@@ -55,7 +46,6 @@ const Navbar = () => {
       setActiveSection('case-studies');
       return;
     }
-
     if (cleanPath !== '/') {
       setActiveSection('');
       return;
@@ -116,12 +106,7 @@ const Navbar = () => {
     }
   }, [pathname]);
 
-  const toggleDark = () => {
-    if (theme === 'system') setTheme('light');
-    else if (theme === 'light') setTheme('dark');
-    else setTheme('system');
-  };
-
+  // TEISINGA scrollTo FUNKCIJA su MouseEvent parametru
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
 
@@ -200,17 +185,8 @@ const Navbar = () => {
               </button>
             </div>
 
-            <button
-              onClick={toggleDark}
-              aria-label="Toggle theme"
-              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-700 ease-out hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
-                mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-              }`}
-            >
-              {theme === 'system' && <Monitor className="h-5 w-5" />}
-              {theme === 'light' && <Sun className="h-5 w-5" />}
-              {theme === 'dark' && <Moon className="h-5 w-5" />}
-            </button>
+            {/* NAUJAS TEMOS MYGTUKAS */}
+            <ThemeToggle />
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
@@ -230,17 +206,8 @@ const Navbar = () => {
               </button>
             </div>
 
-            <button
-              onClick={toggleDark}
-              aria-label="Toggle theme"
-              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-700 ease-out hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 ${
-                mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-              }`}
-            >
-              {theme === 'system' && <Monitor className="h-5 w-5" />}
-              {theme === 'light' && <Sun className="h-5 w-5" />}
-              {theme === 'dark' && <Moon className="h-5 w-5" />}
-            </button>
+            {/* NAUJAS TEMOS MYGTUKAS MOBILIAJAME MENIU */}
+            <ThemeToggle />
 
             <button
               onClick={() => setIsOpen(!isOpen)}

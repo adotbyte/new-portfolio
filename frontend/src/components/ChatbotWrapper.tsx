@@ -4,6 +4,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { MessageCircle } from 'lucide-react';
 
+// Dinaminis importas be SSR
 const Chatbot = dynamic(() => import('./Chatbot'), {
   ssr: false,
   loading: () => (
@@ -28,7 +29,7 @@ const Chatbot = dynamic(() => import('./Chatbot'), {
   ),
 });
 
-export default function ChatbotWrapper() {
+export default function ChatbotWrapper({ nonce }: { nonce?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   if (!isOpen) {
@@ -56,5 +57,5 @@ export default function ChatbotWrapper() {
     );
   }
 
-  return <Chatbot onClose={() => setIsOpen(false)} />;
+  return <Chatbot onClose={() => setIsOpen(false)} nonce={nonce} />;
 }

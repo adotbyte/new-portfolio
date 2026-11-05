@@ -18,6 +18,7 @@ import { registerRobotoFont } from './fonts/roboto';
 
 interface ChatbotProps {
   onClose: () => void;
+  nonce?: string;
 }
 
 type Message = { role: 'user' | 'ai'; content: string; isNew?: boolean };

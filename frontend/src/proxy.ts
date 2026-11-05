@@ -5,26 +5,18 @@ import { routing } from '@/i18n/routing';
 const intlMiddleware = createMiddleware(routing);
 
 export default function proxy(request: NextRequest) {
-  // 1. Tiesiogiai praleisti /api/metrics (patikimiausias būdas)
   const { pathname } = request.nextUrl;
 
-  // 1. Explicitly bypass middleware for API and well-known routes
-  if (pathname.startsWith('/.well-known') || pathname.startsWith('/api')) {
-    return NextResponse.next();
-  }
-
-  // 1. Tiesiogiai praleisti /api/metrics (patikimiausias būdas)
-  if (request.nextUrl.pathname === '/api/metrics') {
+  // 1. Praleisti .well-known (jei matcher nepraleistų)
+  if (pathname.startsWith('/.well-known')) {
     return NextResponse.next();
   }
 
   const acceptHeader = request.headers.get('accept') || '';
 
-  // 2. Handle Markdown Content Negotiation
+  // 2. Markdown Content Negotiation
   if (acceptHeader.includes('text/markdown')) {
     const url = request.nextUrl.clone();
-
-    // Set path to the markdown exporter API and pass requested path in query
     url.pathname = '/api/markdown-exporter';
     url.searchParams.set('path', pathname);
 
@@ -41,14 +33,14 @@ export default function proxy(request: NextRequest) {
   // 4. Define CSP Header
   const cspHeader = `
     default-src 'self';
-    script-src 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com ${isDev ? "'unsafe-eval'" : ''};
+    script-src 'self' 'unsafe-inline' 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com ${isDev ? "'unsafe-eval'" : ''};
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data:;
     font-src 'self' data:;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
-    frame-src 'self' https://challenges.cloudflare.com https://grafana.morkunas.info;;
+    frame-src 'self' https://challenges.cloudflare.com https://grafana.morkunas.info;
     frame-ancestors 'none';
     connect-src 'self' https://challenges.cloudflare.com;
     worker-src 'self' blob:;
@@ -57,7 +49,7 @@ export default function proxy(request: NextRequest) {
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  // 5. Forward Nonce & CSP to incoming request headers for Server Components
+  // 5. Forward Nonce & CSP to incoming request headers
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('Content-Security-Policy', cspHeader);
@@ -72,7 +64,7 @@ export default function proxy(request: NextRequest) {
     })
   );
 
-  // 7. Explicitly set response headers
+  // 7. Set response headers
   response.headers.set('Content-Security-Policy', cspHeader);
   response.headers.set('x-nonce', nonce);
   response.headers.set(
@@ -89,12 +81,7 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  //matcher: [
-  //  '/((?!api/metrics|api|_next/static|_next/image|robots\\.txt|sitemap\\.xml|auth\\.md|\\.well-known|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest|logo\\.png).|.*\\..*)*)',
-  //],
-
   matcher: [
-    // Išimame API, Next.js vidinius failus, Vercel, ir bet kokius failus su plėtiniu (pvz., .ttf, .png, .css)
-    '/((?!api/metrics|api|_next/static|_next/image|robots\\.txt|sitemap\\.xml|auth\\.md|\\.well-known|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest|logo\\.png|.*\\..*).*)',
+    '/((?!api|_next/static|_next/image|robots\\.txt|sitemap\\.xml|auth\\.md|\\.well-known|favicon\\.ico|apple-touch-icon\\.png|site\\.webmanifest|logo\\.png|.*\\..*).*)',
   ],
 };

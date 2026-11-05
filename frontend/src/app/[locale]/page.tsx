@@ -4,7 +4,9 @@ import Contact from '@/components/Contact';
 import DotGrid from '@/components/DotGrid';
 import Certifications from '@/components/Certifications';
 import DeferredSection from '@/components/DeferredSection';
+import ChatbotWrapper from '@/components/ChatbotWrapper';
 import dynamic from 'next/dynamic';
+import { headers } from 'next/headers';
 
 // Dinaminiai importai su ssr: false per wrapper
 const HomeLab = dynamic(() => import('@/components/HomeLab'), {
@@ -75,6 +77,7 @@ export async function generateMetadata({
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
 
   // JSON-LD Schema data
   const jsonLd = {
@@ -130,6 +133,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </section>
       <section id="contact">
         <Contact />
+        <ChatbotWrapper nonce={nonce} />
       </section>
     </>
   );

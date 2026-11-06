@@ -70,7 +70,7 @@ export async function generateMetadata({
       siteName: 'Audrius Morkūnas Portfolio',
       images: [
         {
-          url: `${baseUrl}/${locale}/opengraph-image`,
+          url: `${baseUrl}/logo.webp`,
           width: 1200,
           height: 633,
           alt: 'Audrius Morkūnas Portfolio | AI & Next.js Developer',

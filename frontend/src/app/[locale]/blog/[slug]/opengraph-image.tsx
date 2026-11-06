@@ -6,9 +6,10 @@ export const alt = 'Audrius Morkūnas Blog';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { slug: string } }) {
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
+  // Nuskaitome straipsnio pavadinimą
   let title = slug
     .split('-')
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -19,6 +20,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
     const firstLine = content.split('\n')[0];
     if (firstLine.startsWith('# ')) title = firstLine.replace('# ', '');
   } catch {}
+
+  // Nuskaitome logotipą
+  const logoBuffer = readFileSync(join(process.cwd(), 'public', 'logo-icon.png'));
+  const logoBase64 = logoBuffer.toString('base64');
+  const logoUrl = `data:image/png;base64,${logoBase64}`;
 
   return new ImageResponse(
     <div
@@ -34,25 +40,19 @@ export default async function Image({ params }: { params: { slug: string } }) {
         fontFamily: 'sans-serif',
       }}
     >
+      {/* Logotipas */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-        <div
-          style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '20px',
-            backgroundColor: '#2563eb',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '40px',
-            fontWeight: 'bold',
-          }}
-        >
-          AM
-        </div>
-        <div style={{ color: '#94a3b8', fontSize: 28, marginLeft: '20px' }}>morkunas.info</div>
+        <img
+          src={logoUrl}
+          width={200}
+          height={200}
+          style={{ borderRadius: '16px', objectFit: 'contain' }}
+          alt="Logo"
+        />
+        <div style={{ color: '#94a3b8', fontSize: 28, marginLeft: '20px' }}>morkunas.info/blog</div>
       </div>
+
+      {/* Straipsnio pavadinimas */}
       <div
         style={{
           fontSize: 64,
@@ -64,8 +64,18 @@ export default async function Image({ params }: { params: { slug: string } }) {
       >
         {title}
       </div>
-      <div style={{ color: '#3b82f6', fontSize: 24, marginTop: 'auto', fontWeight: 'bold' }}>
-        Audrius Morkūnas | Blog
+
+      {/* Apatinė eilutė */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: 'auto',
+          color: '#94a3b8',
+          fontSize: 24,
+        }}
+      >
+        <span>Audrius Morkūnas | Blog</span>
       </div>
     </div>,
     { ...size }

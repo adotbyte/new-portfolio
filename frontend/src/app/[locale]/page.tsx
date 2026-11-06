@@ -70,10 +70,10 @@ export async function generateMetadata({
       siteName: 'Audrius Morkūnas Portfolio',
       images: [
         {
-          url: `${baseUrl}/logo.png`,
-          width: 512,
-          height: 512,
-          alt: 'Audrius Morkūnas Portfolio',
+          url: `${baseUrl}/opengraph-image`,
+          width: 1200,
+          height: 633,
+          alt: 'Audrius Morkūnas Portfolio | AI & Next.js Developer',
         },
       ],
       locale: isLt ? 'lt_LT' : 'en_US',
@@ -107,7 +107,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             ? 'Audriaus Morkūno asmeninis portfolio. AI chatbot kūrimas, Next.js, Docker, Linux.'
             : 'Audrius Morkūnas personal portfolio. AI chatbot creation, Next.js, Docker, Linux.',
         url: `https://morkunas.info/${locale}`,
-        image: 'https://morkunas.info/logo.png',
+        image: 'https://morkunas.info/logo.webp',
         sameAs: [
           'https://www.linkedin.com/in/audrius-morkunas-939a2581/',
           'https://github.com/adotbyte',

@@ -45,6 +45,7 @@
     }
   },
   "about": {
+    "title": "Audrius Morkūnas | AI & Next.js Developer",
     "technicalStack": "Technical Stack",
     "status": "Status",
     "online": "ONLINE",

@@ -34,11 +34,22 @@ export async function generateMetadata({
   const isLt = locale === 'lt';
   const baseUrl = 'https://morkunas.info';
 
+  const title = isLt
+    ? 'Audrius Morkūnas | AI & Next.js Kūrėjas'
+    : 'Audrius Morkūnas | AI & Next.js Developer';
+
+  // Konkretesnis aprašymas su išskirtiniais pasiekimais
+  const description = isLt
+    ? 'Savamokslis infrastruktūros entuziastas. Kuriu stabilias, saugias sistemas su Next.js, Docker ir AI (Claude API). 100 balų našumas, A+ saugumas.'
+    : 'Self-taught infrastructure enthusiast. I build stable, secure systems with Next.js, Docker, and AI (Claude API). 100/100 Lighthouse, A+ Security.';
+
   return {
-    title: 'Audrius Morkūnas | Portfolio',
-    description: isLt
-      ? 'Audriaus Morkūno portfolio — AI chatbot kūrėjas, Next.js, Docker, Linux serverių administratorius (Raspberry Pi 5).'
-      : 'Portfolio of Audrius Morkūnas — Creator AI chatbot, Next.js, Docker, Linux server admin on Raspberry Pi 5.',
+    title,
+    description,
+    robots: {
+      index: true,
+      follow: true,
+    },
 
     // HERE IS THE MOST IMPORTANT PART REGARDING THE TWO LANGUAGES:
     alternates: {
@@ -51,10 +62,9 @@ export async function generateMetadata({
     },
 
     openGraph: {
-      title: 'Audrius Morkūnas | Portfolio',
-      description: isLt
-        ? 'Audriaus Morkūno portfolio — AI chatbot kūrėjas, Next.js, Docker, Linux serverių administratorius.'
-        : 'Portfolio of Audrius Morkūnas — Creator AI chatbot, Next.js, Docker, Linux server admin on Raspberry Pi 5.',
+      title,
+      description,
+
       url: `${baseUrl}/${locale}`,
       siteName: 'Audrius Morkūnas Portfolio',
       images: [

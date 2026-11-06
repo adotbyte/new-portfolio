@@ -44,6 +44,7 @@ export async function generateMetadata({
     : 'Self-taught infrastructure enthusiast. I build stable, secure systems with Next.js, Docker, and AI (Claude API). 100/100 Lighthouse, A+ Security.';
 
   return {
+    metadataBase: new URL(baseUrl),
     title,
     description,
     robots: {

@@ -9,8 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import CopyButton from '@/components/CopyButton';
 import CodePlayground from '@/components/CodePlayground';
 import { connection } from 'next/server';
-
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const instant = false;
 
@@ -19,15 +18,62 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
 
-  const formattedSlug = slug
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+  // Nuskaitome straipsnio turinį, kad galėtume ištraukti pavadinimą ir aprašymą
+  let content = '';
+  const blogDir = join(process.cwd(), 'public', 'blog');
+
+  try {
+    try {
+      content = readFileSync(join(blogDir, `${slug}.${locale}.md`), 'utf-8');
+    } catch {
+      content = readFileSync(join(blogDir, `${slug}.lt.md`), 'utf-8');
+    }
+  } catch {
+    content = '# Straipsnis nerastas';
+  }
+
+  const lines = content.split('\n');
+  const title = lines[0].replace('# ', '').trim() || slug;
+
+  // Ieškome pirmos pastraipos (praleidžiame tuščias eilutes ir antraštes)
+  const firstParagraph =
+    lines.slice(1).find((line) => line.trim() !== '' && !line.startsWith('#')) || '';
+
+  // Aprašymas turi būti bent 100 simbolių
+  const description =
+    firstParagraph.length > 160
+      ? firstParagraph.substring(0, 160) + '...'
+      : firstParagraph + ' Skaitykite daugiau šiame straipsnyje.';
+
+  const baseUrl = 'https://morkunas.info';
 
   return {
-    title: `${formattedSlug} | Audrius Morkūnas`,
+    title: `${title} | Audrius Morkūnas`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      authors: ['Audrius Morkūnas'],
+      url: `${baseUrl}/${locale}/blog/${slug}`,
+      images: [
+        {
+          url: `${baseUrl}/${locale}/blog/${slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: locale === 'lt' ? 'lt_LT' : 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${baseUrl}/${locale}/blog/${slug}/opengraph-image`],
+    },
   };
 }
 
@@ -66,15 +112,15 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: content.split('\n')[0].replace('# ', ''), // Pavadinimas iš pirmos eilutės
-    description: content.split('\n')[2]?.substring(0, 160) || 'Straipsnis', // Trumpas aprašymas
+    headline: content.split('\n')[0].replace('# ', ''),
+    description: content.split('\n')[2]?.substring(0, 160) || 'Straipsnis',
     author: {
       '@type': 'Person',
       name: 'Audrius Morkūnas',
       url: 'https://morkunas.info',
     },
     datePublished: new Date().toISOString(),
-    image: `https://morkunas.info/${locale}/blog/${slug}/opengraph-image`, // Nuoroda į mūsų sugeneruotą paveikslėlį
+    image: `https://morkunas.info/${locale}/blog/${slug}/opengraph-image`,
   };
 
   return (
@@ -100,9 +146,6 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
               code({ node, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || '');
                 const codeString = String(children).replace(/\n$/, '');
-
-                // Patikriname, ar tai eilutės viduje esantis kodas (pvz., `get_github_repos`)
-                // Jis neturi className ir neturi naujos eilutės
                 const isInline = !className && !codeString.includes('\n');
 
                 if (isInline) {
@@ -113,7 +156,6 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
                   );
                 }
 
-                // Kitu atveju tai yra kodo blokas su ```
                 return (
                   <div className="my-6 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
                     <div className="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400">
@@ -126,7 +168,6 @@ async function BlogPostContent({ params }: { params: Promise<{ locale: string; s
                   </div>
                 );
               },
-              // Štai šis blokas leidžia atvaizduoti mūsų komponentą
               p({ children }) {
                 if (
                   Array.isArray(children) &&

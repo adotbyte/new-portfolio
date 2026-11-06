@@ -46,6 +46,7 @@ export default async function AboutMe({ locale }: { locale: string }) {
       <div className="mx-auto w-full max-w-7xl px-6 md:px-8">
         {/* Ištryniau h2 su title, palikau tik liniją */}
         <div className="mb-12 flex items-center gap-6">
+          <h1 className="sr-only">Audrius Morkūnas | AI & Next.js Kūrėjas</h1>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-gray-800"></div>
         </div>
 

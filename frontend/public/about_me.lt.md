@@ -1,6 +1,4 @@
-# Audrius Morkūnas | AI & Next.js Kūrėjas
-
-Sveiki, aš Audrius 👋
+## Sveiki, aš Audrius 👋
 
 "Aš savamokslis infrastruktūros entuziastas, kuris technologiją suvokiu iš serverio pusės žemyn. Turėdamas gilias žinias apie kompiuterio aparatinę įrangą, Linux administravimą ir tinklus, ne tik rašau kodą — kuriu stabilias, saugias sistemas, kuriose jis veikia.
 

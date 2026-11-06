@@ -89,30 +89,39 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   const nonce = (await headers()).get('x-nonce') ?? undefined;
 
-  // JSON-LD Schema data
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ProfilePage',
-    mainEntity: {
-      '@type': 'Person',
-      name: 'Audrius Morkūnas',
-      givenName: 'Audrius',
-      familyName: 'Morkūnas',
-      jobTitle:
-        locale === 'lt' ? 'Kūrėjas, Serverių Administratorius' : 'Creator, Server Administrator',
-      description:
-        locale === 'lt'
-          ? 'Audriaus Morkūno asmeninis portfolio. AI chatbot kūrimas, Next.js, Docker, Linux.'
-          : 'Audrius Morkūnas personal portfolio. AI chatbot creation, Next.js, Docker, Linux.',
-      url: `https://morkunas.info/${locale}`,
-      image: 'https://morkunas.info/logo.png',
-      sameAs: [
-        'https://www.linkedin.com/in/audrius-morkunas-939a2581/',
-        'https://github.com/adotbyte',
-      ],
-      knowsAbout: ['Next.js', 'React', 'Docker', 'Linux', 'Artificial Intelligence', 'Chatbots'],
+  // JSON-LD Schema data (dabar masyvas su dviem schemomis)
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      mainEntity: {
+        '@type': 'Person',
+        name: 'Audrius Morkūnas',
+        givenName: 'Audrius',
+        familyName: 'Morkūnas',
+        jobTitle:
+          locale === 'lt' ? 'Kūrėjas, Serverių Administratorius' : 'Creator, Server Administrator',
+        description:
+          locale === 'lt'
+            ? 'Audriaus Morkūno asmeninis portfolio. AI chatbot kūrimas, Next.js, Docker, Linux.'
+            : 'Audrius Morkūnas personal portfolio. AI chatbot creation, Next.js, Docker, Linux.',
+        url: `https://morkunas.info/${locale}`,
+        image: 'https://morkunas.info/logo.png',
+        sameAs: [
+          'https://www.linkedin.com/in/audrius-morkunas-939a2581/',
+          'https://github.com/adotbyte',
+        ],
+        knowsAbout: ['Next.js', 'React', 'Docker', 'Linux', 'Artificial Intelligence', 'Chatbots'],
+      },
     },
-  };
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Audrius Morkūnas | Portfolio',
+      url: 'https://morkunas.info',
+      alternateName: 'morkunas.info',
+    },
+  ];
 
   return (
     <>

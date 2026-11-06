@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 export const alt = 'Audrius Morkūnas | AI & Next.js Developer';
 export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+export const contentType = 'image/webp';
 
 export default async function Image() {
   // Naudojame TIESIOGINĮ URL į tavo logotipą

@@ -8,9 +8,9 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   // Nuskaitome VISĄ paveikslėlį
-  const imageBuffer = readFileSync(join(process.cwd(), 'public', 'logo.png'));
+  const imageBuffer = readFileSync(join(process.cwd(), 'public', 'logo.webp'));
   const imageBase64 = imageBuffer.toString('base64');
-  const imageUrl = `data:image/png;base64,${imageBase64}`;
+  const imageUrl = `data:image/webp;base64,${imageBase64}`;
 
   return new ImageResponse(
     <div

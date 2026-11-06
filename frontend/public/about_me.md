@@ -1,4 +1,6 @@
-# Hi, I'm Audrius 👋
+# Audrius Morkūnas | AI & Next.js Developer
+
+Hi, I'm Audrius 👋
 
 "I am a self-taught infrastructure enthusiast who approaches technology from the server-side down. With a deep foundation in computer hardware, Linux administration, and networking, I don't just write code—I build the stable, secure systems it runs on.
 

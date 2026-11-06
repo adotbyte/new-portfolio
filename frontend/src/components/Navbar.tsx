@@ -148,9 +148,9 @@ const Navbar = () => {
           <a
             href="#about"
             onClick={(e) => scrollTo(e, '#about')}
-            className="flex-shrink-0 text-xl font-bold tracking-tighter text-blue-600 md:text-2xl"
+            className="flex-shrink-0 text-lg font-bold tracking-tighter text-blue-600 md:text-2xl"
           >
-            Audrius Morkūnas Portfolio
+            Audrius Morkūnas | Portfolio
           </a>
 
           <div className="hidden items-center space-x-6 lg:flex">

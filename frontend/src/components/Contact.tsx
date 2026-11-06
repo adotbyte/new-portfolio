@@ -158,7 +158,17 @@ const Contact = () => {
           {status === 'loading' ? t('sending') : t('send')}
         </button>
 
-        {/* ... success/error pranešimai ... */}
+        {status === 'success' && (
+          <div className="rounded-lg bg-green-50 p-4 text-center text-sm font-medium text-green-700 dark:bg-green-900/20 dark:text-green-400">
+            {t('success')}
+          </div>
+        )}
+
+        {status === 'error' && (
+          <div className="rounded-lg bg-red-50 p-4 text-center text-sm font-medium text-red-700 dark:bg-red-900/20 dark:text-red-400">
+            {t('error')}
+          </div>
+        )}
       </form>
     </section>
   );

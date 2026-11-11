@@ -35,8 +35,8 @@ export async function generateMetadata({
   const baseUrl = 'https://morkunas.info';
 
   const title = isLt
-    ? 'Audrius Morkūnas | AI & Next.js Kūrėjas'
-    : 'Audrius Morkūnas | AI & Next.js Developer';
+    ? 'Audrius Morkūnas | Portfolio, AI & Next.js Kūrėjas'
+    : 'Audrius Morkūnas | Portfolio, AI & Next.js Developer';
 
   // Konkretesnis aprašymas su išskirtiniais pasiekimais
   const description = isLt

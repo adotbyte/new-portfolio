@@ -144,22 +144,22 @@ const Navbar = () => {
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 shadow-sm backdrop-blur-md dark:bg-gray-900/90">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 min-w-0 items-center justify-between">
           <a
             href="#about"
             onClick={(e) => scrollTo(e, '#about')}
-            className="flex-shrink-0 text-lg font-bold tracking-tighter text-blue-600 md:text-2xl"
+            className="mr-4 md:mr-6 flex-shrink whitespace-nowrap text-lg font-bold tracking-tighter text-blue-600 md:text-2xl"
           >
-            Audrius Morkūnas | Portfolio
+            Audrius Morkūnas <span className="hidden sm:inline">| Portfolio</span>
           </a>
 
-          <div className="hidden items-center space-x-6 lg:flex">
+          <div className="hidden items-center gap-4 lg:flex lg:flex-nowrap xl:gap-6">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => scrollTo(e, link.href)}
-                className={`cursor-pointer font-medium transition-colors ${
+                className={`cursor-pointer whitespace-nowrap font-medium transition-colors ${
                   activeSection === link.id
                     ? 'border-b-2 border-blue-600 text-blue-600'
                     : 'text-gray-600 hover:text-blue-600 dark:text-gray-300'
@@ -189,7 +189,7 @@ const Navbar = () => {
             <ThemeToggle />
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="ml-auto flex-shrink-0 flex items-center gap-2 lg:hidden">
             <div className="flex items-center gap-1 text-xs font-semibold">
               <button
                 onClick={() => switchLocale('en')}
@@ -245,7 +245,7 @@ const Navbar = () => {
               key={link.name}
               href={link.href}
               onClick={(e) => scrollTo(e, link.href)}
-              className={`block cursor-pointer rounded-md px-3 py-4 text-lg font-medium ${
+              className={`block cursor-pointer whitespace-nowrap rounded-md px-3 py-4 text-lg font-medium ${
                 activeSection === link.id
                   ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-300 dark:hover:bg-gray-800'

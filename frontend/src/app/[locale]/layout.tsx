@@ -17,26 +17,53 @@ import type { Metadata } from 'next';
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
+const BASE_URL = 'https://morkunas.info';
+const DEFAULT_LOCALE = 'lt';
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://morkunas.info'),
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: '/apple-touch-icon.png',
-  },
-  manifest: '/site.webmanifest',
-  other: {
-    'color-scheme': 'light dark',
-    'fb:app_id': '914320204924075',
-  },
-};
+// Dinaminis metadata generavimas kiekvienai kalbai
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  // Nustatome canonical URL: numatytajai kalbai (lt) - be prefikso,
+  // kitoms kalboms - su prefiksu
+  const canonicalUrl =
+    locale === DEFAULT_LOCALE ? BASE_URL : `${BASE_URL}/${locale}`;
+
+  // Sukuriame hreflang alternatyvas visoms kalboms
+  const languages: Record<string, string> = {};
+  routing.locales.forEach((loc) => {
+    languages[loc] = loc === DEFAULT_LOCALE ? BASE_URL : `${BASE_URL}/${loc}`;
+  });
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    alternates: {
+      canonical: canonicalUrl,
+      languages,
+    },
+    icons: {
+      icon: [
+        { url: '/favicon.ico', sizes: 'any' },
+        { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+        { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      ],
+      apple: '/apple-touch-icon.png',
+    },
+    manifest: '/site.webmanifest',
+    other: {
+      'color-scheme': 'light dark',
+      'fb:app_id': '914320204924075',
+    },
+  };
+}
 
 export default async function LocaleLayout({
   children,

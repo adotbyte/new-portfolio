@@ -54,7 +54,9 @@ export default function proxy(request: NextRequest) {
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('Content-Security-Policy', cspHeader);
 
-  // 6. Run next-intl middleware
+  // 6. 🔥 Run next-intl middleware (be specialaus perrašymo!)
+  // Su defaultLocale: 'lt' ir localePrefix: 'as-needed', next-intl
+  // automatiškai aptarnaus '/' kaip lietuvišką turinį be redirect.
   const response = intlMiddleware(
     new NextRequest(request.url, {
       method: request.method,

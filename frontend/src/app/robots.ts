@@ -24,7 +24,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: [
           'GPTBot',
-          'GhatGPT-User',
+          'ChatGPT-User',
           'CCBot',
           'Anthropic-ai',
           'ClaudeBot',

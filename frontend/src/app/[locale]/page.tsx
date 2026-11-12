@@ -24,6 +24,7 @@ import type { Metadata } from 'next';
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
+// src/app/[locale]/page.tsx
 export async function generateMetadata({
   params,
 }: {
@@ -33,15 +34,19 @@ export async function generateMetadata({
 
   const isLt = locale === 'lt';
   const baseUrl = 'https://morkunas.info';
+  const DEFAULT_LOCALE = 'lt';
 
   const title = isLt
     ? 'Audrius Morkūnas | Portfolio, AI & Next.js Kūrėjas'
     : 'Audrius Morkūnas | Portfolio, AI & Next.js Developer';
 
-  // Konkretesnis aprašymas su išskirtiniais pasiekimais
   const description = isLt
     ? 'Savamokslis infrastruktūros entuziastas. Kuriu stabilias, saugias sistemas su Next.js, Docker ir AI (Claude API). 100 balų našumas, A+ saugumas.'
     : 'Self-taught infrastructure enthusiast. I build stable, secure systems with Next.js, Docker, and AI (Claude API). 100/100 Lighthouse, A+ Security.';
+
+  // 🔥 SVARBU: canonical rodo į šakninį URL, jei locale === defaultLocale
+  const canonicalUrl =
+    locale === DEFAULT_LOCALE ? baseUrl : `${baseUrl}/${locale}`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -52,21 +57,20 @@ export async function generateMetadata({
       follow: true,
     },
 
-    // HERE IS THE MOST IMPORTANT PART REGARDING THE TWO LANGUAGES:
+    // 🔥 PATAISYTA: canonical be /lt prefikso lietuvių kalbai
     alternates: {
-      canonical: `${baseUrl}/${locale}`,
+      canonical: canonicalUrl,
       languages: {
-        lt: `${baseUrl}/lt`,
+        lt: baseUrl,              // 🔥 lietuvių → šakninis
         en: `${baseUrl}/en`,
-        'x-default': `${baseUrl}/en`,
+        'x-default': baseUrl,     // 🔥 x-default → šakninis (lietuvių)
       },
     },
 
     openGraph: {
       title,
       description,
-
-      url: `${baseUrl}/${locale}`,
+      url: canonicalUrl, // 🔥 openGraph URL taip pat be /lt
       siteName: 'Audrius Morkūnas Portfolio',
       images: [
         {
@@ -106,7 +110,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           locale === 'lt'
             ? 'Audriaus Morkūno asmeninis portfolio. AI chatbot kūrimas, Next.js, Docker, Linux.'
             : 'Audrius Morkūnas personal portfolio. AI chatbot creation, Next.js, Docker, Linux.',
-        url: `https://morkunas.info/${locale}`,
+        url: locale === 'lt' ? 'https://morkunas.info' : `https://morkunas.info/${locale}`,
         image: 'https://morkunas.info/logo.webp',
         sameAs: [
           'https://www.linkedin.com/in/audrius-morkunas-939a2581/',

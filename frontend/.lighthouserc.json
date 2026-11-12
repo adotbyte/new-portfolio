@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "url": ["https://morkunas.info/lt", "https://morkunas.info/en"],
+      "url": ["https://morkunas.info/", "https://morkunas.info/en"],
       "numberOfRuns": 1,
       "settings": {
         "chromePath": "/usr/bin/chromium",

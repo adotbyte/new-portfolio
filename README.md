@@ -60,6 +60,36 @@ The chatbot is a true **agentic system** — not just a Q&A bot. It combines mul
 - Visitors can export the entire chat transcript as a **polished PDF**.
 - Includes a custom **Roboto** font for Lithuanian characters, colored role labels, date, and clickable links.
 
+## 🛡️ Security & Guardrails
+
+This AI agent is designed with a security-first approach. It is not just a simple wrapper around an LLM API; it includes multiple layers of defense to prevent abuse, prompt injection, and data leakage.
+
+### 1. Input Validation & Rate Limiting
+- **Zod Schemas**: All incoming messages are strictly validated for type, length (max 2000 chars), and locale (only `lt` or `en` allowed). Empty or malformed requests are rejected before reaching the LLM.
+- **IP-Based Rate Limiting**: 
+  - Chat messages are limited to **10 requests per hour** per IP.
+  - The email sending tool (`send_contact_email`) has its own stricter limit of **2 emails per hour** to prevent spam.
+- **Cloudflare Integration**: The agent correctly extracts the real visitor IP using the `cf-connecting-ip` header (when deployed behind Cloudflare), ensuring rate limits cannot be bypassed via header spoofing.
+
+### 2. Prompt Injection Defense (LLM01)
+- **System Prompt Hardening**: The core system prompt explicitly forbids the model from ignoring instructions, revealing its system prompt, or executing "jailbreak" commands.
+- **Suspicious Input Logging**: Incoming messages are scanned for known injection patterns (e.g., "ignore previous instructions", "system prompt", "jailbreak"). Suspicious attempts are logged to the server console with a `🚨 [SECURITY WARNING]` tag for auditing, without disrupting legitimate users.
+- **System File Integrity**: The optional `prompts/system.md` file is scanned for suspicious override patterns before being injected into the system prompt, preventing accidental or malicious rule changes.
+
+### 3. RAG & Context Isolation
+- **Context Isolation**: When retrieving information from the Knowledge Base (via Voyage AI), the context is wrapped in `<context>` tags. The system prompt explicitly instructs the LLM to treat everything inside these tags as **data only**, never as executable instructions.
+- **Sanitization**: Retrieved context is sanitized to remove common injection phrases before being sent to the model.
+
+### 4. Output & Action Safety (LLM03 & LLM10)
+- **Controlled Agency**: The agent has only one action tool (`send_contact_email`). It cannot execute arbitrary code, delete data, or contact third parties. Emails are sent exclusively to the site owner.
+- **XSS Protection**: All user inputs (name, email, message) are escaped using `escapeHtml()` before being rendered in the HTML email template.
+- **Header Injection Prevention**: The `replyTo` field strips newline characters (`\r\n`) to prevent email header injection attacks.
+- **Cookie Security**: The `visitor_id` cookie is set with `httpOnly: true`, `secure: true` (in production), and `sameSite: 'lax'` to prevent XSS and CSRF attacks.
+
+### 5. Tool Restrictions
+- **Web Search**: Limited to a maximum of 3 uses per request to control costs and prevent abuse.
+- **GitHub API**: Uses a `User-Agent` header and optional `GH_TOKEN` to avoid rate limiting from GitHub's side.
+
 ## 📝 Blog & Case Studies (New!)
 
 This portfolio features a fully-fledged, bilingual blog and a dedicated Case Studies section.
